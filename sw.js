@@ -1,5 +1,5 @@
 /* Winga service worker: offline shell + receive photos shared from WhatsApp */
-const SHELL = "winga-shell-v1";
+const SHELL = "winga-shell-v2";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {

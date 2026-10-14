@@ -7,7 +7,8 @@
   <a href="#install-on-a-phone">Install on a phone</a> ·
   <a href="#how-it-works">How it works</a> ·
   <a href="#principles">Principles</a> ·
-  <a href="#roadmap">Roadmap</a>
+  <a href="#roadmap">Roadmap</a> ·
+  <a href="LICENSE">MIT License</a>
 </p>
 
 ---
@@ -114,10 +115,28 @@ docs/                  README images
 
 **Measured in the field test:** time from customer message to invoice sent, calculator opens per day (target: zero), forgotten or disputed orders, and whether he still uses it in week two.
 
-**Known limits in v0.1:** no reminders while the app is closed; data lives on one phone until he backs it up; WhatsApp share-in is Android only.
+**Known limits:** no reminders while the app is closed; data lives on one phone until he backs it up; WhatsApp share-in is Android only, and takes the first photo when several are shared.
+
+## Where photos and data live
+
+```
+ WhatsApp photo ──Share──► sw.js holds it for a moment ──► app shrinks it (max 720 px JPEG) ──► IndexedDB on the phone
+                           (Cache "winga-share", deleted         ~40–90 KB per photo                (no server, no cloud)
+                            as soon as the app reads it)
+```
+
+- **Only a small copy is kept.** The full-size photo stays in WhatsApp; Winga keeps a 720 px copy, enough for the catalog and the invoice card.
+- **Room to spare.** Chrome lets one site use up to 60% of the phone's free disk. At about 70 KB a photo, 1,000 catalog photos is roughly 70 MB.
+- **Protected from clean-ups.** Winga asks Chrome for persistent storage, so the phone won't clear it when space runs low. Settings shows whether that was granted and how much space Winga uses.
+- **No orphans.** Deleting an item or replacing its photo removes the old photo too.
+- **Real risks:** clearing Chrome's site data, uninstalling, or losing the phone wipes it. That is what **Pakua nakala** (backup) in Settings is for.
+
+## Contributing
+
+Winga is open source under the [MIT License](LICENSE). Issues and pull requests are welcome, especially from people who know Kariakoo, wingas, or Tanzanian payments. Keep the principles above: if a change takes power away from the winga, it doesn't belong here.
 
 ---
 
 <p align="center">
-  <sub>Built in Dar es Salaam for the wingas of Kariakoo.</sub>
+  <sub>Built in Dar es Salaam for the wingas of Kariakoo. MIT licensed.</sub>
 </p>

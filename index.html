@@ -280,7 +280,9 @@ var STR = {
   msgOnWay:"{c}, mzigo wako #{no} uko njiani.\nBoda: {b}\nSimu: {bp}{pl}\nUkipokea, nijulishe.",
   msgPkg:"{c}, huu ndio mzigo wako #{no}, umefungwa tayari.",
   late:"imechelewa",inMin:"dk {n}",inHr:"saa {n}",due:"hadi",ex:"MFANO",orderNo:"Oda",
-  examplesCleared:"Mifano imefutwa. Karibu!",unknown:"Bila jina",each:"kila moja",profitNeg:"Unauza chini ya gharama"
+  examplesCleared:"Mifano imefutwa. Karibu!",unknown:"Bila jina",each:"kila moja",profitNeg:"Unauza chini ya gharama",
+  storage:"Hifadhi kwenye simu",storageLine:"Picha {n} · {mb} MB kwenye simu hii",
+  protYes:"Imelindwa. Simu haitafuta data ya Winga yenyewe.",protNo:"Haijalindwa. Simu ikijaa sana, inaweza kufuta data. Pakua nakala mara kwa mara."
  },
  en:{
   tabToday:"Today",tabCatalog:"Catalog",tabOrders:"Orders",tabSellers:"Sellers",
@@ -324,7 +326,9 @@ var STR = {
   msgOnWay:"{c}, your package #{no} is on the way.\nBoda: {b}\nPhone: {bp}{pl}\nLet me know when it arrives.",
   msgPkg:"{c}, here is your package #{no}, packed and ready.",
   late:"late",inMin:"{n} min",inHr:"{n} h",due:"by",ex:"EXAMPLE",orderNo:"Order",
-  examplesCleared:"Examples cleared. Welcome!",unknown:"No name",each:"each",profitNeg:"Selling below cost"
+  examplesCleared:"Examples cleared. Welcome!",unknown:"No name",each:"each",profitNeg:"Selling below cost",
+  storage:"Storage on this phone",storageLine:"{n} photos · {mb} MB on this phone",
+  protYes:"Protected. The phone won't clear Winga's data on its own.",protNo:"Not protected. If the phone runs very low on space it may clear data. Download a backup often."
  }
 };
 function t(k,v){var s=(STR[S.settings.lang]||STR.sw)[k];if(s==null)s=STR.sw[k]||k;if(v)for(var p in v)s=s.split("{"+p+"}").join(v[p]);return s;}
@@ -404,6 +408,21 @@ var UI={tab:"today",q:"",ofilter:"active"};
 var saveT=null;
 function save(){clearTimeout(saveT);saveT=setTimeout(function(){Store.put("kv","state",JSON.parse(JSON.stringify(S)));},150);}
 function putImg(id,data){IMG[id]=data;Store.put("img",id,data);}
+/* Remove photos nothing points to any more (deleted items, replaced photos). */
+function gcImages(){
+  var used={};
+  S.items.forEach(function(i){if(i.img)used[i.img]=1;});
+  S.orders.forEach(function(o){(o.lines||[]).forEach(function(l){if(l.img)used[l.img]=1;});if(o.pkgImg)used[o.pkgImg]=1;});
+  Object.keys(IMG).forEach(function(k){if(!used[k]){delete IMG[k];Store.del("img",k);}});
+}
+var PERSIST=null;
+async function askPersist(){try{if(navigator.storage&&navigator.storage.persist){PERSIST=await navigator.storage.persisted();if(!PERSIST)PERSIST=await navigator.storage.persist();}}catch(e){}}
+async function storageInfo(){
+  var n=Object.keys(IMG).length,bytes=0;
+  try{if(navigator.storage&&navigator.storage.estimate){var est=await navigator.storage.estimate();bytes=est.usage||0;}}catch(e){}
+  if(!bytes)Object.keys(IMG).forEach(function(k){bytes+=(IMG[k]||"").length*.75;});
+  return {n:n,mb:(bytes/1048576).toFixed(1)};
+}
 function seller(id){return S.sellers.find(function(s){return s.id===id;});}
 function item(id){return S.items.find(function(s){return s.id===id;});}
 function order(id){return S.orders.find(function(s){return s.id===id;});}
@@ -587,7 +606,7 @@ async function saveItem(){
   it.name=name;it.cost=cost;it.tag=$("#itTag").value.trim();it.sellerId=$("#itSeller").value;it.date=Date.now();delete it.ex;
   if(sheetState.imgData){var k="img_"+uid();putImg(k,sheetState.imgData);it.img=k;}
   if(!id)S.items.push(it);
-  save();closeSheet();toast(t("saved"));if(UI.tab!=="catalog")UI.tab="catalog";render();
+  gcImages();save();closeSheet();toast(t("saved"));if(UI.tab!=="catalog")UI.tab="catalog";render();
 }
 
 /* Seller */
@@ -780,8 +799,10 @@ function settingsSheet(first){
     '<div class="field"><label for="stLipaName">'+esc(t("lipaName"))+'</label><input class="input" id="stLipaName" value="'+esc(st.lipaName)+'"></div>'+
     '<div class="field"><label for="stNet">'+esc(t("network"))+'</label><input class="input" id="stNet" value="'+esc(st.network)+'" placeholder="Lipa Namba · M-Pesa / Mixx / Airtel"></div>';
   if(!first)b+='<div class="sun-rule"></div><h3>'+esc(t("backup"))+'</h3><div class="hint">'+esc(t("backupHint"))+'</div><div class="btns"><button class="btn ghost" data-act="exportB">'+esc(t("exportB"))+'</button><label class="btn ghost" for="impFile" style="cursor:pointer">'+esc(t("importB"))+'<input id="impFile" type="file" accept="application/json,.json" style="position:absolute;width:1px;height:1px;opacity:0"></label></div>'+
-    '<div class="hint">Winga v0.1 · data on this phone only</div>';
+    '<div class="sun-rule"></div><h3>'+esc(t("storage"))+'</h3><div class="small" id="stInfo">…</div><div class="hint">'+esc(PERSIST?t("protYes"):t("protNo"))+'</div>'+
+    '<div class="hint">Winga v0.2 · open source · data on this phone only</div>';
   openSheet(first?t("setupTitle"):t("settings"),b,'<button class="btn primary block" data-act="saveSettings">'+esc(first?t("start"):t("save"))+'</button>',{kind:"settings",first:first,noFocus:!first});
+  if(!first)storageInfo().then(function(i){var e=$("#stInfo");if(e)e.textContent=t("storageLine",{n:i.n,mb:i.mb});});
 }
 function saveSettings(){
   var st=S.settings;st.name=$("#stName").value.trim();st.lipa=$("#stLipa").value.trim();st.lipaName=$("#stLipaName").value.trim();st.network=$("#stNet").value.trim();
@@ -830,7 +851,7 @@ document.addEventListener("click",async function(e){
     case "newItem":itemSheet(null);break;
     case "openItem":itemSheet(id);break;
     case "saveItem":saveItem();break;
-    case "delItem":S.items=S.items.filter(function(i){return i.id!==id;});save();closeSheet();render();break;
+    case "delItem":S.items=S.items.filter(function(i){return i.id!==id;});gcImages();save();closeSheet();render();break;
     case "itemToOrder":var it=item(id);newOrder({line:{itemId:it.id,name:it.name,img:it.img,qty:1,cost:it.cost,price:suggest(it.cost)}});break;
     case "newSeller":sellerSheet(null);break;
     case "editSeller":sellerSheet(id);break;
@@ -902,7 +923,9 @@ document.addEventListener("focusin",function(e){if(e.target.matches(".money")&&!
   var saved=await Store.get("kv","state");
   if(saved&&saved.settings){S=Object.assign(S,saved);S.settings=Object.assign({lang:"sw",comm:15,seq:0},saved.settings);IMG=await Store.all("img");}
   else loadExamples();
+  gcImages();
   render();
+  askPersist();
   setInterval(function(){if(!sheetState)render();},60000);
   if("serviceWorker" in navigator){try{navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}}
   checkShareInbox();
