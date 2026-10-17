@@ -24,32 +24,35 @@ It works. But it lives in WhatsApp status that disappears in 24 hours, in a phon
 ## What it does
 
 <p align="center">
-  <img src="docs/screens.png" alt="Five screens: the customer shop, a product page, Boss's three-step setup, adding products from photos, and the product list with 7-day freshness." width="100%">
+  <img src="docs/screens.png" alt="Five screens: the customer shop, the basket with a note per item, the Boss home dashboard, adding a product with up to three photos, and the two-column product list." width="100%">
 </p>
 
 | Side | Screen | What it does |
 |---|---|---|
-| Mteja (customer) | **Duka** | Categories on top, search at the bottom where the thumb is, a three-step "how to order" strip on the first visit |
-| Mteja | **Bidhaa** | Photos, price (or "Uliza bei"), sizes, colours. **Agiza kupitia WhatsApp** opens the winga's chat with the product and link already written |
-| Boss | **Hatua 3** | Setup that guides itself: WhatsApp number, first three products, share the link |
-| Boss | **Ongeza picha** | Pick many photos from the gallery at once. Name, category, price, next. Several photos can become one product. Uploads run in the background |
-| Boss | **Bado ipo?** | Every product shows for 7 days, then hides itself. One tap keeps it another week. Sold out, hide, delete |
+| Mteja (customer) | **Duka** | Categories on top, search and basket at the bottom where the thumb is. A bulb icon opens **Jinsi ya kuagiza** (shown once on the first visit) |
+| Mteja | **Kapu** | Pick several products, add a note on each (size, colour, a question). **Tuma oda** sends one WhatsApp message with every item, note and link |
+| Boss | **Nyumbani** | "Una bidhaa N dukani", what's ending, the Niagize Kariakoo link (share / copy) and a live preview of the shop. A bulb icon holds the 3 setup steps |
+| Boss | **Ongeza bidhaa** | Pick photos from the gallery. Up to 3 photos, name, category, one price, description. **+ Bidhaa nyingine** or **Hifadhi, Maliza**. Uploads run in the background |
+| Boss | **Bidhaa zilizopo** | Two-column cards, Zote / Zilizofichwa, category filter, search. **Chagua** to edit many at once in a table (price, hide) or one in a form. Delete asks twice |
+| Boss | **Mipangilio** | Tap the profile at the top: language, light / dark / device theme, WhatsApp number, several payment numbers (M-PESA, Airtel Money, HaloPesa, Mixx by Yas, CRDB, NMB, Selcom), version and system status |
 
-The winga's inside price (**Bei yako ya ndani**) is stored in a private table no customer can ever read.
+Every product shows for 24 days, then hides itself. **Bado ipo** keeps it another 24 days.
+
+The database still has a private table for inside prices (`product_private`, admins only). The form no longer asks for it, by request; it can come back when margin tracking is needed.
 
 ## How it works
 
 ```mermaid
 flowchart LR
     G["200+ supplier<br/>WhatsApp groups"] -- "Save photo" --> PH["Boss's<br/>photo gallery"]
-    PH -- "Ongeza picha" --> B["Boss side<br/>name · price · cost"]
-    B --> DB[("Supabase<br/>products · private cost · photos")]
+    PH -- "Ongeza picha" --> B["Boss side<br/>photos · name · price"]
+    B --> DB[("Supabase<br/>products · photos")]
     DB --> S["Shop link<br/>browse · filter · search"]
     IG["Instagram /<br/>WhatsApp status"] -- "shared link" --> S
-    S -- "Agiza kupitia WhatsApp" --> W["Boss's WhatsApp<br/>bargain · pay · boda"]
+    S -- "Kapu → Tuma oda" --> W["Boss's WhatsApp<br/>confirm · pay · boda"]
 ```
 
-Today, ordering finishes on WhatsApp, where customers already are. In-app orders come only after the numbers show customers actually tap "order" (see [Roadmap](#roadmap)).
+Today, ordering finishes on WhatsApp, where customers already are. In-app orders come only after the numbers show customers actually tap "Tuma oda" (see [Roadmap](#roadmap)).
 
 ## Use it
 
@@ -58,7 +61,7 @@ Today, ordering finishes on WhatsApp, where customers already are. In-app orders
 **Boss (iPhone):**
 1. Open **https://pengo01.github.io/winga/admin/** in **Safari**, tap **Share → Add to Home Screen**.
 2. Open **Niagize Boss** from the Home Screen and sign in. Accounts are created by the Super Admin.
-3. Follow **Hatua 3**: WhatsApp number, three products, share the link.
+3. Tap the bulb for **Hatua 3**: WhatsApp number, three products, share the link.
 
 > On iPhone, "Share → app" from WhatsApp isn't possible for web apps (WebKit limitation), so photos come from the gallery: in WhatsApp, hold a photo → **Save**, then **Ongeza picha**.
 
@@ -82,7 +85,7 @@ Today, ordering finishes on WhatsApp, where customers already are. In-app orders
 | **Security** | Row Level Security: visitors read live products only; costs live in `product_private` (admins only); only admins upload or edit. See [`supabase/schema.sql`](supabase/schema.sql) |
 | **Photos** | Shrunk on the phone before upload: 1080 px full, 400 px thumbnail |
 | **Search** | Fuse.js fuzzy search, so "kiatu" finds "viatu" |
-| **Language** | Kiswahili first, English toggle |
+| **Language** | Kiswahili first (short, M-Pesa style), English switch. All words live in one table in `shared/core.js` |
 
 ```
 index.html             customer shop
@@ -100,7 +103,7 @@ The anon key in `shared/config.js` is public by design. Row Level Security decid
 Effort follows one rule: **metrics 50% · onboarding 40% · features 10%.**
 
 ```
- ✅ Shop + Boss side ──► ✅ Onboarding pass 1 ──► ▶ Metrics ──► In-app orders ──► Delivery · rating · reorder · alerts ──► WhatsApp forward bot · Instagram cards
+ ✅ Shop + Boss side ──► ✅ Onboarding pass 1 ──► ✅ Review #1 (basket, Swahili, themes) ──► ▶ Metrics ──► In-app orders ──► Delivery · rating · reorder · alerts ──► WhatsApp forward bot · Instagram cards
 ```
 
 - **Metrics next:** visits, product views, order taps, products added per day, days active.

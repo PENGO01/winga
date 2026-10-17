@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Niagize Kariakoo</title>
-<meta name="description" content="Bidhaa za Kariakoo, mlangoni kwako. Tafuta, agiza, pokea.">
+<meta name="description" content="Bidhaa za Kariakoo, mlangoni kwako. Chagua, tuma oda, pokea.">
 <meta name="theme-color" content="#12283C">
 <meta property="og:title" content="Niagize Kariakoo">
 <meta property="og:description" content="Bidhaa za Kariakoo, mlangoni kwako.">
@@ -18,18 +18,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared/style.css">
 <style>
-/* Shop: image-first grid. Categories on top for the eyes, search at the bottom for the thumb. */
-.app{max-width:760px;margin:0 auto;min-height:100vh;padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
-header.shop{background:var(--ink);color:#fff;position:relative;overflow:hidden;padding:18px var(--gr) 18px var(--gl);padding-top:calc(18px + env(safe-area-inset-top,0px))}
-header.shop::after{content:"";position:absolute;right:-60px;top:-80px;width:200px;height:200px;border-radius:50%;background:var(--jua);opacity:.2;pointer-events:none}
-header.shop .mark{font-size:26px}
-header.shop .tag{color:#C8D2DC;font-size:14px;margin-top:6px;max-width:34ch}
-header.shop .tools{position:absolute;right:var(--gr);top:calc(14px + env(safe-area-inset-top,0px));display:flex;gap:6px;z-index:1}
-header.shop .tools .seg{background:rgba(255,255,255,.12)}
-header.shop .tools .seg button{color:#C8D2DC}
-header.shop .tools .seg button[aria-pressed="true"]{background:#fff;color:var(--ink)}
+/* Shop: image-first grid. Categories on top for the eyes, search and basket at the bottom for the thumb. */
+.app{max-width:760px;margin:0 auto;min-height:100vh;padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+header.shop{background:var(--navy);color:var(--on-navy);position:relative;overflow:hidden;padding:16px var(--gr) 18px var(--gl);padding-top:calc(16px + env(safe-area-inset-top,0px))}
+header.shop::after{content:"";position:absolute;right:-60px;top:-80px;width:200px;height:200px;border-radius:50%;background:var(--jua);opacity:.18;pointer-events:none}
+header.shop .bar{display:flex;align-items:center;gap:8px;position:relative;z-index:1}
+header.shop .mark{font-size:24px;flex:1;min-width:0}
+header.shop .tag{color:var(--on-navy-dim);font-size:14px;margin-top:8px;max-width:34ch;position:relative;z-index:1}
+header.shop .langpick,header.shop .icon-btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:var(--on-navy)}
+header.shop .langpick svg{color:var(--on-navy-dim)}
 .cats{position:sticky;top:0;z-index:10;background:var(--paper);padding:10px var(--gr) 8px var(--gl);border-bottom:1px solid var(--line)}
-main{padding:14px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px}
+main{padding:0 var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px}
+main>.ptr+*{margin-top:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;text-align:left;padding:0;position:relative}
 .card .ph{position:relative;aspect-ratio:1/1;background:var(--sunk);max-width:100%}
@@ -38,28 +38,46 @@ main{padding:14px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 .card .n{font-weight:600;font-size:14px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .card .p{font-family:var(--num);font-weight:600;font-size:15.5px}
 .card .ask{font-size:12.5px;font-weight:600;color:var(--jua-text)}
-.badge{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 8px;border-radius:999px;background:var(--jua);color:var(--ink)}
+.badge{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 8px;border-radius:999px;background:var(--jua);color:#12283C}
+.incart{position:absolute;right:8px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center}
+.incart svg{width:15px;height:15px}
 .card.sold .ph img{filter:grayscale(1) opacity(.55)}
-.card.sold .badge{background:var(--ink);color:#fff}
-.searchbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:linear-gradient(to top,var(--paper) 70%,rgba(246,244,238,0));padding:14px var(--gr) calc(12px + env(safe-area-inset-bottom,0px)) var(--gl)}
-.searchbar .in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--ink);border-radius:16px;padding:0 14px;box-shadow:0 8px 24px rgba(18,40,60,.14)}
+.card.sold .badge{background:#12283C;color:#fff}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;background:linear-gradient(to top,var(--paper) 72%,transparent);padding:14px var(--gr) calc(12px + env(safe-area-inset-bottom,0px)) var(--gl)}
+.dock .w{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.cartbar{display:flex;align-items:center;gap:10px;background:var(--wa);color:#fff;border:0;border-radius:14px;padding:10px 12px 10px 14px;font-weight:600;box-shadow:var(--shadow);text-align:left}
+.cartbar svg{width:20px;height:20px;flex:none}
+.cartbar .grow{font-size:15px}
+.cartbar .tot{font-family:var(--num);font-size:14px;opacity:.95}
+.searchbar{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--ink);border-radius:16px;padding:0 14px;box-shadow:var(--shadow)}
 .searchbar input{border:0;outline:none;background:transparent;flex:1;min-width:0;padding:14px 0;font-size:16px}
 .searchbar svg{width:20px;height:20px;color:var(--dim);flex:none}
 .searchbar .cnt{font-size:12px;color:var(--faint);white-space:nowrap}
-.gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:0;border-radius:var(--r);background:var(--sunk);scrollbar-width:none}
+.gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:var(--r);background:var(--sunk);scrollbar-width:none}
 .gal::-webkit-scrollbar{display:none}
 .gal img{flex:0 0 100%;width:100%;aspect-ratio:1/1;object-fit:contain;scroll-snap-align:center;background:var(--sunk);max-width:100%}
 .dots{display:flex;gap:6px;justify-content:center}
 .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
 .dots i.on{background:var(--ink)}
 .pp{font-family:var(--num);font-weight:600;font-size:24px}
-.opts{display:flex;flex-wrap:wrap;gap:6px}
-.opt{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:13.5px}
-.how{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-.how ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.how li{display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.3}
-.how li b{width:26px;height:26px;border-radius:50%;background:var(--jua);display:grid;place-items:center;font-family:var(--num);font-size:13px}
-.how .x{align-self:flex-end;background:none;border:0;font-weight:600;font-size:13px;color:var(--dim);padding:4px 0}
+.note{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 12px}
+.note:focus-within{border-color:var(--ink)}
+.note svg{width:18px;height:18px;color:var(--dim);flex:none}
+.note input{border:0;outline:none;background:transparent;flex:1;min-width:0;padding:12px 0}
+.prow{display:flex;gap:8px}
+.prow .btn{flex:1}
+.howlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.howlist li{display:flex;align-items:center;gap:12px;font-weight:500}
+.howlist b{width:32px;height:32px;border-radius:50%;background:var(--jua);color:#12283C;display:grid;place-items:center;font-family:var(--num);flex:none}
+.citem{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.citem:first-child{border-top:0}
+.citem img{width:56px;height:56px;border-radius:10px;object-fit:cover;background:var(--sunk)}
+.citem .n{font-weight:600;line-height:1.3}
+.citem .p{font-family:var(--num);font-size:13.5px;color:var(--dim)}
+.citem .note{margin-top:6px;grid-column:2/4}
+.citem .note input{padding:9px 0;font-size:14px}
+.total{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;padding-top:10px;border-top:1px solid var(--line)}
+.total b{font-family:var(--num);font-size:18px}
 .foot{text-align:center;color:var(--faint);font-size:12px;padding:22px 0 8px}
 .foot b{color:var(--dim)}
 </style>
@@ -67,15 +85,14 @@ main{padding:14px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 <body>
 <div class="app">
   <header class="shop">
-    <div class="tools"><div class="seg" role="group" aria-label="Language"><button data-lang="sw">SW</button><button data-lang="en">EN</button></div></div>
-    <div class="mark" id="shopName"><i></i><span>Niagize Kariakoo</span></div>
+    <div class="bar"><div class="mark" id="shopName"><i></i><span>Niagize Kariakoo</span></div><span id="langSlot"></span><button class="icon-btn" data-how aria-label="Jinsi ya kuagiza" id="howBtn"></button></div>
     <div class="tag" id="shopTag"></div>
   </header>
   <div class="cats"><div class="chips" id="cats" role="group" aria-label="Categories"></div></div>
   <main id="main" aria-live="polite"></main>
   <div class="foot" id="foot"></div>
 </div>
-<div class="searchbar"><label class="in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" autocomplete="off" enterkeyhint="search"><span class="cnt" id="cnt"></span></label></div>
+<div class="dock"><div class="w"><div id="cartSlot"></div><label class="searchbar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" autocomplete="off" enterkeyhint="search"><span class="cnt" id="cnt"></span></label></div></div>
 <div id="sheetRoot"></div>
 <div id="toastRoot"></div>
 
@@ -87,14 +104,34 @@ main{padding:14px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 (function(){
 "use strict";
 var W=window.Winga,t=W.t,esc=W.esc,$=W.$;
-var S={shop:{},products:[],cat:"all",q:"",loaded:false},fuse=null;
-var IC={wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c.4 2 2.3 4.2 4.8 4.9l1.2-1.2 1.8.8-.3 1.6c-3.6.3-7.6-3.2-8-6.8l1.5-.4.9 1.8z"/></svg>',
- share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>',
- x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'};
+var S={shop:{},products:[],cat:"all",q:"",loaded:false,sent:false},fuse=null;
+var P='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">';
+var IC={
+ wa:P+'<path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c.4 2 2.3 4.2 4.8 4.9l1.2-1.2 1.8.8-.3 1.6c-3.6.3-7.6-3.2-8-6.8l1.5-.4.9 1.8z"/></svg>',
+ share:P+'<path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>',
+ x:P+'<path d="M6 6l12 12M18 6L6 18"/></svg>',
+ bulb:P+'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>',
+ cart:P+'<path d="M3 4h2l2.2 11h10.6L20 8H6.2"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>',
+ check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>',
+ pen:P+'<path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+ down:P+'<path d="M6 9l6 6 6-6"/></svg>'
+};
+var FLAG={sw:"🇹🇿",en:"🇬🇧"};
 
+/* ---------------- basket (this phone only) ---------------- */
+var CART=load();
+function load(){try{var c=JSON.parse(localStorage.getItem("winga.cart"));return Array.isArray(c)?c:[];}catch(e){return [];}}
+function persist(){try{localStorage.setItem("winga.cart",JSON.stringify(CART));}catch(e){}}
+function inCart(id){return CART.find(function(c){return c.id===id;});}
+function cartItems(){return CART.map(function(c){return {c:c,p:S.products.find(function(p){return p.id===c.id;})};}).filter(function(x){return x.p;});}
+function cartTotal(){var sum=0,ask=false;cartItems().forEach(function(x){if(x.p.price!=null)sum+=x.p.price;else ask=true;});return {sum:sum,ask:ask};}
+
+/* ---------------- render ---------------- */
 function catLabel(c){return t("cat_"+c);}
+function langPick(){return '<label class="langpick"><span class="fl">'+FLAG[W.lang]+'</span>'+(W.lang==="sw"?"SW":"ENG")+IC.down+'<select data-langsel aria-label="Lugha / Language"><option value="sw"'+(W.lang==="sw"?" selected":"")+'>🇹🇿 Kiswahili</option><option value="en"'+(W.lang==="en"?" selected":"")+'>🇬🇧 English</option></select></label>';}
 function renderChrome(){
-  document.querySelectorAll("[data-lang]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===W.lang));});
+  $("#langSlot").innerHTML=langPick();
+  $("#howBtn").innerHTML=IC.bulb;$("#howBtn").setAttribute("aria-label",t("how_title"));
   $("#shopName span").textContent=S.shop.name||"Niagize Kariakoo";
   $("#shopTag").textContent=S.shop.tagline||"";
   $("#q").placeholder=t("searchPh");
@@ -102,30 +139,29 @@ function renderChrome(){
   var used={};S.products.forEach(function(p){used[p.category]=1;});
   var cats=["all"].concat(W.CATS.filter(function(c){return used[c];}));
   $("#cats").innerHTML=cats.map(function(c){return '<button class="chip" data-cat="'+c+'" aria-pressed="'+(S.cat===c)+'">'+esc(c==="all"?t("all"):catLabel(c))+'</button>';}).join("");
+  var n=cartItems().length,tt=cartTotal();
+  $("#cartSlot").innerHTML=n?'<button class="cartbar" data-cart style="width:100%">'+IC.cart+'<span class="grow">'+esc(t("cart_n",{n:n}))+'</span><span class="tot">'+(tt.sum?"TSh "+W.money(tt.sum)+(tt.ask?"+":""):esc(t("askPrice")))+'</span></button>':'';
+  $("#foot").innerHTML='<b>'+esc(S.shop.name||"Niagize Kariakoo")+'</b> · '+esc(t("place"));
 }
-function howDismissed(){try{return localStorage.getItem("winga.how")==="1";}catch(e){return false;}}
-function renderFoot(){var ig=(S.shop.instagram||"").replace(/^@/,"");$("#foot").innerHTML='<b>'+esc(S.shop.name||"Niagize Kariakoo")+'</b> · '+esc(t("place"))+(ig?' · <a href="https://instagram.com/'+esc(encodeURIComponent(ig))+'" target="_blank" rel="noopener" style="color:inherit">@'+esc(ig)+'</a>':'');}
 function filtered(){
   var list=S.products;
   if(S.cat!=="all")list=list.filter(function(p){return p.category===S.cat;});
   var q=S.q.trim();
   if(q&&fuse){var ids={};fuse.search(q).forEach(function(r){ids[r.item.id]=r.score;});list=list.filter(function(p){return p.id in ids;}).sort(function(a,b){return ids[a.id]-ids[b.id];});}
-  else if(q){var ql=q.toLowerCase();list=list.filter(function(p){return [p.name,p.description,t("cat_"+p.category),p.colors,p.sizes].join(" ").toLowerCase().indexOf(ql)>=0;});}
-  // in stock first, newest first
+  else if(q){var ql=q.toLowerCase();list=list.filter(function(p){return [p.name,p.description,t("cat_"+p.category)].join(" ").toLowerCase().indexOf(ql)>=0;});}
   return list.slice().sort(function(a,b){return (a.status==="soldout")-(b.status==="soldout");});
 }
 function card(p){
   var sold=p.status==="soldout";
   var badge=sold?'<span class="badge">'+esc(t("soldout"))+'</span>':(W.isNew(p)?'<span class="badge">'+esc(t("isNew"))+'</span>':'');
-  return '<button class="card'+(sold?" sold":"")+'" data-open="'+esc(p.id)+'"><div class="ph"><img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.thumbUrl)+'">'+badge+'</div><div class="b"><div class="n">'+esc(p.name)+'</div>'+
+  return '<button class="card'+(sold?" sold":"")+'" data-open="'+esc(p.id)+'"><div class="ph"><img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.thumbUrl)+'">'+badge+(inCart(p.id)?'<span class="incart" aria-label="'+esc(t("inCart"))+'">'+IC.check+'</span>':'')+'</div><div class="b"><div class="n">'+esc(p.name)+'</div>'+
     (p.price!=null?'<div class="p">TSh '+W.money(p.price)+'</div>':'<div class="ask">'+esc(t("askPrice"))+'</div>')+'</div></button>';
 }
 function render(){
-  renderChrome();renderFoot();
-  var m=$("#main"),h="";
+  renderChrome();
+  var m=$("#main"),h='<div class="ptr" id="ptr"></div>';
   if(W.mode==="demo")h+='<div class="banner"><span class="pill sun">'+esc(t("example"))+'</span><span class="grow">'+esc(t("exampleBanner"))+'</span></div>';
   if(W.offline)h+='<div class="banner">'+esc(t("offline"))+'</div>';
-  if(S.loaded&&S.products.length&&!howDismissed())h+='<section class="how" aria-label="'+esc(t("howTitle"))+'"><div class="eyebrow">'+esc(t("howTitle"))+'</div><ol><li><b>1</b>'+esc(t("how1"))+'</li><li><b>2</b>'+esc(t("how2"))+'</li><li><b>3</b>'+esc(t("how3"))+'</li></ol><button class="x" data-howok>'+esc(t("gotIt"))+'</button></section>';
   if(!S.loaded){h+='<div class="grid">'+[0,1,2,3,4,5].map(function(){return '<div class="card"><div class="ph skeleton"></div><div class="b"><div class="skeleton" style="height:14px;border-radius:6px"></div><div class="skeleton" style="height:14px;width:60%;border-radius:6px"></div></div></div>';}).join("")+'</div>';m.innerHTML=h;return;}
   var list=filtered();
   $("#cnt").textContent=t("count",{n:list.length});
@@ -134,54 +170,103 @@ function render(){
   else h+='<div class="grid">'+list.map(card).join("")+'</div>';
   m.innerHTML=h;
 }
-function waLink(p){
-  var url=W.shopUrl()+"#p-"+p.id;
-  var text=t("waHello")+"\n*"+p.name+"*"+(p.price!=null?" · TSh "+W.money(p.price):"")+"\n"+url+"\n"+t("waAsk");
-  var n=W.waPhone(S.shop.whatsapp);
-  return "https://wa.me/"+(n||"")+"?text="+encodeURIComponent(text);
+function ready(){return !!W.waPhone(S.shop.whatsapp);}
+
+/* ---------------- sheets ---------------- */
+function sheet(inner,label,center){
+  var first=!$("#sheetRoot .scrim");
+  $("#sheetRoot").innerHTML='<div class="scrim'+(center?" center":"")+(first?" anim":"")+'" data-scrim><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(label)+'">'+inner+'</div></div>';
+}
+function hd(title){return '<div class="hd"><h2>'+esc(title)+'</h2><button class="iconbtn" data-close aria-label="'+esc(t("close"))+'">'+IC.x+'</button></div>';}
+function openHow(){
+  sheet(hd(t("how_title"))+'<div class="bd"><ol class="howlist">'+[1,2,3,4].map(function(n){return '<li><b>'+n+'</b>'+esc(t("how"+n))+'</li>';}).join("")+'</ol></div>'+
+   '<div class="ft"><button class="btn primary block" data-close>'+esc(t("how_ok"))+'</button></div>',t("how_title"),true);
+  try{localStorage.setItem("winga.how","1");}catch(e){}
 }
 function openProduct(id){
   var p=S.products.find(function(x){return x.id===id;});if(!p)return;
   try{history.replaceState(null,"","#p-"+id);}catch(e){}
+  var c=inCart(id),sold=p.status==="soldout";
   var imgs=p.imageUrls.length?p.imageUrls:[p.thumbUrl];
   var b='<div class="gal" id="gal">'+imgs.map(function(u){return '<img alt="'+esc(p.name)+'" src="'+esc(u)+'">';}).join("")+'</div>'+
     (imgs.length>1?'<div class="dots" id="dots">'+imgs.map(function(_,i){return '<i class="'+(i?"":"on")+'"></i>';}).join("")+'</div>':'')+
     '<div><div class="eyebrow">'+esc(catLabel(p.category))+' · '+esc(t("added",{a:W.ago(p.created_at)}))+'</div><h2 style="font-size:22px;margin-top:4px">'+esc(p.name)+'</h2></div>'+
     (p.price!=null?'<div class="pp">TSh '+W.money(p.price)+'</div>':'<div class="pill sun" style="align-self:flex-start;font-size:13px">'+esc(t("askPrice"))+'</div>')+
-    (p.status==="soldout"?'<div class="banner">'+esc(t("soldout"))+'</div>':'')+
-    (p.sizes?'<div class="stack" style="gap:6px"><div class="eyebrow">'+esc(t("sizes"))+'</div><div class="opts">'+p.sizes.split(/[,;]/).map(function(s){return s.trim()?'<span class="opt">'+esc(s.trim())+'</span>':"";}).join("")+'</div></div>':'')+
-    (p.colors?'<div class="stack" style="gap:6px"><div class="eyebrow">'+esc(t("colors"))+'</div><div class="opts">'+p.colors.split(/[,;]/).map(function(s){return s.trim()?'<span class="opt">'+esc(s.trim())+'</span>':"";}).join("")+'</div></div>':'')+
+    (sold?'<div class="banner">'+esc(t("soldout"))+'</div>':'')+
     (p.description?'<div class="stack" style="gap:6px"><div class="eyebrow">'+esc(t("details"))+'</div><div>'+esc(p.description)+'</div></div>':'');
-  var f=(p.status!=="soldout"&&!W.waPhone(S.shop.whatsapp)?'<div class="hint" style="text-align:center">'+esc(t("notReady"))+'</div>':'')+'<div class="btns"><button class="btn ghost" data-share="'+esc(p.id)+'">'+IC.share+esc(t("share"))+'</button>'+
-    (p.status==="soldout"?'<button class="btn green" disabled>'+IC.wa+esc(t("soldout"))+'</button>':!W.waPhone(S.shop.whatsapp)?'<button class="btn green" disabled title="'+esc(t("notReady"))+'">'+IC.wa+esc(t("orderWa"))+'</button>':'<a class="btn green" target="_blank" rel="noopener" data-ask="'+esc(p.id)+'" href="'+esc(waLink(p))+'">'+IC.wa+esc(t("orderWa"))+'</a>')+'</div>';
-  $("#sheetRoot").innerHTML='<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(p.name)+'"><div class="hd"><h2 class="small muted" style="font-family:var(--body);font-weight:500">'+esc(S.shop.name||"Niagize Kariakoo")+'</h2><button class="iconbtn" data-close aria-label="'+esc(t("close"))+'">'+IC.x+'</button></div><div class="bd">'+b+'</div><div class="ft">'+f+'</div></div></div>';
+  var f=sold?'<div class="prow"><button class="btn ghost" data-share="'+esc(p.id)+'">'+IC.share+esc(t("share"))+'</button></div>':
+    '<label class="note">'+IC.pen+'<input id="pnote" placeholder="'+esc(t("notePh"))+'" value="'+esc(c?c.note:"")+'" maxlength="140"></label>'+
+    '<div class="prow"><button class="icon-btn" style="width:46px;height:46px" data-share="'+esc(p.id)+'" aria-label="'+esc(t("share"))+'">'+IC.share+'</button>'+
+    (c?'<button class="btn ghost" data-uncart="'+esc(p.id)+'">'+esc(t("removeCart"))+'</button><button class="btn green" data-addcart="'+esc(p.id)+'">'+IC.check+esc(t("updateCart"))+'</button>'
+      :'<button class="btn green" data-addcart="'+esc(p.id)+'">'+IC.cart+esc(t("addCart"))+'</button>')+'</div>';
+  sheet('<div class="hd"><h2 class="small muted" style="font-family:var(--body);font-weight:500">'+esc(S.shop.name||"Niagize Kariakoo")+'</h2><button class="iconbtn" data-close aria-label="'+esc(t("close"))+'">'+IC.x+'</button></div><div class="bd">'+b+'</div><div class="ft">'+f+'</div>',p.name);
   var g=$("#gal");if(g&&imgs.length>1)g.addEventListener("scroll",function(){var i=Math.round(g.scrollLeft/g.clientWidth);document.querySelectorAll("#dots i").forEach(function(d,j){d.className=j===i?"on":"";});},{passive:true});
 }
+function orderText(items){
+  var lines=[t("wa_hello"),""],base=W.shopUrl(),tt=cartTotal();
+  items.forEach(function(x,i){
+    lines.push((i+1)+". *"+x.p.name+"* · "+(x.p.price!=null?"TSh "+W.money(x.p.price):t("askPrice")));
+    if(x.c.note&&x.c.note.trim())lines.push("   "+t("wa_note")+": "+x.c.note.trim());
+    lines.push("   "+base+"#p-"+x.p.id);
+  });
+  lines.push("");
+  if(tt.sum)lines.push(t("cart_total")+": TSh "+W.money(tt.sum)+(tt.ask?" "+t("cart_plus"):""));
+  lines.push(t("wa_end"));
+  return lines.join("\n");
+}
+function openCart(){
+  var items=cartItems(),tt=cartTotal();
+  var b=items.length?items.map(function(x){
+    return '<div class="citem"><img src="'+esc(x.p.thumbUrl)+'" alt=""><div><div class="n">'+esc(x.p.name)+'</div><div class="p">'+(x.p.price!=null?"TSh "+W.money(x.p.price):esc(t("askPrice")))+'</div></div>'+
+     '<button class="iconbtn" data-uncart="'+esc(x.p.id)+'" aria-label="'+esc(t("removeCart"))+'">'+IC.x+'</button>'+
+     '<label class="note">'+IC.pen+'<input data-cnote="'+esc(x.p.id)+'" placeholder="'+esc(t("notePh"))+'" value="'+esc(x.c.note||"")+'" maxlength="140"></label></div>';
+  }).join("")+'<div class="total"><span>'+esc(t("cart_total"))+'</span><b>'+(tt.sum?"TSh "+W.money(tt.sum):"–")+(tt.ask?' <span class="small muted" style="font-family:var(--body)">'+esc(t("cart_plus"))+'</span>':'')+'</b></div>':'<div class="empty">'+esc(t("cart_empty"))+'</div>';
+  var f=!items.length?'':!ready()?'<div class="hint" style="text-align:center">'+esc(t("notReady"))+'</div><button class="btn green block" disabled>'+IC.wa+esc(t("cart_send"))+'</button>':
+    '<a class="btn green block" data-send target="_blank" rel="noopener" href="#">'+IC.wa+esc(t("cart_send"))+'</a>'+
+    (S.sent?'<button class="btn ghost block" data-clear>'+esc(t("cart_sent"))+'</button>':'<button class="btn ghost sm" data-clear style="align-self:center">'+esc(t("cart_clear"))+'</button>');
+  sheet(hd(t("cart_title"))+'<div class="bd">'+b+'</div>'+(f?'<div class="ft">'+f+'</div>':''),t("cart_title"));
+}
 function closeSheet(){$("#sheetRoot").innerHTML="";try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}}
+function saveNotes(){document.querySelectorAll("[data-cnote]").forEach(function(el){var c=inCart(el.dataset.cnote);if(c)c.note=el.value;});persist();}
 
+/* ---------------- events ---------------- */
 document.addEventListener("click",function(e){
-  var el=e.target.closest("[data-open],[data-cat],[data-lang],[data-close],[data-scrim],[data-share],[data-ask],[data-howok]");if(!el)return;
-  if("howok" in el.dataset){try{localStorage.setItem("winga.how","1");}catch(_){}render();return;}
-  if(el.dataset.open){openProduct(el.dataset.open);return;}
-  if(el.dataset.cat){S.cat=el.dataset.cat;render();return;}
-  if(el.dataset.lang){W.setLang(el.dataset.lang);render();return;}
-  if("close" in el.dataset){closeSheet();return;}
-  if("scrim" in el.dataset){if(e.target===el)closeSheet();return;}
-  if(el.dataset.ask){W.db.ask(el.dataset.ask);return;}
-  if(el.dataset.share){var p=S.products.find(function(x){return x.id===el.dataset.share;});var url=W.shopUrl()+"#p-"+p.id;
-    if(navigator.share){navigator.share({title:p.name,text:p.name+(p.price!=null?" · TSh "+W.money(p.price):""),url:url}).catch(function(){});}else W.copy(url);}
+  var el=e.target.closest("[data-open],[data-cat],[data-close],[data-scrim],[data-share],[data-how],[data-cart],[data-addcart],[data-uncart],[data-send],[data-clear]");if(!el)return;
+  var d=el.dataset;
+  if(d.open){openProduct(d.open);return;}
+  if(d.cat){S.cat=d.cat;render();return;}
+  if("close" in d){saveNotes();closeSheet();return;}
+  if("scrim" in d){if(e.target===el){saveNotes();closeSheet();}return;}
+  if("how" in d){openHow();return;}
+  if("cart" in d){S.sent=false;openCart();return;}
+  if(d.addcart){var note=($("#pnote")||{}).value||"",c=inCart(d.addcart);if(c)c.note=note;else CART.push({id:d.addcart,note:note});persist();W.toast(t("inCart"));closeSheet();render();return;}
+  if(d.uncart){var inSheet=!!$("[data-cnote]");saveNotes();CART=CART.filter(function(x){return x.id!==d.uncart;});persist();render();if(inSheet&&CART.length)openCart();else closeSheet();return;}
+  if("send" in d){saveNotes();var items=cartItems();el.href="https://wa.me/"+W.waPhone(S.shop.whatsapp)+"?text="+encodeURIComponent(orderText(items));items.forEach(function(x){W.db.ask(x.p.id);});S.sent=true;setTimeout(openCart,400);return;}
+  if("clear" in d){CART=[];persist();closeSheet();render();return;}
+  if(d.share){var p=S.products.find(function(x){return x.id===d.share;});var url=W.shopUrl()+"#p-"+p.id;
+    if(navigator.share){navigator.share({title:p.name,text:t("wa_one")+" "+p.name+(p.price!=null?" · TSh "+W.money(p.price):""),url:url}).catch(function(){});}else W.copy(url);}
 });
+document.addEventListener("change",function(e){if("langsel" in e.target.dataset){W.setLang(e.target.value);render();}});
+document.addEventListener("input",function(e){if(e.target.dataset.cnote!==undefined){var c=inCart(e.target.dataset.cnote);if(c){c.note=e.target.value;persist();}}});
 $("#q").addEventListener("input",function(e){S.q=e.target.value;render();});
-document.addEventListener("keydown",function(e){if(e.key==="Escape")closeSheet();});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){saveNotes();closeSheet();}});
 
-(async function boot(){
-  render();
+/* ---------------- boot ---------------- */
+async function fetchAll(){
   try{S.shop=await W.db.getShop()||{};}catch(e){S.shop={};}
   try{S.products=await W.db.listProducts(false);}catch(e){S.products=[];}
   S.loaded=true;
-  fuse=window.Fuse?new Fuse(S.products.map(function(p){return Object.assign({catLabel:t("cat_"+p.category)},p);}),{keys:["name","description","catLabel","colors","sizes"],threshold:.38,ignoreLocation:true}):null;
+  fuse=window.Fuse?new Fuse(S.products.map(function(p){return Object.assign({catLabel:t("cat_"+p.category)},p);}),{keys:["name","description","catLabel"],threshold:.38,ignoreLocation:true}):null;
   render();
-  var m=location.hash.match(/^#p-(.+)$/);if(m)openProduct(m[1]);
+}
+var ptrProxy={get classList(){return ($("#ptr")||document.createElement("i")).classList;},set innerHTML(v){var p=$("#ptr");if(p)p.innerHTML=v;}};
+W.pullToRefresh(ptrProxy,fetchAll);
+(async function boot(){
+  render();
+  await fetchAll();
+  var m=location.hash.match(/^#p-(.+)$/);
+  if(m)openProduct(m[1]);
+  else{var seen=false;try{seen=localStorage.getItem("winga.how")==="1";}catch(e){}if(!seen&&S.products.length)openHow();}
   if("serviceWorker" in navigator){try{navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}}
 })();
 })();

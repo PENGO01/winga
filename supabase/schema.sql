@@ -11,7 +11,8 @@ create table if not exists public.shop (
   lipa        text,               -- Lipa Namba
   lipa_name   text,
   network     text,
-  instagram   text,
+  instagram   text,                          -- unused since review #1 (kept for old data)
+  payments    jsonb not null default '[]'::jsonb, -- [{provider, number, name}]: M-PESA, AIRTEL MONEY, HALOPESA, MIXX BY YAS, CRDB, NMB, SELCOM
   updated_at  timestamptz default now()
 );
 insert into public.shop (id) values (1) on conflict (id) do nothing;
@@ -35,7 +36,7 @@ grant execute on function public.is_admin() to authenticated;
 create table if not exists public.products (
   id            uuid primary key default gen_random_uuid(),
   created_at    timestamptz not null default now(),
-  refreshed_at  timestamptz not null default now(),  -- shown for 7 days after this
+  refreshed_at  timestamptz not null default now(),  -- shown for 24 days after this
   name          text not null,
   description   text,
   category      text not null default 'nyingine',
@@ -75,7 +76,7 @@ create policy admins_self on public.admins for select to authenticated using (us
 drop policy if exists products_public_read on public.products;
 drop policy if exists products_admin_all   on public.products;
 create policy products_public_read on public.products for select
-  using (status <> 'hidden' and refreshed_at > now() - interval '7 days');
+  using (status <> 'hidden' and refreshed_at > now() - interval '24 days');
 create policy products_admin_all on public.products for all to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
