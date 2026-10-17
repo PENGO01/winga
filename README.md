@@ -31,12 +31,14 @@ It works. But it lives in WhatsApp status that disappears in 24 hours, in a phon
 |---|---|---|
 | Mteja (customer) | **Duka** | Categories on top, search and basket at the bottom where the thumb is. A bulb icon opens **Jinsi ya kuagiza** (shown once on the first visit) |
 | Mteja | **Kapu** | Pick several products, add a note on each (size, colour, a question). **Tuma oda** sends one WhatsApp message with every item, note and link |
-| Boss | **Nyumbani** | "Una bidhaa N dukani", what's ending, the Niagize Kariakoo link (share / copy) and a live preview of the shop. A bulb icon holds the 3 setup steps |
+| Boss | **Nyumbani** | "Una bidhaa N dukani", Selcom-style icon tiles (add, products, archive, shop, share, assistants, start here, settings), the shop link with share / copy icons and a live preview |
 | Boss | **Ongeza bidhaa** | Pick photos from the gallery. Up to 3 photos, name, category, one price, description. **+ Bidhaa nyingine** or **Hifadhi, Maliza**. Uploads run in the background |
 | Boss | **Bidhaa zilizopo** | Two-column cards, Zote / Zilizofichwa, category filter, search. **Chagua** to edit many at once in a table (price, hide) or one in a form. Delete asks twice |
-| Boss | **Mipangilio** | Tap the profile at the top: language, light / dark / device theme, WhatsApp number, several payment numbers (M-PESA, Airtel Money, HaloPesa, Mixx by Yas, CRDB, NMB, Selcom), version and system status |
+| Boss | **Profile** | Round buttons on top switch theme (moon / sun) and language (SW / EN). The avatar opens a menu: shop settings, WhatsApp number, several payment numbers (M-PESA, Airtel Money, HaloPesa, Mixx by Yas, CRDB, NMB, Selcom), assistants, version and a status dot |
 
-Every product shows for 24 days, then hides itself. **Bado ipo** keeps it another 24 days.
+Every product shows for 60 days, then moves to **Archive** by itself (a daily database job). **Rudisha dukani** brings it back for another 60 days.
+
+A shop can have **assistants (wasaidizi)**: the Boss adds them in the app; they can add and edit products but can't delete or change settings.
 
 The database still has a private table for inside prices (`product_private`, admins only). The form no longer asks for it, by request; it can come back when margin tracking is needed.
 

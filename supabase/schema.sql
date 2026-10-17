@@ -36,7 +36,7 @@ grant execute on function public.is_admin() to authenticated;
 create table if not exists public.products (
   id            uuid primary key default gen_random_uuid(),
   created_at    timestamptz not null default now(),
-  refreshed_at  timestamptz not null default now(),  -- shown for 24 days after this
+  refreshed_at  timestamptz not null default now(),  -- shown for 60 days after this, then archived
   name          text not null,
   description   text,
   category      text not null default 'nyingine',
@@ -76,7 +76,7 @@ create policy admins_self on public.admins for select to authenticated using (us
 drop policy if exists products_public_read on public.products;
 drop policy if exists products_admin_all   on public.products;
 create policy products_public_read on public.products for select
-  using (status <> 'hidden' and refreshed_at > now() - interval '24 days');
+  using (status <> 'hidden' and refreshed_at > now() - interval '60 days');
 create policy products_admin_all on public.products for all to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
@@ -105,3 +105,38 @@ create policy products_img_delete on storage.objects for delete to authenticated
 -- ---------- admins ----------
 -- Create the accounts in Dashboard → Authentication → Users → Add user (tick "Auto Confirm User"), then:
 -- insert into public.admins (user_id, name, role) select id, 'Boss Deus', 'boss' from auth.users where email = 'boss@example.com';
+
+-- ---------- v1.2: auto-archive after 60 days, assistants ----------
+-- roles: super_admin + boss are owners; assistant can add and edit products only
+alter table public.admins drop constraint if exists admins_role_check;
+alter table public.admins add constraint admins_role_check check (role in ('super_admin','boss','assistant'));
+alter table public.products drop constraint if exists products_status_check;
+alter table public.products add constraint products_status_check check (status in ('active','soldout','hidden','archived'));
+create or replace function public.is_owner() returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.admins where user_id = auth.uid() and role in ('super_admin','boss'));
+$$;
+create or replace function public.is_super() returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.admins where user_id = auth.uid() and role = 'super_admin');
+$$;
+revoke execute on function public.is_owner() from anon, public;
+revoke execute on function public.is_super() from anon, public;
+alter policy products_admin_all on public.products using (public.is_owner()) with check (public.is_owner());
+create policy products_team_read on public.products for select to authenticated using (public.is_admin());
+create policy products_team_add on public.products for insert to authenticated with check (public.is_admin());
+create policy products_team_edit on public.products for update to authenticated using (public.is_admin()) with check (public.is_admin());
+alter policy private_admin_all on public.product_private using (public.is_owner()) with check (public.is_owner());
+alter policy shop_write on public.shop using (public.is_owner()) with check (public.is_owner());
+create policy admins_owner_manage on public.admins for all to authenticated
+  using (public.is_super() or (public.is_owner() and role = 'assistant'))
+  with check (public.is_super() or (public.is_owner() and role = 'assistant'));
+alter policy products_public_read on public.products using (status in ('active','soldout') and refreshed_at > now() - interval '60 days');
+alter table public.products alter column created_by set default auth.uid();
+create or replace function public.archive_stale() returns integer language sql security definer set search_path = public as $$
+  with a as (update public.products set status = 'archived'
+             where status in ('active','soldout') and refreshed_at < now() - interval '60 days' returning 1)
+  select count(*)::int from a;
+$$;
+revoke execute on function public.archive_stale() from anon, authenticated, public;
+create extension if not exists pg_cron;
+select cron.schedule('niagize-archive-stale', '15 0 * * *', 'select public.archive_stale()');
+-- assistants are created by the edge function supabase/functions/team (owner-only, uses the service key server-side)

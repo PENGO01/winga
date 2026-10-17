@@ -4,181 +4,162 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "1.1.0";
+W.VERSION = "1.2.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 
 /* ---------------- words ----------------
    One row per text: [key, screen, Kiswahili, English].
    Style: short, M-Pesa / Selcom tone. The same table feeds the translation Excel. */
 W.STRINGS = [
- // common
- ["loading","Common","Inapakia…","Loading…"],
+ // common (icons replace: close, back, share, copy, pull-to-refresh text, loading text)
  ["save","Common","Hifadhi","Save"],
- ["cancel","Common","Ghairi","Cancel"],
- ["close","Common","Funga","Close"],
  ["back","Common","Rudi","Back"],
  ["del","Common","Futa","Delete"],
- ["yesDel","Common","Ndiyo, futa","Yes, delete"],
- ["no","Common","Hapana","No"],
  ["copied","Common","Imenakiliwa","Copied"],
  ["saved","Common","Imehifadhiwa","Saved"],
  ["share","Common","Shiriki","Share"],
  ["copy","Common","Nakili","Copy"],
- ["error","Common","Imeshindikana. Jaribu tena.","Failed. Try again."],
- ["pull","Common","Vuta kusasisha","Pull to refresh"],
- ["release","Common","Achia kusasisha","Release to refresh"],
- ["refreshing","Common","Inasasisha…","Refreshing…"],
- ["example","Common","MFANO","EXAMPLE"],
- ["offline","Common","Hakuna mtandao. Unaona bidhaa za mwisho.","Offline. Showing the last products."],
- ["place","Common","Kariakoo, Dar es Salaam","Kariakoo, Dar es Salaam"],
+ ["error","Common","Imeshindikana. Tafadhali jaribu tena","Failed. Please try again"],
+ ["offline","Common","Offline. Unaona bidhaa za mara ya mwisho","Offline. Showing the last products"],
  ["count","Common","Bidhaa {n}","{n} products"],
  ["askPrice","Common","Uliza bei","Ask price"],
- ["soldout","Common","Imeisha","Sold out"],
- ["isNew","Common","Mpya","New"],
- ["added","Common","Imewekwa {a}","Added {a}"],
+ ["soldout","Common","Mzigo umetuishia","Sold out"],
+ ["isNew","Common","Mzigo mpya","New"],
+ ["added","Common","Imetunzwa {a}","Added {a}"],
  ["agoToday","Common","leo","today"],
  ["agoYday","Common","jana","yesterday"],
  ["agoDays","Common","siku {n} zilizopita","{n} days ago"],
  ["all","Common","Zote","All"],
- ["category","Common","Aina","Category"],
  ["cat_viatu","Categories","Viatu","Shoes"],
  ["cat_nguo","Categories","Nguo","Clothes"],
  ["cat_electronics","Categories","Simu & Elektroniki","Phones & Electronics"],
  ["cat_urembo","Categories","Urembo","Beauty"],
- ["cat_nyumbani","Categories","Nyumbani","Home"],
+ ["cat_nyumbani","Categories","Vifaa vya nyumbani","Home"],
  ["cat_begi","Categories","Mabegi","Bags"],
  ["cat_watoto","Categories","Watoto","Kids"],
  ["cat_nyingine","Categories","Nyingine","Other"],
  // customer shop
  ["searchPh","Shop","Tafuta bidhaa upendayo","Search products you like"],
- ["emptyShop","Shop","Bidhaa mpya zinakuja.","New products coming."],
- ["noMatch","Shop","Hakuna bidhaa hiyo. Jaribu neno jingine.","No match. Try another word."],
- ["exampleBanner","Shop","Duka la mfano.","Example shop."],
- ["notReady","Shop","Duka linaandaliwa. Oda zitafunguliwa hivi punde.","Shop being set up. Orders open soon."],
- ["details","Product","Maelezo","Details"],
- ["addCart","Product","Weka kwenye kapu","Add to basket"],
- ["updateCart","Product","Badili maelezo","Update note"],
- ["inCart","Product","Iko kwenye kapu","In your basket"],
- ["removeCart","Product","Ondoa","Remove"],
- ["notePh","Product","Saizi, rangi au swali lako","Size, colour or your question"],
- ["how_title","How to order","Jinsi ya kuagiza","How to order"],
+ ["emptyShop","Shop","Kaa mkao wa kula, bidhaa mpya zinakuja","Get ready, new products are coming"],
+ ["noMatch","Shop","Pole, hatuna bidhaa hiyo! Jaribu neno tofauti","Sorry, we don't have that! Try another word"],
+ ["addCart","Product","Ongeza kwenye kapu","Add to basket"],
+ ["inCart","Product","Ipo kwenye kapu","In your basket"],
+ ["notePh","Product","Maelekezo zaidi… Size, rangi au swali?","More details… Size, colour or a question?"],
+ ["how_title","How to order","Namna ya kuagiza bidhaa","How to order"],
  ["how1","How to order","Chagua bidhaa upendayo","Pick what you like"],
- ["how2","How to order","Bonyeza Tuma oda","Tap Send order"],
+ ["how2","How to order","Tuma oda","Send the order"],
  ["how3","How to order","Tutahakiki oda yako","We confirm your order"],
- ["how4","How to order","Lipia, tukuletee mlangoni","Pay, we deliver to your door"],
+ ["how4","How to order","Lipia, tukuletee hadi mlangoni","Pay, we deliver to your door"],
  ["how_ok","How to order","Sawa","OK"],
  ["cart_title","Basket","Kapu lako","Your basket"],
  ["cart_n","Basket","Kapu · {n}","Basket · {n}"],
  ["cart_send","Basket","Tuma oda","Send order"],
  ["cart_total","Basket","Jumla","Total"],
- ["cart_plus","Basket","+ bei za kuuliza","+ prices to confirm"],
- ["cart_empty","Basket","Kapu ni tupu.","Your basket is empty."],
- ["cart_clear","Basket","Safisha kapu","Clear basket"],
- ["cart_sent","Basket","Umetuma? Safisha kapu","Sent? Clear basket"],
+ ["cart_empty","Basket","Hakuna bidhaa","No products"],
+ ["cart_clear","Basket","Futa, anza upya","Clear, start again"],
+ ["cart_sent","Basket","Umeshaweka oda? Safisha kapu","Order sent? Clear basket"],
  ["wa_hello","Basket (WhatsApp)","Habari! Naomba oda hii:","Hello! I'd like to order:"],
- ["wa_note","Basket (WhatsApp)","Maelezo","Note"],
+ ["wa_note","Basket (WhatsApp)","Maelekezo","Note"],
  ["wa_end","Basket (WhatsApp)","Naomba uthibitishe bei na upatikanaji.","Please confirm price and availability."],
- ["wa_one","Product share","Angalia hii Niagize Kariakoo:","Look at this on Niagize Kariakoo:"],
+ ["wa_one","Product share","Mdau… Tuagize Kariakoo, ni chap na salama","Order from Kariakoo, fast and safe"],
  // boss: sign in
+ ["boss_app","Boss · Sign in","Niagize mdau","Niagize Boss"],
  ["login","Boss · Sign in","Ingia","Sign in"],
  ["email","Boss · Sign in","Barua pepe","Email"],
  ["password","Boss · Sign in","Neno la siri","Password"],
- ["showPw","Boss · Sign in","Onyesha","Show"],
- ["hidePw","Boss · Sign in","Ficha","Hide"],
- ["wrongLogin","Boss · Sign in","Barua pepe au neno la siri si sahihi.","Wrong email or password."],
- ["accountHint","Boss · Sign in","Akaunti hutolewa na Super Admin.","Accounts come from the Super Admin."],
- ["notAdmin","Boss · Sign in","Akaunti hii haina ruhusa ya duka. Wasiliana na Super Admin.","This account can't manage the shop. Contact the Super Admin."],
- ["signOut","Boss · Settings","Toka","Log out"],
- // boss: navigation
+ ["wrongLogin","Boss · Sign in","Taarifa ulizoweka sio sahihi, angalia na ujaribu tena","Wrong details, check and try again"],
+ ["accountHint","Boss · Sign in","Omba akaunti kwa Super Admin","Ask the Super Admin for an account"],
+ ["notAdmin","Boss · Sign in","Akaunti hii haina ruhusa, wasiliana na Super Admin","This account has no access, contact the Super Admin"],
+ // boss: menu and home
  ["home","Boss · Menu","Nyumbani","Home"],
  ["addPhotos","Boss · Menu","Ongeza picha","Add photos"],
  ["products","Boss · Menu","Bidhaa","Products"],
- // boss: home
  ["haveN","Boss · Home","Una bidhaa","You have"],
  ["inShopN","Boss · Home","dukani","in the shop"],
- ["t_ending","Boss · Home","Zinaisha karibu","Ending soon"],
+ ["t_ending","Boss · Home","Bado zipo?","Still there?"],
  ["t_hidden","Boss · Home","Zimefichwa","Hidden"],
- ["t_asked","Boss · Home","Zimeulizwa","Asked"],
- ["st_live","Boss · Home","Hai","Live"],
- ["st_pilot","Boss · Home","Majaribio","Pilot"],
+ ["t_asked","Boss · Home","Zinazoulizwa","Asked"],
+ ["st_live","Boss · Home","Live","Live"],
+ ["st_pilot","Boss · Home","Test","Test"],
  ["st_down","Boss · Home","Haipatikani","Down"],
- ["link_title","Boss · Home","Niagize Kariakoo link","Niagize Kariakoo link"],
+ ["link_title","Boss · Home","Link yangu","My link"],
  ["check_shop","Boss · Home","Cheki duka lako","See your shop"],
- ["shareText","Boss · Home","Bidhaa za Kariakoo, mlangoni kwako. Chagua hapa:","Kariakoo products, to your door. Pick here:"],
- ["boss_app","Boss · Sign in","Niagize Boss","Niagize Boss"],
- ["stillHere","Boss · Home","Bado ipo","Still here"],
- ["markSold","Boss · Home","Imeisha","Sold out"],
- ["mostAsked","Boss · Home","Zinazoulizwa zaidi","Most asked"],
- ["emptyHome","Boss · Home","Anza kwa kuongeza picha.","Start by adding photos."],
- ["steps_title","Boss · Discover","Hatua 3 za kufungua duka","3 steps to open the shop"],
- ["step1","Boss · Discover","Weka namba ya WhatsApp","Add WhatsApp number"],
- ["step1s","Boss · Discover","Oda zitakufikia hapa.","Orders reach you here."],
+ ["shareText","Boss · Home","Niagize Kariakoo, ni chap na salama","Niagize Kariakoo, fast and safe"],
+ ["stillHere","Boss · Home","Bado upo?","Still here"],
+ ["markSold","Boss · Home","Mzigo umetuishia","Sold out"],
+ ["emptyHome","Boss · Home","Ongeza picha ya bidhaa zako","Add photos of your products"],
+ ["q_add","Boss · Home tiles","Ongeza bidhaa","Add product"],
+ ["q_list","Boss · Home tiles","Bidhaa zangu","My products"],
+ ["q_archive","Boss · Home tiles","Archive","Archive"],
+ ["q_shop","Boss · Home tiles","Cheki duka","See shop"],
+ ["q_share","Boss · Home tiles","Share link","Share link"],
+ ["q_team","Boss · Home tiles","Wasaidizi","Assistants"],
+ ["q_steps","Boss · Home tiles","Anza hapa","Start here"],
+ ["q_settings","Boss · Home tiles","Mipangilio","Settings"],
+ ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
+ ["step1","Boss · Discover","Namba ya WhatsApp","WhatsApp number"],
+ ["step1s","Boss · Discover","Oda zitakufikia hapa","Orders reach you here"],
  ["step2","Boss · Discover","Weka bidhaa 3","Add 3 products"],
- ["step2s","Boss · Discover","WhatsApp: shika picha → Save, kisha Ongeza picha.","WhatsApp: hold a photo → Save, then Add photos."],
- ["step3","Boss · Discover","Shiriki link ya duka","Share the shop link"],
- ["step3s","Boss · Discover","Status ya WhatsApp au Instagram.","WhatsApp status or Instagram."],
- ["stepsDone","Boss · Discover","Duka liko tayari.","The shop is ready."],
+ ["step2s","Boss · Discover","Ongeza picha ya bidhaa zako","Add photos of your products"],
+ ["step3","Boss · Discover","Share link ya duka kwa wateja","Share the shop link with customers"],
+ ["step3s","Boss · Discover","Au share link kwenye status na kurasa zako mtandaoni","Or on your status and social pages"],
+ ["stepsDone","Boss · Discover","Duka liko tayari","The shop is ready"],
  ["go","Boss · Discover","Anza","Start"],
  // boss: add product
  ["add_title","Boss · Add product","Ongeza bidhaa","Add product"],
  ["add_saved","Boss · Add product","{n} zimehifadhiwa","{n} saved"],
- ["photo_add","Boss · Add product","Picha","Photo"],
- ["photos_max","Boss · Add product","Hadi picha 3","Up to 3 photos"],
+ ["photos_max","Boss · Add product","Picha zaidi?","More photos?"],
  ["name_ph","Boss · Add product","Jina la bidhaa","Product name"],
  ["price_ph","Boss · Add product","Bei","Price"],
- ["price_hint","Boss · Add product","Acha wazi kwa 'Uliza bei'","Leave empty for 'Ask price'"],
- ["desc_ph","Boss · Add product","Maelezo: saizi, rangi, ubora…","Details: size, colour, quality…"],
+ ["ask_check","Boss · Add product","Acha mteja aulize bei","Let the customer ask the price"],
+ ["desc_ph","Boss · Add product","Maelezo ya ziada (size, rangi, material)","More details (size, colour, material)"],
  ["add_more","Boss · Add product","Bidhaa nyingine","Another product"],
  ["add_done","Boss · Add product","Hifadhi, Maliza","Save & finish"],
- ["need_photo","Boss · Add product","Weka picha angalau moja.","Add at least one photo."],
- ["need_name","Boss · Add product","Weka jina la bidhaa.","Add a product name."],
- ["uploading","Boss · Add product","Inapakia {i}/{n}","Uploading {i}/{n}"],
+ ["need_photo","Boss · Add product","Ongeza angalau picha moja","Add at least one photo"],
+ ["need_name","Boss · Add product","Jina la bidhaa","Product name"],
  ["upload_fail","Boss · Add product","Imeshindwa kupakia: {x}","Upload failed: {x}"],
- ["savedN","Boss · Add product","Bidhaa {n} zimeingia dukani","{n} products are live"],
- // boss: product list
+ ["savedN","Boss · Add product","Bidhaa {n} zimeongezwa","{n} products added"],
+ // boss: products
  ["list_title","Boss · Products","Bidhaa zilizopo","Your products"],
  ["f_hidden","Boss · Products","Zilizofichwa","Hidden"],
- ["filter_title","Boss · Products","Chuja kwa aina","Filter by category"],
- ["select","Boss · Products","Chagua","Select"],
- ["selectedN","Boss · Products","{n} zimechaguliwa","{n} selected"],
- ["edit_sel","Boss · Products","Badili","Edit"],
- ["daysLeft","Boss · Products","Siku {n}","{n} days"],
- ["lastDay","Boss · Products","Mwisho leo","Last day"],
- ["expired","Boss · Products","Muda umeisha","Expired"],
+ ["f_archive","Boss · Products","Archive","Archive"],
  ["hidden","Boss · Products","Imefichwa","Hidden"],
- ["asks","Boss · Products","Maombi {n}","{n} asks"],
- ["noProducts","Boss · Products","Hakuna bidhaa hapa.","No products here."],
+ ["archived","Boss · Products","Archive","Archived"],
+ ["noProducts","Boss · Products","Hakuna bidhaa","No products"],
+ ["unarchive","Boss · Products","Rudisha dukani","Back to shop"],
+ ["unarchived","Boss · Products","Imerudi dukani kwa siku 60","Back in the shop for 60 days"],
+ ["archive_hint","Boss · Products","Bidhaa huenda Archive yenyewe baada ya siku 60","Products move to Archive by themselves after 60 days"],
  // boss: edit
- ["edit_title","Boss · Edit","Badili taarifa za bidhaa","Edit product details"],
+ ["edit_title","Boss · Edit","Badili taarifa","Edit details"],
  ["bulk_title","Boss · Edit","Badili bidhaa {n}","Edit {n} products"],
  ["col_item","Boss · Edit","Bidhaa","Product"],
  ["col_price","Boss · Edit","Bei","Price"],
- ["col_hide","Boss · Edit","Ficha","Hide"],
- ["confirmDel1","Boss · Edit","Futa bidhaa {n}?","Delete {n} products?"],
- ["confirmDel2","Boss · Edit","Una uhakika? Haiwezi kurudishwa.","Are you sure? This can't be undone."],
- ["refreshed","Boss · Edit","Itaonekana siku 24 zaidi","Shown 24 more days"],
- ["show","Boss · Edit","Onyesha","Show"],
- ["hide","Boss · Edit","Ficha","Hide"],
- // boss: settings
- ["set_title","Boss · Settings","Mipangilio","Settings"],
- ["role_super_admin","Boss · Settings","Super Admin","Super Admin"],
- ["role_boss","Boss · Settings","Boss","Boss"],
- ["lang","Boss · Settings","Lugha","Language"],
- ["theme","Boss · Settings","Mwonekano","Appearance"],
- ["th_device","Boss · Settings","Kifaa","Device"],
- ["th_light","Boss · Settings","Mwanga","Light"],
- ["th_dark","Boss · Settings","Giza","Dark"],
+ ["confirmDel2","Boss · Edit","Je, una uhakika unataka kufuta bidhaa?","Are you sure you want to delete?"],
+ ["yesDel","Boss · Edit","Ndiyo, futa","Yes, delete"],
+ // boss: profile and settings
+ ["role_super_admin","Boss · Profile","Super Admin","Super Admin"],
+ ["role_boss","Boss · Profile","Boss","Boss"],
+ ["role_assistant","Boss · Profile","Msaidizi","Assistant"],
+ ["shop_settings","Boss · Profile","Mipangilio ya duka","Shop settings"],
+ ["shop_settings_s","Boss · Profile","WhatsApp na namba za malipo","WhatsApp and payment numbers"],
+ ["team","Boss · Profile","Wasaidizi","Assistants"],
+ ["team_s","Boss · Profile","Wanaoweza kuongeza bidhaa","People who can add products"],
+ ["signOut","Boss · Profile","Kutoka","Log out"],
  ["wa_label","Boss · Settings","Namba ya WhatsApp","WhatsApp number"],
  ["pay_title","Boss · Settings","Namba za malipo","Payment numbers"],
- ["pay_add","Boss · Settings","Ongeza namba","Add number"],
- ["pay_num","Boss · Settings","Namba","Number"],
+ ["pay_num","Boss · Settings","Namba ya malipo","Payment number"],
  ["pay_name","Boss · Settings","Jina la akaunti","Account name"],
- ["waFirst","Boss · Settings","Weka namba ya WhatsApp kwanza.","Add the WhatsApp number first."],
- ["system","Boss · Settings","Mfumo","System"],
- ["version","Boss · Settings","Toleo","Version"],
- ["updated","Boss · Settings","Imesasishwa","Updated"],
- ["status","Boss · Settings","Hali","Status"],
- ["reset_demo","Boss · Settings","Rudisha mifano","Reset examples"]
+ ["reset_demo","Boss · Settings","Reset examples","Reset examples"],
+ // boss: assistants
+ ["team_add","Boss · Assistants","Ongeza msaidizi","Add assistant"],
+ ["team_name","Boss · Assistants","Jina","Name"],
+ ["team_pw","Boss · Assistants","Neno la siri (herufi 8+)","Password (8+ characters)"],
+ ["team_note","Boss · Assistants","Msaidizi anaweza kuongeza na kubadili bidhaa. Hawezi kufuta, wala kubadili mipangilio.","An assistant can add and edit products. They can't delete or change settings."],
+ ["team_added","Boss · Assistants","Msaidizi ameongezwa. Mpe barua pepe na neno la siri","Assistant added. Give them the email and password"],
+ ["team_removed","Boss · Assistants","Msaidizi ameondolewa","Assistant removed"],
+ ["team_exists","Boss · Assistants","Barua pepe hii tayari ina akaunti","This email already has an account"],
+ ["team_confirm","Boss · Assistants","Ondoa {x}?","Remove {x}?"],
+ ["you","Boss · Assistants","Wewe","You"]
 ];
 var STR = { sw: {}, en: {} };
 W.STRINGS.forEach(function (r) { STR.sw[r[0]] = r[2]; STR.en[r[0]] = r[3]; });
@@ -191,13 +172,14 @@ W.setLang = function (l) { W.lang = l; ls("winga.lang", l); document.documentEle
 W.t = function (k, v) { var s = (STR[W.lang] || STR.sw)[k]; if (s == null) s = STR.sw[k] || k; if (v) for (var p in v) s = s.split("{" + p + "}").join(v[p]); return s; };
 document.documentElement.lang = W.lang;
 
-/* ---------------- theme: device / light / dark ---------------- */
-W.theme = ls("winga.theme") || "device";
-W.applyTheme = function (th) {
-  W.theme = th; ls("winga.theme", th);
-  if (th === "device") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", th);
-};
-W.applyTheme(W.theme);
+/* ---------------- theme: light / dark (first visit follows the phone) ---------------- */
+W.isDark = function () { var th = ls("winga.theme"); if (th === "dark" || th === "light") return th === "dark"; try { return matchMedia("(prefers-color-scheme: dark)").matches; } catch (e) { return false; } };
+W.applyTheme = function (th) { if (th) ls("winga.theme", th); document.documentElement.setAttribute("data-theme", W.isDark() ? "dark" : "light"); };
+W.toggleTheme = function () { W.applyTheme(W.isDark() ? "light" : "dark"); };
+W.applyTheme();
+
+/* sun loader: a sun rising over the horizon, rays turning. Used instead of "loading" words */
+W.SUN = '<span class="sunload" role="img" aria-label="…"><svg viewBox="0 0 48 48" fill="none" stroke-linecap="round"><g class="rays" stroke="var(--jua)" stroke-width="3"><path d="M24 6v6M24 36v6M6 24h6M36 24h6M11.3 11.3l4.2 4.2M32.5 32.5l4.2 4.2M11.3 36.7l4.2-4.2M32.5 15.5l4.2-4.2"/></g><circle cx="24" cy="24" r="7.5" fill="var(--jua)"/></svg></span>';
 
 /* ---------------- helpers ---------------- */
 W.$ = function (s, r) { return (r || document).querySelector(s); };
@@ -205,7 +187,7 @@ W.esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, fun
 W.money = function (n) { return Math.round(+n || 0).toLocaleString("en-US"); };
 W.parseMoney = function (v) { if (v == null || v === "") return null; var s = String(v).toLowerCase().replace(/tsh|tzs|sh/g, "").trim(); var k = /k$/.test(s); s = s.replace(/[^0-9.]/g, ""); if (!s) return null; var n = parseFloat(s); return Math.round(k ? n * 1000 : n); };
 W.waPhone = function (p) { var d = String(p || "").replace(/\D/g, ""); if (!d) return ""; if (d[0] === "0") d = "255" + d.slice(1); else if (d.length === 9) d = "255" + d; return d; };
-W.DAY = 864e5; W.SHOW_DAYS = 24;
+W.DAY = 864e5; W.SHOW_DAYS = 60;   // products move to Archive after 60 days
 W.daysLeft = function (p) { return W.SHOW_DAYS - Math.floor((Date.now() - new Date(p.refreshed_at).getTime()) / W.DAY); };
 W.ago = function (iso) { var d = Math.floor((Date.now() - new Date(iso).getTime()) / W.DAY); return d <= 0 ? W.t("agoToday") : d === 1 ? W.t("agoYday") : W.t("agoDays", { n: d }); };
 W.isNew = function (p) { return Date.now() - new Date(p.created_at).getTime() < W.DAY; };
@@ -214,13 +196,12 @@ W.copy = function (text, fallbackEl) { return navigator.clipboard.writeText(text
 W.uid = function () { return (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)); };
 W.standalone = function () { try { return navigator.standalone === true || matchMedia("(display-mode: standalone)").matches; } catch (e) { return false; } };
 
-/* pull to refresh: drag down at the top of the page, release to run onRefresh() */
+/* pull to refresh: drag down at the top of the page; the sun shows, release to reload */
 W.pullToRefresh = function (indicator, onRefresh) {
   var startY = null, dist = 0, busy = false;
-  function label(txt, spin) { indicator.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg>' + W.esc(txt); indicator.classList.toggle("spin", !!spin); }
   addEventListener("touchstart", function (e) { if (busy || window.scrollY > 0 || document.querySelector(".scrim")) { startY = null; return; } startY = e.touches[0].clientY; dist = 0; }, { passive: true });
-  addEventListener("touchmove", function (e) { if (startY == null) return; dist = e.touches[0].clientY - startY; if (dist > 12) { indicator.classList.add("on"); label(dist > 70 ? W.t("release") : W.t("pull")); } }, { passive: true });
-  addEventListener("touchend", async function () { if (startY == null) return; startY = null; if (dist > 70) { busy = true; label(W.t("refreshing"), true); try { await onRefresh(); } catch (e) {} busy = false; } indicator.classList.remove("on", "spin"); dist = 0; });
+  addEventListener("touchmove", function (e) { if (startY == null) return; dist = e.touches[0].clientY - startY; if (dist > 12) { indicator.innerHTML = W.SUN; indicator.classList.add("on"); indicator.classList.toggle("ready", dist > 70); } }, { passive: true });
+  addEventListener("touchend", async function () { if (startY == null) return; startY = null; if (dist > 70) { busy = true; indicator.classList.add("spin"); try { await onRefresh(); } catch (e) {} busy = false; } indicator.classList.remove("on", "spin", "ready"); dist = 0; });
 };
 
 /* ---------------- photos ---------------- */
@@ -247,6 +228,7 @@ var live = !!(C.url && C.anonKey && window.supabase && window.supabase.createCli
 var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, storageKey: "winga.auth" } }) : null;
 W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";   // "production" shows green, "pilot" yellow
+W.frame = function (st) { document.documentElement.setAttribute("data-stage", st || (live && W.stage === "production" ? "live" : "pilot")); };
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 function decorate(p) {
   p.thumbUrl = pub((p.thumbs && p.thumbs[0]) || (p.images && p.images[0]));
@@ -259,7 +241,7 @@ function cacheSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } ca
 function cacheGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 
 /* --- example mode store --- */
-var DEMO_KEY = "winga.demo.v2";
+var DEMO_KEY = "winga.demo.v3";
 function demoLoad() { var d = cacheGet(DEMO_KEY); if (d && d.products) return d; d = demoSeed(); demoSave(d); return d; }
 function demoSave(d) { try { localStorage.setItem(DEMO_KEY, JSON.stringify(d)); } catch (e) { W._demoMem = d; } }
 function demoGet() { return W._demoMem || demoLoad(); }
@@ -284,8 +266,8 @@ function demoSeed() {
     ["Tecno Spark 20, 128GB", "electronics", null, "Mpya kwenye boksi.", now - 2*D, "#D3DEE8", "#1C3A54", "phone"],
     ["Chaja Type-C 33W", "electronics", 12000, "Inachaji haraka.", now - 3*36e5, "#E7ECEF", "#3B4A57", "phone"],
     ["Kitenge cha Kongo, doti 1", "nguo", 22000, "Pamba halisi.", now - 3*D, "#F6C85F", "#1F6F5C", "cloth"],
-    ["Begi la mgongoni", "begi", 27000, "Laptop ya 15\" inaingia.", now - 21*D, "#B9C9B0", "#2F4B32", "bag"],
-    ["Mafuta ya nywele, 250ml", "urembo", 9500, "", now - 10*D, "#F2D7E0", "#8A2E4E", "bottle"],
+    ["Begi la mgongoni", "begi", 27000, "Laptop ya 15\" inaingia.", now - 55*D, "#B9C9B0", "#2F4B32", "bag"],
+    ["Mafuta ya nywele, 250ml", "urembo", 9500, "", now - 64*D, "#F2D7E0", "#8A2E4E", "bottle"],
     ["Shati la kitambaa", "nguo", 25000, "M, L, XL.", now - 6*D, "#E4EEF7", "#1F5C8F", "cloth"]
   ];
   return { shop: { name: "Niagize Kariakoo", tagline: "Bidhaa za Kariakoo, mlangoni kwako", whatsapp: "255700000000", payments: [{ provider: "M-PESA", number: "5512 3487", name: "BOSS DEUS" }] },
@@ -324,11 +306,14 @@ W.db = {
   async listProducts(admin) {
     if (!live) {
       var all = demoGet().products.map(function (p) { return decorate(Object.assign({}, p)); });
-      return admin ? all : all.filter(function (p) { return p.status !== "hidden" && W.daysLeft(p) > 0; });
+      all.forEach(function (p) { if ((p.status === "active" || p.status === "soldout") && W.daysLeft(p) <= 0) p.status = "archived"; });
+      return admin ? all : all.filter(function (p) { return (p.status === "active" || p.status === "soldout"); });
     }
     var r = await sb.from("products").select("id,created_at,refreshed_at,name,description,category,price,images,thumbs,status,asks").order("refreshed_at", { ascending: false }).limit(1000);
     if (r.error) { var c = !admin && cacheGet("winga.cache.products"); if (c) { W.offline = true; return c.map(decorate); } throw r.error; }
     if (!admin) cacheSet("winga.cache.products", r.data);
+    // the database archives once a day; show it straight away here too
+    r.data.forEach(function (p) { if ((p.status === "active" || p.status === "soldout") && W.daysLeft(p) <= 0) p.status = "archived"; });
     return r.data.map(decorate);
   },
   async createProduct(data, photos) {
@@ -352,6 +337,19 @@ W.db = {
     return { images: images, thumbs: thumbs };
   },
   refresh(id) { return this.updateProduct(id, { refreshed_at: new Date().toISOString(), status: "active" }); },
+  unarchive(id) { return this.refresh(id); },
+  /* team: list / add / remove assistants (server function checks the caller is an owner) */
+  async team(action, body) {
+    if (!live) {
+      var d = demoGet(); d.team = d.team || [{ user_id: "demo-boss", name: "Boss Deus", role: "boss", email: "boss@mfano" }];
+      if (action === "add") { if (d.team.some(function (m) { return m.email === body.email; })) throw new Error("exists"); d.team.push({ user_id: W.uid(), name: body.name, role: "assistant", email: body.email }); }
+      if (action === "remove") d.team = d.team.filter(function (m) { return m.user_id !== body.user_id; });
+      demoSave(d); return { ok: true, team: d.team };
+    }
+    var r = await sb.functions.invoke("team", { body: Object.assign({ action: action }, body || {}) });
+    if (r.error) { var msg = "error"; try { msg = (await r.error.context.json()).error || msg; } catch (e) {} throw new Error(msg); }
+    return r.data;
+  },
   async deleteProduct(p) {
     if (!live) { var d = demoGet(); d.products = d.products.filter(function (x) { return x.id !== p.id; }); demoSave(d); return; }
     var paths = (p.images || []).concat(p.thumbs || []).filter(isStored);
@@ -365,10 +363,10 @@ W.db = {
   async signIn(email, password) { if (!live) return { demo: true }; var r = await sb.auth.signInWithPassword({ email: email, password: password }); if (r.error) throw r.error; return r.data.session; },
   async isAdmin() { if (!live) return true; var r = await sb.rpc("is_admin"); return !r.error && r.data === true; },
   async me() {
-    if (!live) return { name: "Boss Deus", role: "boss", email: "boss@mfano" };
+    if (!live) return { id: "demo-boss", name: "Boss Deus", role: ls("winga.demoRole") || "boss", email: "boss@mfano" };
     var s = await sb.auth.getSession(), u = s.data.session && s.data.session.user; if (!u) return null;
     var r = await sb.from("admins").select("name,role").eq("user_id", u.id).maybeSingle();
-    return { name: (r.data && r.data.name) || u.email.split("@")[0], role: (r.data && r.data.role) || "boss", email: u.email };
+    return { id: u.id, name: (r.data && r.data.name) || u.email.split("@")[0], role: (r.data && r.data.role) || "assistant", email: u.email };
   },
   async signOut() { if (live) await sb.auth.signOut(); }
 };
