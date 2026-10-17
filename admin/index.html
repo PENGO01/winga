@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Winga Boss Deus</title>
+<meta name="theme-color" content="#12283C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Winga Boss Deus">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/style.css">
+<style>
+/* Boss Deus's side: one thumb, three tabs, one big yellow "add photos" button. */
+.app{max-width:640px;margin:0 auto;min-height:100vh;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+header.top{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff;padding:12px var(--gr) 12px var(--gl);padding-top:calc(12px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:10px;overflow:hidden}
+header.top::after{content:"";position:absolute;right:-40px;top:-50px;width:130px;height:130px;border-radius:50%;background:var(--jua);opacity:.18;pointer-events:none}
+header.top .mark{font-size:22px}
+header.top .sub{margin-left:auto;font-size:12px;color:#B8C4CF;text-align:right;line-height:1.25;position:relative;z-index:1}
+.upq{font-family:var(--num);font-size:12px;background:var(--jua);color:var(--ink);border-radius:999px;padding:3px 9px;font-weight:600}
+main{padding:14px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px;text-align:left}
+.tile b{display:block;font-family:var(--num);font-size:24px;font-weight:600}
+.tile span{font-size:12px;color:var(--dim)}
+.tile.warn b{color:var(--amber)}
+.linkcard{background:var(--ink);color:#fff;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.linkcard::after{content:"";position:absolute;right:-40px;bottom:-70px;width:150px;height:150px;border-radius:50%;background:var(--jua);opacity:.16}
+.linkcard .u{font-family:var(--num);font-size:13px;color:#DCE3EA;overflow-wrap:anywhere;user-select:all}
+.linkcard .btns{position:relative;z-index:1}
+.linkcard .btn.ghost{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff}
+.list{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.li{display:flex;gap:12px;align-items:center;padding:11px 12px;border:0;border-top:1px solid var(--line);background:transparent;text-align:left;width:100%}
+.li:first-child{border-top:0}
+.li .t{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li .s{font-size:12.5px;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:3px}
+.thumb{width:54px;height:54px;border-radius:10px;object-fit:cover;background:var(--sunk);flex:none}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 12px}
+.search input{border:0;background:transparent;padding:11px 0;flex:1;min-width:0;outline:none}
+.search svg{width:18px;height:18px;color:var(--faint);flex:none}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+nav.tabs .in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 96px 1fr;align-items:center;height:68px}
+nav.tabs button.tab{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:500;color:var(--faint);height:100%}
+nav.tabs button.tab svg{width:22px;height:22px}
+nav.tabs button.tab[aria-current="page"]{color:var(--ink);font-weight:600}
+.fab{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:-30px;cursor:pointer}
+.fab span.c{width:62px;height:62px;border-radius:50%;background:var(--jua);border:4px solid var(--card);box-shadow:0 6px 18px rgba(18,40,60,.22);display:grid;place-items:center;color:var(--ink)}
+.fab span.c svg{width:26px;height:26px}
+.fab span.l{font-size:11px;font-weight:600;color:var(--ink)}
+.fab input,.fileHidden{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+/* intake */
+.big{width:100%;aspect-ratio:1/1;object-fit:contain;background:var(--sunk);border-radius:var(--r);max-width:100%}
+.strip{display:flex;gap:8px;overflow-x:auto}
+.strip img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;border:2px solid transparent}
+.strip img.cur{border-color:var(--jua)}
+.prog{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--jua)}
+.catpick{display:flex;flex-wrap:wrap;gap:6px}
+.confirm{background:var(--red-soft);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:24px var(--gr) 24px var(--gl);max-width:440px;margin:0 auto}
+.login .mark{font-size:34px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div id="sheetRoot"></div>
+<div id="toastRoot"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../shared/config.js"></script>
+<script src="../shared/core.js"></script>
+<script>
+(function(){
+"use strict";
+var W=window.Winga,t=W.t,esc=W.esc,$=W.$;
+var S={shop:{},products:[],tab:"home",filter:"all",q:"",email:"",stage:"boot",lastCat:"viatu"};
+var Q={jobs:[],done:0,total:0,running:false}; // upload queue
+var IC={
+ home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>',
+ grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>',
+ gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>',
+ cam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+ x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+ search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>'
+};
+
+/* ---------------- shell ---------------- */
+function shell(inner){
+  var up=Q.total&&Q.done<Q.total?'<span class="upq">'+esc(t("uploading",{i:Q.done+1,n:Q.total}))+'</span>':"";
+  return '<header class="top"><div class="mark"><i></i>Winga</div><div class="sub">'+(up||esc(t("admin"))+"<br>"+esc(S.shop.name||""))+'</div></header><main>'+inner+'</main>'+
+  '<nav class="tabs" aria-label="Main"><div class="in">'+
+   tabBtn("home",IC.home,t("home"))+tabBtn("products",IC.grid,t("products"))+
+   '<label class="fab" for="pick"><span class="c">'+IC.cam+'</span><span class="l">'+esc(t("addPhotos"))+'</span><input id="pick" type="file" accept="image/*" multiple></label>'+
+   tabBtn("settings",IC.gear,t("settings"))+'</div></nav>';
+}
+function tabBtn(id,icon,label){return '<button class="tab" data-tab="'+id+'" aria-current="'+(S.tab===id?"page":"false")+'">'+icon+'<span>'+esc(label)+'</span></button>';}
+function render(){
+  var a=$("#app");
+  if(S.stage==="login"){a.innerHTML=vLogin();return;}
+  if(S.stage==="denied"){a.innerHTML='<div class="login"><div class="mark"><i></i>Winga</div><div class="banner">'+esc(t("notAdmin"))+'</div><button class="btn ghost" data-act="signout">'+esc(t("signOut"))+'</button></div>';return;}
+  if(S.stage!=="ready"){a.innerHTML='<div class="login"><div class="mark"><i></i>Winga</div><div class="muted">'+esc(t("loading"))+'</div></div>';return;}
+  a.innerHTML=shell(({home:vHome,products:vProducts,settings:vSettings}[S.tab]||vHome)());
+  var q=$("#aq");if(q&&S.focusQ){q.focus();q.setSelectionRange(q.value.length,q.value.length);S.focusQ=false;}
+}
+function vLogin(){
+  return '<form class="login" data-form="login"><div class="mark"><i></i>Winga</div><div><h1>'+esc(t("admin"))+'</h1><div class="muted" style="margin-top:4px">'+esc(t("login"))+'</div></div>'+
+   '<div class="field"><label for="em">'+esc(t("email"))+'</label><input class="input" id="em" type="email" autocomplete="username" inputmode="email" required value="'+esc(S.email)+'"></div>'+
+   '<div class="field"><label for="pw">'+esc(t("password"))+'</label><input class="input" id="pw" type="password" autocomplete="current-password" required></div>'+
+   '<button class="btn primary block" type="submit">'+esc(t("login"))+'</button><div class="hint">'+esc(t("installHint"))+'</div></form>';
+}
+
+/* ---------------- views ---------------- */
+function liveP(p){return p.status!=="hidden"&&W.daysLeft(p)>0;}
+function daysPill(p){
+  if(p.status==="hidden")return '<span class="pill ok">'+esc(t("hidden"))+'</span>';
+  var d=W.daysLeft(p);
+  if(d<=0)return '<span class="pill late">'+esc(t("expired"))+'</span>';
+  if(d===1)return '<span class="pill soon">'+esc(t("lastDay"))+'</span>';
+  return '<span class="pill '+(d<=2?"soon":"ok")+'">'+esc(t("daysLeft",{n:d}))+'</span>';
+}
+function row(p){
+  return '<button class="li" data-edit="'+esc(p.id)+'"><img class="thumb" alt="" src="'+esc(p.thumbUrl)+'"><div class="grow"><div class="t">'+esc(p.name)+'</div>'+
+   '<div class="s"><span class="num" style="color:var(--ink);font-weight:600">'+(p.price!=null?W.money(p.price):esc(t("askPrice")))+'</span>'+(p.cost!=null?'<span class="num" style="background:var(--private);padding:0 5px;border-radius:5px">'+W.money(p.cost)+'</span>':'')+
+   (p.status==="soldout"?'<span class="pill late">'+esc(t("soldout"))+'</span>':daysPill(p))+(p.asks?'<span>'+esc(t("asks",{n:p.asks}))+'</span>':'')+'</div></div></button>';
+}
+function vHome(){
+  var live=S.products.filter(function(p){return liveP(p)&&p.status!=="soldout";}),ending=live.filter(function(p){return W.daysLeft(p)<=2&&p.status!=="soldout";}),sold=S.products.filter(function(p){return p.status==="soldout";});
+  var url=W.shopUrl();
+  var h='<div class="eyebrow">'+esc(W.mode==="live"?t("modeLive"):t("modeDemo"))+'</div>';
+  h+='<div class="tiles"><button class="tile" data-goto="all"><b>'+live.length+'</b><span>'+esc(t("live"))+'</span></button><button class="tile warn" data-goto="ending"><b>'+ending.length+'</b><span>'+esc(t("endingSoon"))+'</span></button><button class="tile" data-goto="sold"><b>'+sold.length+'</b><span>'+esc(t("soldoutN"))+'</span></button></div>';
+  h+='<section class="linkcard"><div class="eyebrow" style="color:#B8C4CF">'+esc(t("shopLink"))+'</div><div class="u" id="shopUrl">'+esc(url)+'</div><div class="btns"><button class="btn ghost sm" data-act="copyLink">'+esc(t("copyLink"))+'</button><a class="btn sun sm" href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(t("openShop"))+'</a></div></section>';
+  if(ending.length){h+='<h2>'+esc(t("endingSoon"))+'</h2><div class="list">'+ending.map(function(p){
+    return '<div class="li"><img class="thumb" alt="" src="'+esc(p.thumbUrl)+'"><div class="grow"><div class="t">'+esc(p.name)+'</div><div class="s">'+daysPill(p)+'</div></div><button class="btn sm sun" data-still="'+esc(p.id)+'">'+esc(t("stillHere"))+'</button><button class="btn sm ghost" data-sold="'+esc(p.id)+'">'+esc(t("markSold"))+'</button></div>';}).join("")+'</div>';}
+  var top=S.products.filter(function(p){return p.asks>0;}).sort(function(a,b){return b.asks-a.asks;}).slice(0,5);
+  if(top.length)h+='<h2>'+esc(W.lang==="en"?"Most asked":"Zinazoulizwa zaidi")+'</h2><div class="list">'+top.map(row).join("")+'</div>';
+  if(!S.products.length)h+='<div class="empty"><h3 style="color:var(--ink);margin-bottom:6px">'+esc(t("addPhotos"))+'</h3>'+esc(t("addPhotosS"))+'</div>';
+  return h;
+}
+function vProducts(){
+  var F=[["all",t("filterAll")],["ending",t("filterEnding")],["sold",t("filterSold")],["hidden",t("filterHidden")]];
+  var q=S.q.trim().toLowerCase();
+  var list=S.products.filter(function(p){
+    if(S.filter==="ending"&&!(liveP(p)&&W.daysLeft(p)<=2))return false;
+    if(S.filter==="sold"&&p.status!=="soldout")return false;
+    if(S.filter==="hidden"&&!(p.status==="hidden"||W.daysLeft(p)<=0))return false;
+    return !q||(p.name+" "+t("cat_"+p.category)).toLowerCase().indexOf(q)>=0;
+  });
+  return '<h1>'+esc(t("products"))+'</h1><label class="search">'+IC.search+'<input id="aq" type="search" value="'+esc(S.q)+'" placeholder="'+esc(t("searchPh"))+'" autocomplete="off"></label>'+
+   '<div class="chips" role="group">'+F.map(function(f){return '<button class="chip" data-filter="'+f[0]+'" aria-pressed="'+(S.filter===f[0])+'">'+esc(f[1])+'</button>';}).join("")+'</div>'+
+   (list.length?'<div class="list">'+list.map(row).join("")+'</div>':'<div class="empty">'+esc(t("noMatch"))+'</div>');
+}
+function vSettings(){
+  var s=S.shop;function f(id,k,ph,type){return '<div class="field"><label for="'+id+'">'+esc(t(k))+'</label><input class="input'+(type==="num"?" money":"")+'" id="'+id+'" value="'+esc(s[id.slice(2)]||"")+'" placeholder="'+esc(ph||"")+'"'+(type==="num"?' inputmode="tel"':'')+'></div>';}
+  return '<h1>'+esc(t("settings"))+'</h1>'+
+   '<div class="field"><label>'+esc(t("language"))+'</label><div class="seg" role="group"><button data-lang="sw" aria-pressed="'+(W.lang!=="en")+'">Kiswahili</button><button data-lang="en" aria-pressed="'+(W.lang==="en")+'">English</button></div></div>'+
+   f("s_name","shopName","Duka la Boss Deus")+f("s_tagline","tagline","Bidhaa za Kariakoo, mlangoni kwako")+f("s_whatsapp","whatsapp","0712 345 678","num")+
+   '<div class="two">'+f("s_lipa","lipa","5512 3487","num")+f("s_network","network","Mtandao wowote")+'</div>'+f("s_lipa_name","lipaName","BOSS DEUS KARIAKOO")+f("s_instagram","instagram","@duka_la_bossdeus")+
+   '<button class="btn primary block" data-act="saveShop">'+esc(t("save"))+'</button>'+
+   '<div class="hint">'+esc(W.mode==="live"?t("modeLive"):t("modeDemo"))+'</div>'+
+   (W.mode==="live"?'<button class="btn ghost block" data-act="signout">'+esc(t("signOut"))+'</button>':'<button class="btn ghost block" data-act="resetDemo">Reset mifano</button>');
+}
+
+/* ---------------- sheets ---------------- */
+var sheet=null;
+function openSheet(title,body,foot,ctx){sheet=ctx||{};$("#sheetRoot").innerHTML='<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(title)+'"><div class="hd"><h2>'+esc(title)+'</h2><button class="iconbtn" data-act="closeSheet" aria-label="'+esc(t("close"))+'">'+IC.x+'</button></div><div class="bd">'+body+'</div>'+(foot?'<div class="ft">'+foot+'</div>':'')+'</div></div>';}
+function closeSheet(){$("#sheetRoot").innerHTML="";sheet=null;}
+function fields(p){
+  p=p||{};var cat=p.category||S.lastCat;
+  return '<div class="field"><label for="f_name">'+esc(t("name"))+'</label><input class="input" id="f_name" value="'+esc(p.name||"")+'" autocomplete="off" enterkeyhint="next"></div>'+
+   '<div class="field"><label>'+esc(t("category"))+'</label><div class="catpick" role="group">'+W.CATS.map(function(c){return '<button type="button" class="chip" data-pickcat="'+c+'" aria-pressed="'+(c===cat)+'">'+esc(t("cat_"+c))+'</button>';}).join("")+'</div></div>'+
+   '<div class="two"><div class="field"><label for="f_price">'+esc(t("price"))+'</label><input class="input money" id="f_price" inputmode="numeric" value="'+(p.price!=null?W.money(p.price):"")+'" placeholder="35,000"></div>'+
+   '<div class="field"><label for="f_cost">'+esc(t("cost"))+'</label><input class="input money private" id="f_cost" inputmode="numeric" value="'+(p.cost!=null?W.money(p.cost):"")+'" placeholder="25,000"></div></div>'+
+   '<div class="hint">'+esc(t("priceHint"))+' · '+esc(t("costHint"))+'</div>'+
+   '<div class="two"><div class="field"><label for="f_sizes">'+esc(t("sizes"))+'</label><input class="input" id="f_sizes" value="'+esc(p.sizes||"")+'" placeholder="'+esc(t("sizesPh"))+'"></div>'+
+   '<div class="field"><label for="f_colors">'+esc(t("colors"))+'</label><input class="input" id="f_colors" value="'+esc(p.colors||"")+'" placeholder="'+esc(t("colorsPh"))+'"></div></div>'+
+   '<div class="field"><label for="f_desc">'+esc(t("details"))+'</label><textarea class="input" id="f_desc" placeholder="'+esc(t("descPh"))+'">'+esc(p.description||"")+'</textarea></div>';
+}
+function readFields(){
+  var cat=(document.querySelector('[data-pickcat][aria-pressed="true"]')||{}).dataset;
+  return {name:$("#f_name").value.trim(),category:cat?cat.pickcat:"nyingine",price:W.parseMoney($("#f_price").value),cost:W.parseMoney($("#f_cost").value),
+   sizes:$("#f_sizes").value.trim()||null,colors:$("#f_colors").value.trim()||null,description:$("#f_desc").value.trim()||null};
+}
+
+/* intake: photos from the iPhone gallery, one product at a time */
+var IN=null; // {files:[File], urls:[], i:index of next unused photo, group:[indexes], saved:n}
+function startIntake(files){
+  files=Array.prototype.slice.call(files).filter(function(f){return /^image\//.test(f.type)||/\.(jpe?g|png|heic|webp)$/i.test(f.name);});
+  if(!files.length)return;
+  IN={files:files,urls:files.map(function(f){return URL.createObjectURL(f);}),i:1,group:[0],saved:0,draft:null};
+  intakeSheet();
+}
+function intakeSheet(){
+  var n=IN.files.length,cur=IN.group[0],remaining=n-IN.i;
+  var title=t("intakeTitle",{i:IN.saved+1,n:"~"+(IN.saved+1+remaining)});
+  var b='<div class="prog"><i style="width:'+Math.round((IN.i-IN.group.length)/n*100)+'%"></i></div>'+
+   '<img class="big" alt="" src="'+IN.urls[IN.group[IN.group.length-1]]+'">'+
+   (IN.group.length>1?'<div class="strip">'+IN.group.map(function(g,k){return '<img alt="" class="'+(k===IN.group.length-1?"cur":"")+'" src="'+IN.urls[g]+'">';}).join("")+'</div>':'')+
+   (remaining>0?'<button class="btn ghost sm" data-act="samePhoto">+ '+esc(t("nextPhotoSame"))+' ('+remaining+')</button>':'')+
+   fields(IN.draft||{});
+  var last=remaining===0;
+  var f='<div class="btns"><button class="btn ghost" data-act="skipPhoto">'+esc(t("skip"))+'</button><button class="btn primary" data-act="saveIntake">'+esc(last?t("saveDone"):t("saveNext"))+'</button></div>';
+  openSheet(title,b,f,{kind:"intake"});
+  setTimeout(function(){var e=$("#f_name");if(e&&!e.value)try{e.focus({preventScroll:true});}catch(_){}},80);
+}
+function nextIntake(){
+  IN.draft=null;
+  if(IN.i>=IN.files.length){var n=IN.saved;closeSheet();IN.urls.forEach(function(u){URL.revokeObjectURL(u);});IN=null;if(n)W.toast(t("savedN",{n:n}));render();return;}
+  IN.group=[IN.i];IN.i++;intakeSheet();
+}
+function enqueue(data,files){
+  Q.total++;Q.jobs.push({data:data,files:files});render();run();
+}
+async function run(){
+  if(Q.running)return;Q.running=true;
+  while(Q.jobs.length){
+    var j=Q.jobs.shift();
+    try{
+      var photos=[];for(var k=0;k<j.files.length;k++){photos.push({full:await W.shrink(j.files[k],1080,.8),thumb:await W.shrink(j.files[k],400,.72)});}
+      var p=await W.db.createProduct(j.data,photos);
+      S.products.unshift(p.thumbUrl?p:(await reloadOne(p)));
+    }catch(e){console.error(e);W.toast((W.lang==="en"?"Upload failed: ":"Imeshindwa kupakia: ")+(j.data.name||""));}
+    Q.done++;if(!sheet||sheet.kind!=="intake")render();else updateTop();
+  }
+  Q.running=false;Q.total=0;Q.done=0;await load();render();
+}
+async function reloadOne(){await load();return S.products[0];}
+function updateTop(){var s=document.querySelector("header.top .sub");if(s)s.innerHTML=Q.total&&Q.done<Q.total?'<span class="upq">'+esc(t("uploading",{i:Q.done+1,n:Q.total}))+'</span>':esc(t("admin"));}
+
+/* edit */
+function editSheet(id){
+  var p=S.products.find(function(x){return x.id===id;});if(!p)return;
+  var b='<div class="strip">'+(p.imageUrls.length?p.imageUrls:[p.thumbUrl]).map(function(u){return '<img alt="" src="'+esc(u)+'" style="width:84px;height:84px">';}).join("")+'</div>'+
+   '<div class="row wrap">'+(p.status==="soldout"?'<span class="pill late">'+esc(t("soldout"))+'</span>':'')+daysPill(p)+(p.asks?'<span class="pill blue">'+esc(t("asks",{n:p.asks}))+'</span>':'')+'</div>'+
+   '<div class="row wrap"><button class="btn sm sun" data-still="'+esc(p.id)+'">'+esc(t("stillHere"))+'</button>'+
+   (p.status==="soldout"?'<button class="btn sm ghost" data-unsold="'+esc(p.id)+'">'+esc(t("unhide"))+'</button>':'<button class="btn sm ghost" data-sold="'+esc(p.id)+'">'+esc(t("markSold"))+'</button>')+
+   (p.status==="hidden"?'<button class="btn sm ghost" data-unhide="'+esc(p.id)+'">'+esc(t("unhide"))+'</button>':'<button class="btn sm ghost" data-hide="'+esc(p.id)+'">'+esc(t("hide"))+'</button>')+'</div>'+
+   fields(p)+'<div id="delZone"><button class="btn danger sm" data-act="askDel">'+esc(t("del"))+'</button></div>';
+  openSheet(t("edit"),b,'<div class="btns"><button class="btn ghost" data-act="closeSheet">'+esc(t("cancel"))+'</button><button class="btn primary" data-act="saveEdit">'+esc(t("save"))+'</button></div>',{kind:"edit",id:id});
+}
+async function act(id,patch,msg){
+  try{await W.db.updateProduct(id,patch);var p=S.products.find(function(x){return x.id===id;});Object.assign(p,patch);if(msg)W.toast(msg);}catch(e){W.toast(e.message||"Error");}
+  if(sheet&&sheet.kind==="edit")editSheet(id);else render();
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click",async function(e){
+  var el=e.target.closest("[data-act],[data-tab],[data-edit],[data-still],[data-sold],[data-unsold],[data-hide],[data-unhide],[data-filter],[data-goto],[data-lang],[data-pickcat],[data-scrim]");if(!el)return;
+  var d=el.dataset;
+  if(d.tab){S.tab=d.tab;render();window.scrollTo(0,0);return;}
+  if(d.goto){S.tab="products";S.filter=d.goto;render();return;}
+  if(d.filter){S.filter=d.filter;render();return;}
+  if(d.edit){editSheet(d.edit);return;}
+  if(d.still){act(d.still,{refreshed_at:new Date().toISOString(),status:"active"},t("refreshed"));return;}
+  if(d.sold){act(d.sold,{status:"soldout"});return;}
+  if(d.unsold||d.unhide){act(d.unsold||d.unhide,{status:"active",refreshed_at:new Date().toISOString()});return;}
+  if(d.hide){act(d.hide,{status:"hidden"});return;}
+  if(d.lang){W.setLang(d.lang);render();return;}
+  if(d.pickcat){el.parentNode.querySelectorAll("[data-pickcat]").forEach(function(b){b.setAttribute("aria-pressed",String(b===el));});S.lastCat=d.pickcat;return;}
+  if("scrim" in d){if(e.target===el&&(!sheet||sheet.kind!=="intake"))closeSheet();return;}
+  switch(d.act){
+    case "closeSheet": if(sheet&&sheet.kind==="intake"){IN.urls.forEach(function(u){URL.revokeObjectURL(u);});IN=null;}closeSheet();render();break;
+        case "signout": await W.db.signOut();S.stage="login";render();break;
+    case "copyLink": W.copy(W.shopUrl(),$("#shopUrl"));break;
+    case "resetDemo": W.db.resetDemo();await load();render();break;
+    case "saveShop":
+      var patch={};["name","tagline","whatsapp","lipa","lipa_name","network","instagram"].forEach(function(k){var x=$("#s_"+k);if(x)patch[k]=x.value.trim()||null;});
+      if(patch.whatsapp)patch.whatsapp=W.waPhone(patch.whatsapp);
+      try{S.shop=Object.assign(S.shop,await W.db.saveShop(patch)||patch);W.toast(t("saved"));render();}catch(err){W.toast(err.message||"Error");}break;
+    case "samePhoto": IN.draft=readFields();IN.group.push(IN.i);IN.i++;intakeSheet();break;
+    case "skipPhoto": nextIntake();break;
+    case "saveIntake":
+      var data=readFields();if(!data.name){W.toast(t("nameNeeded"));$("#f_name").focus();return;}
+      S.lastCat=data.category;enqueue(data,IN.group.map(function(g){return IN.files[g];}));IN.saved++;nextIntake();break;
+    case "saveEdit":
+      var ed=readFields();if(!ed.name){W.toast(t("nameNeeded"));return;}
+      await act(sheet.id,ed,t("saved"));closeSheet();render();break;
+    case "askDel": $("#delZone").innerHTML='<div class="confirm"><div>'+esc(t("confirmDel"))+'</div><div class="btns"><button class="btn ghost" data-act="noDel">'+esc(t("no"))+'</button><button class="btn danger" data-act="doDel">'+esc(t("yesDel"))+'</button></div></div>';break;
+    case "noDel": editSheet(sheet.id);break;
+    case "doDel": var p=S.products.find(function(x){return x.id===sheet.id;});try{await W.db.deleteProduct(p);S.products=S.products.filter(function(x){return x.id!==p.id;});}catch(err){W.toast(err.message||"Error");}closeSheet();render();break;
+  }
+});
+document.addEventListener("change",function(e){if(e.target.id==="pick"&&e.target.files.length){startIntake(e.target.files);e.target.value="";}});
+document.addEventListener("input",function(e){if(e.target.id==="aq"){S.q=e.target.value;S.focusQ=true;render();}});
+document.addEventListener("submit",async function(e){
+  e.preventDefault();
+  if(e.target.dataset.form!=="login")return;
+  var btn=e.target.querySelector("button[type=submit]");btn.disabled=true;
+  try{S.email=$("#em").value.trim();await W.db.signIn(S.email,$("#pw").value);await afterLogin();}
+  catch(err){W.toast(t("wrongLogin"));btn.disabled=false;}
+});
+
+async function load(){
+  try{S.shop=await W.db.getShop()||{};}catch(e){}
+  try{S.products=await W.db.listProducts(true);}catch(e){W.toast(e.message||"Error");}
+}
+async function afterLogin(){
+  if(!(await W.db.isAdmin())){S.stage="denied";render();return;}
+  await load();S.stage="ready";render();
+}
+(async function boot(){
+  render();
+  if("serviceWorker" in navigator){try{navigator.serviceWorker.register("../sw.js",{scope:"../"}).catch(function(){});}catch(e){}}
+  if(W.mode==="demo"){await load();S.stage="ready";render();return;}
+  var s=await W.db.session();
+  if(!s){S.stage="login";render();return;}
+  await afterLogin();
+})();
+})();
+</script>
+</body>
+</html>

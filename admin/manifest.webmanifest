@@ -1,0 +1,18 @@
+{
+  "id": "./admin/",
+  "name": "Winga Boss Deus",
+  "short_name": "Winga Boss Deus",
+  "description": "Boss Deus's side of the Winga shop: add products, keep the shop fresh.",
+  "lang": "sw",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#12283C",
+  "theme_color": "#12283C",
+  "icons": [
+    { "src": "../icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "../icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "../icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
