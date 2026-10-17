@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Winga Boss Deus</title>
+<title>Winga Boss</title>
 <meta name="theme-color" content="#12283C">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="../icon-192.png">
 <link rel="apple-touch-icon" href="../icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Winga Boss Deus">
+<meta name="apple-mobile-web-app-title" content="Winga Boss">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -63,6 +63,14 @@ nav.tabs button.tab[aria-current="page"]{color:var(--ink);font-weight:600}
 .confirm{background:var(--red-soft);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
 .login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:24px var(--gr) 24px var(--gl);max-width:440px;margin:0 auto}
 .login .mark{font-size:34px}
+.ob{background:var(--card);border:1.5px solid var(--ink);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ob .bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.ob .bar i{display:block;height:100%;background:var(--jua)}
+.step{display:flex;gap:12px;align-items:center;padding-top:10px;border-top:1px solid var(--line)}
+.step .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--num);font-weight:600;background:var(--sunk);flex:none}
+.step.done .n{background:var(--green);color:#fff}.step.done .tt{text-decoration:line-through;color:var(--dim)}
+.step .tt{font-weight:600}.step .ss{font-size:12.5px;color:var(--dim)}
+.step .btn{flex:none}
+.pwrow{position:relative}.pwrow .input{padding-right:84px}.pwrow button{position:absolute;right:6px;top:6px;bottom:6px;border:0;background:var(--sunk);border-radius:8px;padding:0 12px;font-weight:600;font-size:13px}
 </style>
 </head>
 <body>
@@ -109,8 +117,8 @@ function render(){
 function vLogin(){
   return '<form class="login" data-form="login"><div class="mark"><i></i>Winga</div><div><h1>'+esc(t("admin"))+'</h1><div class="muted" style="margin-top:4px">'+esc(t("login"))+'</div></div>'+
    '<div class="field"><label for="em">'+esc(t("email"))+'</label><input class="input" id="em" type="email" autocomplete="username" inputmode="email" required value="'+esc(S.email)+'"></div>'+
-   '<div class="field"><label for="pw">'+esc(t("password"))+'</label><input class="input" id="pw" type="password" autocomplete="current-password" required></div>'+
-   '<button class="btn primary block" type="submit">'+esc(t("login"))+'</button><div class="hint">'+esc(t("installHint"))+'</div></form>';
+   '<div class="field"><label for="pw">'+esc(t("password"))+'</label><div class="pwrow"><input class="input" id="pw" type="password" autocomplete="current-password" required><button type="button" data-act="togglePw">'+esc(t("showPw"))+'</button></div></div>'+
+   '<button class="btn primary block" type="submit">'+esc(t("login"))+'</button><div class="hint">'+esc(t("accountHint"))+'</div></form>';
 }
 
 /* ---------------- views ---------------- */
@@ -131,14 +139,28 @@ function vHome(){
   var live=S.products.filter(function(p){return liveP(p)&&p.status!=="soldout";}),ending=live.filter(function(p){return W.daysLeft(p)<=2&&p.status!=="soldout";}),sold=S.products.filter(function(p){return p.status==="soldout";});
   var url=W.shopUrl();
   var h='<div class="eyebrow">'+esc(W.mode==="live"?t("modeLive"):t("modeDemo"))+'</div>';
+  if(!standalone())h+='<section class="banner" style="flex-direction:column;align-items:flex-start;gap:4px"><b style="color:var(--ink)">'+esc(t("installTitle"))+'</b><span>'+esc(t("installS"))+'</span></section>';
+  h+=onboarding(live.length);
   h+='<div class="tiles"><button class="tile" data-goto="all"><b>'+live.length+'</b><span>'+esc(t("live"))+'</span></button><button class="tile warn" data-goto="ending"><b>'+ending.length+'</b><span>'+esc(t("endingSoon"))+'</span></button><button class="tile" data-goto="sold"><b>'+sold.length+'</b><span>'+esc(t("soldoutN"))+'</span></button></div>';
-  h+='<section class="linkcard"><div class="eyebrow" style="color:#B8C4CF">'+esc(t("shopLink"))+'</div><div class="u" id="shopUrl">'+esc(url)+'</div><div class="btns"><button class="btn ghost sm" data-act="copyLink">'+esc(t("copyLink"))+'</button><a class="btn sun sm" href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(t("openShop"))+'</a></div></section>';
+  h+='<section class="linkcard"><div class="eyebrow" style="color:#B8C4CF">'+esc(t("shopLink"))+'</div><div class="u" id="shopUrl">'+esc(url)+'</div><div class="btns"><button class="btn sun sm" data-act="shareShop">'+esc(t("shareShop"))+'</button><button class="btn ghost sm" data-act="copyLink">'+esc(t("copyLink"))+'</button></div><a class="btn ghost sm" style="position:relative;z-index:1" href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(t("openShop"))+'</a></section>';
   if(ending.length){h+='<h2>'+esc(t("endingSoon"))+'</h2><div class="list">'+ending.map(function(p){
     return '<div class="li"><img class="thumb" alt="" src="'+esc(p.thumbUrl)+'"><div class="grow"><div class="t">'+esc(p.name)+'</div><div class="s">'+daysPill(p)+'</div></div><button class="btn sm sun" data-still="'+esc(p.id)+'">'+esc(t("stillHere"))+'</button><button class="btn sm ghost" data-sold="'+esc(p.id)+'">'+esc(t("markSold"))+'</button></div>';}).join("")+'</div>';}
   var top=S.products.filter(function(p){return p.asks>0;}).sort(function(a,b){return b.asks-a.asks;}).slice(0,5);
   if(top.length)h+='<h2>'+esc(W.lang==="en"?"Most asked":"Zinazoulizwa zaidi")+'</h2><div class="list">'+top.map(row).join("")+'</div>';
   if(!S.products.length)h+='<div class="empty"><h3 style="color:var(--ink);margin-bottom:6px">'+esc(t("addPhotos"))+'</h3>'+esc(t("addPhotosS"))+'</div>';
   return h;
+}
+function standalone(){try{return navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;}catch(e){return false;}}
+function shared(){try{return localStorage.getItem("winga.shared")==="1";}catch(e){return false;}}
+function markShared(){try{localStorage.setItem("winga.shared","1");}catch(e){}}
+function onboarding(liveN){
+  var st=[!!W.waPhone(S.shop.whatsapp),liveN>=3,shared()],d=st.filter(Boolean).length;
+  if(d===3)return "";
+  function step(i,done,title,sub,btn){return '<div class="step'+(done?" done":"")+'"><span class="n">'+(done?"✓":i)+'</span><div class="grow"><div class="tt">'+esc(title)+'</div><div class="ss">'+esc(sub)+'</div></div>'+(done?"":btn)+'</div>';}
+  return '<section class="ob"><div class="row between"><h2>'+esc(t("obTitle"))+'</h2><span class="pill sun">'+esc(t("obProg",{d:d}))+'</span></div><div class="bar"><i style="width:'+Math.round(d/3*100)+'%"></i></div>'+
+   step(1,st[0],t("ob1"),t("ob1s"),'<button class="btn sm primary" data-act="goWhatsapp">'+esc(t("obGo"))+'</button>')+
+   step(2,st[1],t("ob2"),t("ob2s")+(liveN&&liveN<3?" · "+t("obCount",{n:liveN}):""),'<label class="btn sm primary" for="pick" style="cursor:pointer">'+esc(t("addPhotos"))+'</label>')+
+   step(3,st[2],t("ob3"),t("ob3s"),'<button class="btn sm primary" data-act="shareShop">'+esc(t("shareShop"))+'</button>')+'</section>';
 }
 function vProducts(){
   var F=[["all",t("filterAll")],["ending",t("filterEnding")],["sold",t("filterSold")],["hidden",t("filterHidden")]];
@@ -157,7 +179,8 @@ function vSettings(){
   var s=S.shop;function f(id,k,ph,type){return '<div class="field"><label for="'+id+'">'+esc(t(k))+'</label><input class="input'+(type==="num"?" money":"")+'" id="'+id+'" value="'+esc(s[id.slice(2)]||"")+'" placeholder="'+esc(ph||"")+'"'+(type==="num"?' inputmode="tel"':'')+'></div>';}
   return '<h1>'+esc(t("settings"))+'</h1>'+
    '<div class="field"><label>'+esc(t("language"))+'</label><div class="seg" role="group"><button data-lang="sw" aria-pressed="'+(W.lang!=="en")+'">Kiswahili</button><button data-lang="en" aria-pressed="'+(W.lang==="en")+'">English</button></div></div>'+
-   f("s_name","shopName","Duka la Boss Deus")+f("s_tagline","tagline","Bidhaa za Kariakoo, mlangoni kwako")+f("s_whatsapp","whatsapp","0712 345 678","num")+
+   f("s_whatsapp","whatsapp","0712 345 678","num")+(W.waPhone(s.whatsapp)?'':'<div class="hint" style="color:var(--red)">'+esc(t("waFirst"))+'</div>')+
+   f("s_name","shopName","Duka la Boss Deus")+f("s_tagline","tagline","Bidhaa za Kariakoo, mlangoni kwako")+
    '<div class="two">'+f("s_lipa","lipa","5512 3487","num")+f("s_network","network","Mtandao wowote")+'</div>'+f("s_lipa_name","lipaName","BOSS DEUS KARIAKOO")+f("s_instagram","instagram","@duka_la_bossdeus")+
    '<button class="btn primary block" data-act="saveShop">'+esc(t("save"))+'</button>'+
    '<div class="hint">'+esc(W.mode==="live"?t("modeLive"):t("modeDemo"))+'</div>'+
@@ -195,7 +218,7 @@ function startIntake(files){
 }
 function intakeSheet(){
   var n=IN.files.length,cur=IN.group[0],remaining=n-IN.i;
-  var title=t("intakeTitle",{i:IN.saved+1,n:"~"+(IN.saved+1+remaining)});
+  var title=t("intakeTitle2",{i:IN.saved+1})+" · "+(remaining>0?t("photosLeft",{r:remaining}):t("lastPhoto"));
   var b='<div class="prog"><i style="width:'+Math.round((IN.i-IN.group.length)/n*100)+'%"></i></div>'+
    '<img class="big" alt="" src="'+IN.urls[IN.group[IN.group.length-1]]+'">'+
    (IN.group.length>1?'<div class="strip">'+IN.group.map(function(g,k){return '<img alt="" class="'+(k===IN.group.length-1?"cur":"")+'" src="'+IN.urls[g]+'">';}).join("")+'</div>':'')+
@@ -264,7 +287,13 @@ document.addEventListener("click",async function(e){
   switch(d.act){
     case "closeSheet": if(sheet&&sheet.kind==="intake"){IN.urls.forEach(function(u){URL.revokeObjectURL(u);});IN=null;}closeSheet();render();break;
         case "signout": await W.db.signOut();S.stage="login";render();break;
-    case "copyLink": W.copy(W.shopUrl(),$("#shopUrl"));break;
+    case "copyLink": W.copy(W.shopUrl(),$("#shopUrl"));markShared();setTimeout(render,300);break;
+    case "shareShop":
+      var txt=t("shareText",{s:S.shop.name||"Winga"}),u=W.shopUrl();
+      if(navigator.share){try{await navigator.share({title:S.shop.name||"Winga",text:txt,url:u});markShared();}catch(_){}}else{W.copy(txt+" "+u,$("#shopUrl"));markShared();}
+      render();break;
+    case "goWhatsapp": S.tab="settings";render();setTimeout(function(){var x=$("#s_whatsapp");if(x){x.focus();x.scrollIntoView({block:"center"});}},60);break;
+    case "togglePw": var pw=$("#pw");var show=pw.type==="password";pw.type=show?"text":"password";el.textContent=show?t("hidePw"):t("showPw");break;
     case "resetDemo": W.db.resetDemo();await load();render();break;
     case "saveShop":
       var patch={};["name","tagline","whatsapp","lipa","lipa_name","network","instagram"].forEach(function(k){var x=$("#s_"+k);if(x)patch[k]=x.value.trim()||null;});

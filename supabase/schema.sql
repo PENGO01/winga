@@ -1,6 +1,6 @@
 -- Winga full version · Week 1 schema
 -- Shop (public), products (public price), product_private (Boss Deus's cost, never public),
--- admins (Boss Deus + Super Admin), storage bucket "products" (public read, admin write).
+-- admins (Super Admin + Boss Deus), storage bucket "products" (public read, admin write).
 
 -- ---------- shop settings (single row) ----------
 create table if not exists public.shop (
@@ -20,6 +20,7 @@ insert into public.shop (id) values (1) on conflict (id) do nothing;
 create table if not exists public.admins (
   user_id  uuid primary key references auth.users(id) on delete cascade,
   name     text,
+  role     text not null default 'boss' check (role in ('super_admin','boss')),  -- super_admin owns the platform; boss runs the shop
   added_at timestamptz default now()
 );
 
@@ -102,4 +103,4 @@ create policy products_img_delete on storage.objects for delete to authenticated
 
 -- ---------- admins ----------
 -- Create the accounts in Dashboard → Authentication → Users → Add user (tick "Auto Confirm User"), then:
--- insert into public.admins (user_id, name) select id, 'Boss Deus' from auth.users where email = 'bossdeus@example.com';
+-- insert into public.admins (user_id, name, role) select id, 'Boss Deus', 'boss' from auth.users where email = 'boss@example.com';

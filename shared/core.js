@@ -29,7 +29,14 @@ var STR = {
   shopName:"Jina la duka", tagline:"Kauli fupi", whatsapp:"Namba ya WhatsApp ya duka", lipa:"Lipa Namba", lipaName:"Jina kwenye Lipa Namba", network:"Mtandao / benki", instagram:"Instagram",
   save:"Hifadhi", saved:"Imehifadhiwa", cancel:"Ghairi", language:"Lugha", nameNeeded:"Weka jina la bidhaa kwanza.", asks:"maombi {n}",
   modeLive:"Imeunganishwa na database", modeDemo:"Hali ya mfano: data iko kwenye kivinjari hiki tu", installHint:"Kwenye iPhone: Share → Add to Home Screen", filterAll:"Zote", filterEnding:"Zinaisha", filterSold:"Zimeisha", filterHidden:"Zimefichwa",
-  cat_viatu:"Viatu", cat_nguo:"Nguo", cat_electronics:"Simu & Electronics", cat_urembo:"Urembo", cat_nyumbani:"Nyumbani", cat_begi:"Mabegi", cat_watoto:"Watoto", cat_nyingine:"Nyingine"
+  cat_viatu:"Viatu", cat_nguo:"Nguo", cat_electronics:"Simu & Electronics", cat_urembo:"Urembo", cat_nyumbani:"Nyumbani", cat_begi:"Mabegi", cat_watoto:"Watoto", cat_nyingine:"Nyingine",
+  howTitle:"Jinsi ya kuagiza", how1:"Chagua bidhaa", how2:"Agiza WhatsApp, bei inathibitishwa", how3:"Lipa, upokee mlangoni", gotIt:"Sawa, nimeelewa",
+  notReady:"Duka linaandaliwa. Kuagiza kutafunguka hivi punde.", added:"Imeongezwa {a}", agoToday:"leo", agoYday:"jana", agoDays:"siku {n} zilizopita", place:"Kariakoo, Dar es Salaam",
+  obTitle:"Hatua 3 za kufungua duka", obProg:"{d} kati ya 3", ob1:"Weka namba ya WhatsApp ya duka", ob1s:"Oda za wateja zitakufikia hapa.", ob2:"Weka bidhaa 3 za kwanza", ob2s:"WhatsApp: shika picha → Save. Kisha bonyeza Ongeza picha.",
+  ob3:"Shiriki link ya duka", ob3s:"Kwenye status ya WhatsApp au Instagram.", obDone:"Duka liko tayari. Endelea kuongeza bidhaa kila siku.", obGo:"Anza", obCount:"{n} kati ya 3",
+  installTitle:"Weka Winga Boss kwenye Home Screen", installS:"Kwenye Safari: bonyeza Share, kisha Add to Home Screen. Itafunguka kama app na utabaki umeingia.",
+  shareShop:"Shiriki", shareText:"Karibu {s}! Bidhaa za Kariakoo, mlangoni kwako:", showPw:"Onyesha", hidePw:"Ficha", accountHint:"Akaunti yako inatengenezwa na Super Admin.",
+  waFirst:"Weka namba ya WhatsApp kwanza, la sivyo wateja hawawezi kuagiza.", intakeTitle2:"Bidhaa ya {i}", photosLeft:"picha {r} zimebaki", lastPhoto:"picha ya mwisho"
  },
  en: {
   shop:"Shop", searchPh:"Search: shoes, phones, kitenge…", all:"All", askPrice:"Ask price", soldout:"Sold out", isNew:"New",
@@ -40,7 +47,7 @@ var STR = {
   exampleBanner:"This is an example shop. Real products appear once Boss Deus starts uploading.",
   linkCopied:"Link copied", close:"Close", back:"Back", count:"{n} products",
   admin:"Boss Deus's side", login:"Sign in", email:"Email", password:"Password", wrongLogin:"Email or password is wrong. Try again.",
-  notAdmin:"This account isn't allowed to run the shop yet. Ask Super Admin to add you.", signOut:"Sign out",
+  notAdmin:"This account isn't allowed to run the shop yet. Ask the Super Admin to add you.", signOut:"Sign out",
   home:"Home", products:"Products", settings:"Settings", addPhotos:"Add photos", addPhotosS:"Pick several photos from Photos",
   live:"In the shop", endingSoon:"Ending within 2 days", soldoutN:"Sold out", shopLink:"Shop link", copyLink:"Copy link", openShop:"Open shop",
   intakeTitle:"Product {i} of {n}", photoN:"{n} photos", name:"Product name", category:"Category", price:"Customer price", priceHint:"Leave empty for 'Ask price'",
@@ -52,7 +59,14 @@ var STR = {
   shopName:"Shop name", tagline:"Short tagline", whatsapp:"Shop WhatsApp number", lipa:"Lipa Namba", lipaName:"Name on Lipa Namba", network:"Network / bank", instagram:"Instagram",
   save:"Save", saved:"Saved", cancel:"Cancel", language:"Language", nameNeeded:"Add a product name first.", asks:"{n} asks",
   modeLive:"Connected to the database", modeDemo:"Example mode: data lives in this browser only", installHint:"On iPhone: Share → Add to Home Screen", filterAll:"All", filterEnding:"Ending", filterSold:"Sold out", filterHidden:"Hidden",
-  cat_viatu:"Shoes", cat_nguo:"Clothing", cat_electronics:"Phones & Electronics", cat_urembo:"Beauty", cat_nyumbani:"Home", cat_begi:"Bags", cat_watoto:"Kids", cat_nyingine:"Other"
+  cat_viatu:"Shoes", cat_nguo:"Clothing", cat_electronics:"Phones & Electronics", cat_urembo:"Beauty", cat_nyumbani:"Home", cat_begi:"Bags", cat_watoto:"Kids", cat_nyingine:"Other",
+  howTitle:"How ordering works", how1:"Pick a product", how2:"Order on WhatsApp, price confirmed", how3:"Pay, receive at your door", gotIt:"Got it",
+  notReady:"The shop is being set up. Ordering opens soon.", added:"Added {a}", agoToday:"today", agoYday:"yesterday", agoDays:"{n} days ago", place:"Kariakoo, Dar es Salaam",
+  obTitle:"3 steps to open the shop", obProg:"{d} of 3", ob1:"Add the shop's WhatsApp number", ob1s:"Customer orders reach you here.", ob2:"Add your first 3 products", ob2s:"In WhatsApp: hold a photo → Save. Then tap Add photos.",
+  ob3:"Share the shop link", ob3s:"On WhatsApp status or Instagram.", obDone:"The shop is ready. Keep adding products every day.", obGo:"Start", obCount:"{n} of 3",
+  installTitle:"Put Winga Boss on your Home Screen", installS:"In Safari: tap Share, then Add to Home Screen. It opens like an app and you stay signed in.",
+  shareShop:"Share", shareText:"Welcome to {s}! Kariakoo goods to your door:", showPw:"Show", hidePw:"Hide", accountHint:"Your account is created by the Super Admin.",
+  waFirst:"Add the WhatsApp number first, or customers can't order.", intakeTitle2:"Product {i}", photosLeft:"{r} photos left", lastPhoto:"last photo"
  }
 };
 W.CATS = ["viatu","nguo","electronics","urembo","nyumbani","begi","watoto","nyingine"];
@@ -69,6 +83,7 @@ W.parseMoney = function (v) { if (v == null || v === "") return null; var s = St
 W.waPhone = function (p) { var d = String(p || "").replace(/\D/g, ""); if (!d) return ""; if (d[0] === "0") d = "255" + d.slice(1); else if (d.length === 9) d = "255" + d; return d; };
 W.DAY = 864e5; W.SHOW_DAYS = 7;
 W.daysLeft = function (p) { return W.SHOW_DAYS - Math.floor((Date.now() - new Date(p.refreshed_at).getTime()) / W.DAY); };
+W.ago = function (iso) { var d = Math.floor((Date.now() - new Date(iso).getTime()) / W.DAY); return d <= 0 ? W.t("agoToday") : d === 1 ? W.t("agoYday") : W.t("agoDays", { n: d }); };
 W.isNew = function (p) { return Date.now() - new Date(p.created_at).getTime() < W.DAY; };
 W.toast = function (m) { var r = document.getElementById("toastRoot"); if (!r) return; r.innerHTML = '<div class="toast" role="status">' + W.esc(m) + "</div>"; clearTimeout(W.toast._t); W.toast._t = setTimeout(function () { r.innerHTML = ""; }, 2400); };
 W.copy = function (text, fallbackEl) { return navigator.clipboard.writeText(text).then(function(){ W.toast(W.t("linkCopied")); }, function(){ if (fallbackEl) { var r = document.createRange(); r.selectNodeContents(fallbackEl); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } }); };
