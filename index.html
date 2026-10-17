@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Winga Duka</title>
+<title>Niagize Kariakoo</title>
 <meta name="description" content="Bidhaa za Kariakoo, mlangoni kwako. Tafuta, agiza, pokea.">
 <meta name="theme-color" content="#12283C">
-<meta property="og:title" content="Winga Duka">
+<meta property="og:title" content="Niagize Kariakoo">
 <meta property="og:description" content="Bidhaa za Kariakoo, mlangoni kwako.">
 <meta property="og:image" content="docs/social-preview.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -68,7 +68,7 @@ main{padding:14px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 <div class="app">
   <header class="shop">
     <div class="tools"><div class="seg" role="group" aria-label="Language"><button data-lang="sw">SW</button><button data-lang="en">EN</button></div></div>
-    <div class="mark" id="shopName"><i></i><span>Winga</span></div>
+    <div class="mark" id="shopName"><i></i><span>Niagize Kariakoo</span></div>
     <div class="tag" id="shopTag"></div>
   </header>
   <div class="cats"><div class="chips" id="cats" role="group" aria-label="Categories"></div></div>
@@ -95,16 +95,16 @@ var IC={wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 function catLabel(c){return t("cat_"+c);}
 function renderChrome(){
   document.querySelectorAll("[data-lang]").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.lang===W.lang));});
-  $("#shopName span").textContent=S.shop.name||"Winga";
+  $("#shopName span").textContent=S.shop.name||"Niagize Kariakoo";
   $("#shopTag").textContent=S.shop.tagline||"";
   $("#q").placeholder=t("searchPh");
-  document.title=(S.shop.name||"Winga")+" · Winga";
+  document.title=S.shop.name||"Niagize Kariakoo";
   var used={};S.products.forEach(function(p){used[p.category]=1;});
   var cats=["all"].concat(W.CATS.filter(function(c){return used[c];}));
   $("#cats").innerHTML=cats.map(function(c){return '<button class="chip" data-cat="'+c+'" aria-pressed="'+(S.cat===c)+'">'+esc(c==="all"?t("all"):catLabel(c))+'</button>';}).join("");
 }
 function howDismissed(){try{return localStorage.getItem("winga.how")==="1";}catch(e){return false;}}
-function renderFoot(){var ig=(S.shop.instagram||"").replace(/^@/,"");$("#foot").innerHTML='<b>'+esc(S.shop.name||"Winga")+'</b> · '+esc(t("place"))+(ig?' · <a href="https://instagram.com/'+esc(encodeURIComponent(ig))+'" target="_blank" rel="noopener" style="color:inherit">@'+esc(ig)+'</a>':'')+'<br><span style="opacity:.7">Winga</span>';}
+function renderFoot(){var ig=(S.shop.instagram||"").replace(/^@/,"");$("#foot").innerHTML='<b>'+esc(S.shop.name||"Niagize Kariakoo")+'</b> · '+esc(t("place"))+(ig?' · <a href="https://instagram.com/'+esc(encodeURIComponent(ig))+'" target="_blank" rel="noopener" style="color:inherit">@'+esc(ig)+'</a>':'');}
 function filtered(){
   var list=S.products;
   if(S.cat!=="all")list=list.filter(function(p){return p.category===S.cat;});
@@ -154,7 +154,7 @@ function openProduct(id){
     (p.description?'<div class="stack" style="gap:6px"><div class="eyebrow">'+esc(t("details"))+'</div><div>'+esc(p.description)+'</div></div>':'');
   var f=(p.status!=="soldout"&&!W.waPhone(S.shop.whatsapp)?'<div class="hint" style="text-align:center">'+esc(t("notReady"))+'</div>':'')+'<div class="btns"><button class="btn ghost" data-share="'+esc(p.id)+'">'+IC.share+esc(t("share"))+'</button>'+
     (p.status==="soldout"?'<button class="btn green" disabled>'+IC.wa+esc(t("soldout"))+'</button>':!W.waPhone(S.shop.whatsapp)?'<button class="btn green" disabled title="'+esc(t("notReady"))+'">'+IC.wa+esc(t("orderWa"))+'</button>':'<a class="btn green" target="_blank" rel="noopener" data-ask="'+esc(p.id)+'" href="'+esc(waLink(p))+'">'+IC.wa+esc(t("orderWa"))+'</a>')+'</div>';
-  $("#sheetRoot").innerHTML='<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(p.name)+'"><div class="hd"><h2 class="small muted" style="font-family:var(--body);font-weight:500">'+esc(S.shop.name||"Winga")+'</h2><button class="iconbtn" data-close aria-label="'+esc(t("close"))+'">'+IC.x+'</button></div><div class="bd">'+b+'</div><div class="ft">'+f+'</div></div></div>';
+  $("#sheetRoot").innerHTML='<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(p.name)+'"><div class="hd"><h2 class="small muted" style="font-family:var(--body);font-weight:500">'+esc(S.shop.name||"Niagize Kariakoo")+'</h2><button class="iconbtn" data-close aria-label="'+esc(t("close"))+'">'+IC.x+'</button></div><div class="bd">'+b+'</div><div class="ft">'+f+'</div></div></div>';
   var g=$("#gal");if(g&&imgs.length>1)g.addEventListener("scroll",function(){var i=Math.round(g.scrollLeft/g.clientWidth);document.querySelectorAll("#dots i").forEach(function(d,j){d.className=j===i?"on":"";});},{passive:true});
 }
 function closeSheet(){$("#sheetRoot").innerHTML="";try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}}

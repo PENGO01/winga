@@ -1,8 +1,8 @@
 {
   "id": "./admin/",
-  "name": "Winga Boss",
-  "short_name": "Winga Boss",
-  "description": "Boss Deus's side of the Winga shop: add products, keep the shop fresh.",
+  "name": "Niagize Boss",
+  "short_name": "Niagize Boss",
+  "description": "Boss Deus's side of Niagize Kariakoo: add products, keep the shop fresh.",
   "lang": "sw",
   "start_url": "./",
   "scope": "./",

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/banner.png" alt="Winga: Jua kichwani, faida mfukoni. The winga's back pocket for catalog, margin math and orders, riding on WhatsApp." width="100%">
+  <img src="docs/banner.png" alt="Niagize Kariakoo: Bidhaa za Kariakoo, mlangoni kwako. One trusted winga, his whole market in one link." width="100%">
 </p>
 
 <p align="center">
-  <a href="https://pengo01.github.io/winga/"><b>Open the app</b></a> ·
-  <a href="#install-on-a-phone">Install on a phone</a> ·
+  <a href="https://pengo01.github.io/winga/"><b>Open the shop</b></a> ·
+  <a href="https://pengo01.github.io/winga/admin/">Boss side</a> ·
   <a href="#how-it-works">How it works</a> ·
   <a href="#principles">Principles</a> ·
   <a href="#roadmap">Roadmap</a> ·
@@ -13,130 +13,107 @@
 
 ---
 
-## Why Winga exists
+## Why it exists
 
-In Kariakoo, a **winga** (or *dalali*) is the person who knows which shop has the stock, what the real price is today, and who sells fakes. Sellers post their goods in WhatsApp groups. Customers message the winga: *"Viatu brown 42, kabla ya saa nne?"* He finds it, bargains, buys, and sends it by boda.
+In Kariakoo, a **winga** is the person who knows which shop has the stock, what the real price is today, and who sells fakes. A good one sits in 200+ supplier WhatsApp groups and posts what he finds to his status. Customers see it, message him, bargain, pay, and a boda brings it.
 
-His commission is the **jua kichwani**: the sun on his head as he walks the market all day.
+It works. But it lives in WhatsApp status that disappears in 24 hours, in a phone gallery, and in his head. A customer can't browse. He can't see what sold. Nothing builds up.
 
-Today all of that lives in WhatsApp chats, a phone gallery, and a calculator app. Prices get lost. Margins leak. Orders get forgotten. When a customer disputes a payment, there is no record.
-
-Big platforms tried to replace the winga. They struggled, because trust in Kariakoo has a human face.
-
-**Winga doesn't replace him. It goes in his back pocket.**
+**Niagize Kariakoo turns one trusted winga's status into a shop that stays.** Not a marketplace. One winga, his market, one link.
 
 ## What it does
 
 <p align="center">
-  <img src="docs/screens.png" alt="Five Winga screens: Leo (today), Bidhaa (catalog), Oda (order with live margin), Ankara (invoice card) and Imelipwa (paid and locked)." width="100%">
+  <img src="docs/screens.png" alt="Five screens: the customer shop, a product page, Boss's three-step setup, adding products from photos, and the product list with 7-day freshness." width="100%">
 </p>
 
-| Screen | What the winga gets |
-|---|---|
-| **Leo** | Today's profit as the big number. Waiting orders sorted by deadline. A nudge when catalog prices are three or more days old. |
-| **Bidhaa** | His personal catalog. Seller photos shared straight in from WhatsApp, with his inside price and how old that price is. |
-| **Oda** | Cost in, price out, profit live, per item and per basket. One tap prices everything at his commission. |
-| **Ankara** | A clean invoice card sent to the customer on WhatsApp. Items, total, Lipa Namba. Seller and cost never appear. |
-| **Imelipwa** | Payer name and last transaction digits lock the order: item, price and address frozen. His defence in a dispute. |
-| **Njiani → Imekamilika** | Optional package photo, boda name and plate sent to the customer, then Done adds the profit to today. |
-| **Wauzaji** | His regular sellers, one tap to call or WhatsApp. |
+| Side | Screen | What it does |
+|---|---|---|
+| Mteja (customer) | **Duka** | Categories on top, search at the bottom where the thumb is, a three-step "how to order" strip on the first visit |
+| Mteja | **Bidhaa** | Photos, price (or "Uliza bei"), sizes, colours. **Agiza kupitia WhatsApp** opens the winga's chat with the product and link already written |
+| Boss | **Hatua 3** | Setup that guides itself: WhatsApp number, first three products, share the link |
+| Boss | **Ongeza picha** | Pick many photos from the gallery at once. Name, category, price, next. Several photos can become one product. Uploads run in the background |
+| Boss | **Bado ipo?** | Every product shows for 7 days, then hides itself. One tap keeps it another week. Sold out, hide, delete |
 
-<p align="center">
-  <img src="docs/invoice.jpg" alt="An example Winga invoice card: one pair of brown shoes, delivery fare, total TSh 33,000 and the winga's Lipa Namba." width="360">
-  <br><sub>The invoice card a customer receives on WhatsApp. Example data.</sub>
-</p>
+The winga's inside price (**Bei yako ya ndani**) is stored in a private table no customer can ever read.
 
 ## How it works
 
 ```mermaid
 flowchart LR
-    SG["Seller WhatsApp groups"] -- "Share → Winga" --> CAT["Bidhaa<br/>catalog + inside price"]
-    CW["Customer on WhatsApp"] -- "Share → Winga" --> DR["Oda<br/>draft"]
-    CAT -- "search" --> DR
-    DR --> MG["Margin<br/>cost · price · profit"]
-    MG --> INV["Ankara<br/>invoice card"]
-    INV -- "WhatsApp" --> CW
-    CW -- "bargain" --> DR
-    INV --> PAID["Imelipwa<br/>name + last digits → locked"]
-    PAID --> BUY["Buys in person<br/>(jua kichwani)"]
-    BUY --> BODA["Njiani<br/>boda + package photo"]
-    BODA --> DONE["Imekamilika<br/>+ profit today"]
+    G["200+ supplier<br/>WhatsApp groups"] -- "Save photo" --> PH["Boss's<br/>photo gallery"]
+    PH -- "Ongeza picha" --> B["Boss side<br/>name · price · cost"]
+    B --> DB[("Supabase<br/>products · private cost · photos")]
+    DB --> S["Shop link<br/>browse · filter · search"]
+    IG["Instagram /<br/>WhatsApp status"] -- "shared link" --> S
+    S -- "Agiza kupitia WhatsApp" --> W["Boss's WhatsApp<br/>bargain · pay · boda"]
 ```
 
-WhatsApp stays home. Winga is the structured spine in the middle: stock comes in from seller groups, orders come in from customers, and everything that goes back out (invoice, payment thanks, boda details) goes through WhatsApp.
+Today, ordering finishes on WhatsApp, where customers already are. In-app orders come only after the numbers show customers actually tap "order" (see [Roadmap](#roadmap)).
 
-## Install on a phone
+## Use it
 
-1. On an **Android** phone, open **https://pengo01.github.io/winga/** in Chrome.
-2. Tap the menu, then **Install app** (or **Add to Home screen**).
-3. Open Winga from the home screen. It starts with example data marked **MFANO**. Tap **Futa mifano, anza yako** to start fresh, then enter your name and Lipa Namba.
-4. In WhatsApp, long-press a seller's photo, tap **Share**, then **Winga**. It lands in the app ready to save as an item or start an order.
+**Customers:** open **https://pengo01.github.io/winga/**. On a phone, add it to the Home Screen to come back in one tap.
 
-> Sharing from WhatsApp into Winga works on Android with Chrome. On iPhone the app runs, but photos are added from the gallery instead.
+**Boss (iPhone):**
+1. Open **https://pengo01.github.io/winga/admin/** in **Safari**, tap **Share → Add to Home Screen**.
+2. Open **Niagize Boss** from the Home Screen and sign in. Accounts are created by the Super Admin.
+3. Follow **Hatua 3**: WhatsApp number, three products, share the link.
+
+> On iPhone, "Share → app" from WhatsApp isn't possible for web apps (WebKit limitation), so photos come from the gallery: in WhatsApp, hold a photo → **Save**, then **Ongeza picha**.
+
+**Super Admin:** creates accounts in Supabase (Authentication → Users → Add user, *Auto Confirm*) and grants a role in `public.admins` (`super_admin` or `boss`).
 
 ## Principles
 
-1. **Augment WhatsApp, never replace it.** WhatsApp is the winga's home. Take him out of it and you kill him.
-2. **Protect his edge.** His seller relationships and inside prices are his livelihood. The customer never sees them.
-3. **Automate friction, not judgment.** Searching, calculating, sharing and remembering go to the app. Bargaining and buying stay human.
-4. **The invoice is the contract.** What the customer approved, at what price, to which address, before money moved.
-5. **Don't hold money.** Winga records payments and proves them. It never touches the cash.
-6. **His data stays with him.** Everything is stored on his phone. No account, no server. He can back it up and take it anywhere.
+1. **Augment WhatsApp, never replace it.** It's where the winga and his customers live.
+2. **One winga, not a marketplace.** His trust is the product.
+3. **Protect his edge.** Suppliers and inside prices are never shown to customers.
+4. **Fresh or hidden.** Stale stock breaks trust; products expire unless confirmed.
+5. **Don't hold money.** Payments happen outside the app. We record, we don't touch.
+6. **Borrow the basics, innovate on go-to-market.** Shop grids and order flows are solved problems; reach and trust are not.
 
 ## Under the hood
 
 | | |
 |---|---|
-| **App** | One HTML file, plain JavaScript, no framework, no build step |
-| **Storage** | IndexedDB on the device; backup and restore as a JSON file in Settings |
-| **Offline** | Service worker caches the app shell |
-| **Share-in** | Web Share Target (`manifest.webmanifest` + `sw.js`) |
-| **Share-out** | Web Share API with the invoice image, with a WhatsApp link and copy-text fallback |
-| **Invoice** | Drawn on a canvas at 1080 px wide, sized for WhatsApp |
+| **Frontend** | Plain HTML + JavaScript, no build step, hosted on GitHub Pages. Works offline from cache |
+| **Backend** | Supabase: Postgres, Auth (email + password), Storage for photos |
+| **Security** | Row Level Security: visitors read live products only; costs live in `product_private` (admins only); only admins upload or edit. See [`supabase/schema.sql`](supabase/schema.sql) |
+| **Photos** | Shrunk on the phone before upload: 1080 px full, 400 px thumbnail |
+| **Search** | Fuse.js fuzzy search, so "kiatu" finds "viatu" |
 | **Language** | Kiswahili first, English toggle |
-| **Type** | Bricolage Grotesque, IBM Plex Sans, IBM Plex Mono |
 
 ```
-index.html             the whole app
-sw.js                  offline + receives shares from WhatsApp
-manifest.webmanifest   installable app + "Winga" in the Android share menu
-icon-*.png             app icons
+index.html             customer shop
+admin/                 Boss side (Niagize Boss)
+shared/                core.js (language, data layer), style.css, config.js (public Supabase URL + anon key)
+supabase/schema.sql    tables, security rules, storage bucket
+pocket/                v0.1: the original single-winga pocket tool (where this started)
 docs/                  README images
 ```
 
+The anon key in `shared/config.js` is public by design. Row Level Security decides who can read or change what.
+
 ## Roadmap
 
-```
- v0.1 Pocket ───────► v0.2 Field test ───────► B. WhatsApp + auto-pay ───────► C. ODA
- (one winga's tool)    one real winga,          order line on WhatsApp,          customer app,
-                       one week, Android         payments that confirm             many wingas,
-                                                 themselves                        quotes
-```
-
-**Measured in the field test:** time from customer message to invoice sent, calculator opens per day (target: zero), forgotten or disputed orders, and whether he still uses it in week two.
-
-**Known limits:** no reminders while the app is closed; data lives on one phone until he backs it up; WhatsApp share-in is Android only, and takes the first photo when several are shared.
-
-## Where photos and data live
+Effort follows one rule: **metrics 50% · onboarding 40% · features 10%.**
 
 ```
- WhatsApp photo ──Share──► sw.js holds it for a moment ──► app shrinks it (max 720 px JPEG) ──► IndexedDB on the phone
-                           (Cache "winga-share", deleted         ~40–90 KB per photo                (no server, no cloud)
-                            as soon as the app reads it)
+ ✅ Shop + Boss side ──► ✅ Onboarding pass 1 ──► ▶ Metrics ──► In-app orders ──► Delivery · rating · reorder · alerts ──► WhatsApp forward bot · Instagram cards
 ```
 
-- **Only a small copy is kept.** The full-size photo stays in WhatsApp; Winga keeps a 720 px copy, enough for the catalog and the invoice card.
-- **Room to spare.** Chrome lets one site use up to 60% of the phone's free disk. At about 70 KB a photo, 1,000 catalog photos is roughly 70 MB.
-- **Protected from clean-ups.** Winga asks Chrome for persistent storage, so the phone won't clear it when space runs low. Settings shows whether that was granted and how much space Winga uses.
-- **No orphans.** Deleting an item or replacing its photo removes the old photo too.
-- **Real risks:** clearing Chrome's site data, uninstalling, or losing the phone wipes it. That is what **Pakua nakala** (backup) in Settings is for.
+- **Metrics next:** visits, product views, order taps, products added per day, days active.
+- **In-app orders** (bargain, invoice, payment proof, verify) ship only if metrics show customers tap "order".
+
+## Where it started
+
+Niagize Kariakoo grew out of **Winga Pocket** (`/pocket/`), a phone-only tool for a winga's catalog, margin math and orders. Field feedback from a working winga turned it into a shop customers can browse. The pocket tool still works at **https://pengo01.github.io/winga/pocket/**.
 
 ## Contributing
 
-Winga is open source under the [MIT License](LICENSE). Issues and pull requests are welcome, especially from people who know Kariakoo, wingas, or Tanzanian payments. Keep the principles above: if a change takes power away from the winga, it doesn't belong here.
+Open source under the [MIT License](LICENSE). Issues and pull requests are welcome, especially from people who know Kariakoo, wingas, or Tanzanian payments. Keep the principles: if a change takes power away from the winga, it doesn't belong here.
 
 ---
 
-<p align="center">
-  <sub>Built in Dar es Salaam for the wingas of Kariakoo. MIT licensed.</sub>
-</p>
+<p align="center"><sub>Built in Dar es Salaam for the wingas of Kariakoo. MIT licensed.</sub></p>

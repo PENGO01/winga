@@ -34,7 +34,7 @@ var STR = {
   notReady:"Duka linaandaliwa. Kuagiza kutafunguka hivi punde.", added:"Imeongezwa {a}", agoToday:"leo", agoYday:"jana", agoDays:"siku {n} zilizopita", place:"Kariakoo, Dar es Salaam",
   obTitle:"Hatua 3 za kufungua duka", obProg:"{d} kati ya 3", ob1:"Weka namba ya WhatsApp ya duka", ob1s:"Oda za wateja zitakufikia hapa.", ob2:"Weka bidhaa 3 za kwanza", ob2s:"WhatsApp: shika picha → Save. Kisha bonyeza Ongeza picha.",
   ob3:"Shiriki link ya duka", ob3s:"Kwenye status ya WhatsApp au Instagram.", obDone:"Duka liko tayari. Endelea kuongeza bidhaa kila siku.", obGo:"Anza", obCount:"{n} kati ya 3",
-  installTitle:"Weka Winga Boss kwenye Home Screen", installS:"Kwenye Safari: bonyeza Share, kisha Add to Home Screen. Itafunguka kama app na utabaki umeingia.",
+  installTitle:"Weka Niagize Boss kwenye Home Screen", installS:"Kwenye Safari: bonyeza Share, kisha Add to Home Screen. Itafunguka kama app na utabaki umeingia.",
   shareShop:"Shiriki", shareText:"Karibu {s}! Bidhaa za Kariakoo, mlangoni kwako:", showPw:"Onyesha", hidePw:"Ficha", accountHint:"Akaunti yako inatengenezwa na Super Admin.",
   waFirst:"Weka namba ya WhatsApp kwanza, la sivyo wateja hawawezi kuagiza.", intakeTitle2:"Bidhaa ya {i}", photosLeft:"picha {r} zimebaki", lastPhoto:"picha ya mwisho"
  },
@@ -64,7 +64,7 @@ var STR = {
   notReady:"The shop is being set up. Ordering opens soon.", added:"Added {a}", agoToday:"today", agoYday:"yesterday", agoDays:"{n} days ago", place:"Kariakoo, Dar es Salaam",
   obTitle:"3 steps to open the shop", obProg:"{d} of 3", ob1:"Add the shop's WhatsApp number", ob1s:"Customer orders reach you here.", ob2:"Add your first 3 products", ob2s:"In WhatsApp: hold a photo → Save. Then tap Add photos.",
   ob3:"Share the shop link", ob3s:"On WhatsApp status or Instagram.", obDone:"The shop is ready. Keep adding products every day.", obGo:"Start", obCount:"{n} of 3",
-  installTitle:"Put Winga Boss on your Home Screen", installS:"In Safari: tap Share, then Add to Home Screen. It opens like an app and you stay signed in.",
+  installTitle:"Put Niagize Boss on your Home Screen", installS:"In Safari: tap Share, then Add to Home Screen. It opens like an app and you stay signed in.",
   shareShop:"Share", shareText:"Welcome to {s}! Kariakoo goods to your door:", showPw:"Show", hidePw:"Hide", accountHint:"Your account is created by the Super Admin.",
   waFirst:"Add the WhatsApp number first, or customers can't order.", intakeTitle2:"Product {i}", photosLeft:"{r} photos left", lastPhoto:"last photo"
  }
@@ -151,7 +151,7 @@ function demoSeed() {
     ["Mafuta ya nywele, 250ml", "urembo", 9500, 7000, "", "", "", now - 4*D, "#F2D7E0", "#8A2E4E", "bottle"],
     ["Shati la kitambaa, mikono mirefu", "nguo", 25000, 19000, "M, L, XL", "nyeupe, bluu", "", now - 6*D, "#E4EEF7", "#1F5C8F", "cloth"]
   ];
-  return { shop: { name: "Duka la Boss Deus", tagline: "Bidhaa za Kariakoo, mlangoni kwako", whatsapp: "255700000000", lipa: "5512 3487", lipa_name: "BOSS DEUS KARIAKOO", network: "Mtandao wowote", instagram: "" },
+  return { shop: { name: "Niagize Kariakoo", tagline: "Bidhaa za Kariakoo, mlangoni kwako", whatsapp: "255700000000", lipa: "5512 3487", lipa_name: "BOSS DEUS KARIAKOO", network: "Mtandao wowote", instagram: "" },
     products: defs.map(function (d, i) { var img = sample(d[0].split(",")[0], d[8], d[9], d[10]);
       return { id: "demo-" + i, created_at: new Date(d[7]).toISOString(), refreshed_at: new Date(d[7]).toISOString(), name: d[0], category: d[1], price: d[2], cost: d[3], sizes: d[4], colors: d[5], description: d[6], images: [img], thumbs: [img], status: i === 7 ? "soldout" : "active", asks: [3,1,6,2,4,0,1,2][i], ex: true }; }) };
 }

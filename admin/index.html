@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Winga Boss</title>
+<title>Niagize Boss</title>
 <meta name="theme-color" content="#12283C">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="../icon-192.png">
 <link rel="apple-touch-icon" href="../icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Winga Boss">
+<meta name="apple-mobile-web-app-title" content="Niagize Boss">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -99,7 +99,7 @@ var IC={
 /* ---------------- shell ---------------- */
 function shell(inner){
   var up=Q.total&&Q.done<Q.total?'<span class="upq">'+esc(t("uploading",{i:Q.done+1,n:Q.total}))+'</span>':"";
-  return '<header class="top"><div class="mark"><i></i>Winga</div><div class="sub">'+(up||esc(t("admin"))+"<br>"+esc(S.shop.name||""))+'</div></header><main>'+inner+'</main>'+
+  return '<header class="top"><div class="mark"><i></i>Niagize</div><div class="sub">'+(up||esc(t("admin"))+"<br>"+esc(S.shop.name||""))+'</div></header><main>'+inner+'</main>'+
   '<nav class="tabs" aria-label="Main"><div class="in">'+
    tabBtn("home",IC.home,t("home"))+tabBtn("products",IC.grid,t("products"))+
    '<label class="fab" for="pick"><span class="c">'+IC.cam+'</span><span class="l">'+esc(t("addPhotos"))+'</span><input id="pick" type="file" accept="image/*" multiple></label>'+
@@ -109,13 +109,13 @@ function tabBtn(id,icon,label){return '<button class="tab" data-tab="'+id+'" ari
 function render(){
   var a=$("#app");
   if(S.stage==="login"){a.innerHTML=vLogin();return;}
-  if(S.stage==="denied"){a.innerHTML='<div class="login"><div class="mark"><i></i>Winga</div><div class="banner">'+esc(t("notAdmin"))+'</div><button class="btn ghost" data-act="signout">'+esc(t("signOut"))+'</button></div>';return;}
-  if(S.stage!=="ready"){a.innerHTML='<div class="login"><div class="mark"><i></i>Winga</div><div class="muted">'+esc(t("loading"))+'</div></div>';return;}
+  if(S.stage==="denied"){a.innerHTML='<div class="login"><div class="mark"><i></i>Niagize</div><div class="banner">'+esc(t("notAdmin"))+'</div><button class="btn ghost" data-act="signout">'+esc(t("signOut"))+'</button></div>';return;}
+  if(S.stage!=="ready"){a.innerHTML='<div class="login"><div class="mark"><i></i>Niagize</div><div class="muted">'+esc(t("loading"))+'</div></div>';return;}
   a.innerHTML=shell(({home:vHome,products:vProducts,settings:vSettings}[S.tab]||vHome)());
   var q=$("#aq");if(q&&S.focusQ){q.focus();q.setSelectionRange(q.value.length,q.value.length);S.focusQ=false;}
 }
 function vLogin(){
-  return '<form class="login" data-form="login"><div class="mark"><i></i>Winga</div><div><h1>'+esc(t("admin"))+'</h1><div class="muted" style="margin-top:4px">'+esc(t("login"))+'</div></div>'+
+  return '<form class="login" data-form="login"><div class="mark"><i></i>Niagize</div><div><h1>'+esc(t("admin"))+'</h1><div class="muted" style="margin-top:4px">'+esc(t("login"))+'</div></div>'+
    '<div class="field"><label for="em">'+esc(t("email"))+'</label><input class="input" id="em" type="email" autocomplete="username" inputmode="email" required value="'+esc(S.email)+'"></div>'+
    '<div class="field"><label for="pw">'+esc(t("password"))+'</label><div class="pwrow"><input class="input" id="pw" type="password" autocomplete="current-password" required><button type="button" data-act="togglePw">'+esc(t("showPw"))+'</button></div></div>'+
    '<button class="btn primary block" type="submit">'+esc(t("login"))+'</button><div class="hint">'+esc(t("accountHint"))+'</div></form>';
@@ -180,7 +180,7 @@ function vSettings(){
   return '<h1>'+esc(t("settings"))+'</h1>'+
    '<div class="field"><label>'+esc(t("language"))+'</label><div class="seg" role="group"><button data-lang="sw" aria-pressed="'+(W.lang!=="en")+'">Kiswahili</button><button data-lang="en" aria-pressed="'+(W.lang==="en")+'">English</button></div></div>'+
    f("s_whatsapp","whatsapp","0712 345 678","num")+(W.waPhone(s.whatsapp)?'':'<div class="hint" style="color:var(--red)">'+esc(t("waFirst"))+'</div>')+
-   f("s_name","shopName","Duka la Boss Deus")+f("s_tagline","tagline","Bidhaa za Kariakoo, mlangoni kwako")+
+   f("s_name","shopName","Niagize Kariakoo")+f("s_tagline","tagline","Bidhaa za Kariakoo, mlangoni kwako")+
    '<div class="two">'+f("s_lipa","lipa","5512 3487","num")+f("s_network","network","Mtandao wowote")+'</div>'+f("s_lipa_name","lipaName","BOSS DEUS KARIAKOO")+f("s_instagram","instagram","@duka_la_bossdeus")+
    '<button class="btn primary block" data-act="saveShop">'+esc(t("save"))+'</button>'+
    '<div class="hint">'+esc(W.mode==="live"?t("modeLive"):t("modeDemo"))+'</div>'+
@@ -289,8 +289,8 @@ document.addEventListener("click",async function(e){
         case "signout": await W.db.signOut();S.stage="login";render();break;
     case "copyLink": W.copy(W.shopUrl(),$("#shopUrl"));markShared();setTimeout(render,300);break;
     case "shareShop":
-      var txt=t("shareText",{s:S.shop.name||"Winga"}),u=W.shopUrl();
-      if(navigator.share){try{await navigator.share({title:S.shop.name||"Winga",text:txt,url:u});markShared();}catch(_){}}else{W.copy(txt+" "+u,$("#shopUrl"));markShared();}
+      var txt=t("shareText",{s:S.shop.name||"Niagize Kariakoo"}),u=W.shopUrl();
+      if(navigator.share){try{await navigator.share({title:S.shop.name||"Niagize Kariakoo",text:txt,url:u});markShared();}catch(_){}}else{W.copy(txt+" "+u,$("#shopUrl"));markShared();}
       render();break;
     case "goWhatsapp": S.tab="settings";render();setTimeout(function(){var x=$("#s_whatsapp");if(x){x.focus();x.scrollIntoView({block:"center"});}},60);break;
     case "togglePw": var pw=$("#pw");var show=pw.type==="password";pw.type=show?"text":"password";el.textContent=show?t("hidePw"):t("showPw");break;
