@@ -27,6 +27,8 @@ create or replace function public.is_admin() returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (select 1 from public.admins where user_id = auth.uid());
 $$;
+revoke execute on function public.is_admin() from public, anon;
+grant execute on function public.is_admin() to authenticated;
 
 -- ---------- products ----------
 create table if not exists public.products (
@@ -64,20 +66,20 @@ alter table public.product_private enable row level security;
 drop policy if exists shop_read   on public.shop;
 drop policy if exists shop_write  on public.shop;
 create policy shop_read  on public.shop for select using (true);
-create policy shop_write on public.shop for update using (public.is_admin()) with check (public.is_admin());
+create policy shop_write on public.shop for update to authenticated using (public.is_admin()) with check (public.is_admin());
 
 drop policy if exists admins_self on public.admins;
-create policy admins_self on public.admins for select using (user_id = auth.uid() or public.is_admin());
+create policy admins_self on public.admins for select to authenticated using (user_id = auth.uid() or public.is_admin());
 
 drop policy if exists products_public_read on public.products;
 drop policy if exists products_admin_all   on public.products;
 create policy products_public_read on public.products for select
   using (status <> 'hidden' and refreshed_at > now() - interval '7 days');
-create policy products_admin_all on public.products for all
+create policy products_admin_all on public.products for all to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
 drop policy if exists private_admin_all on public.product_private;
-create policy private_admin_all on public.product_private for all
+create policy private_admin_all on public.product_private for all to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
 -- Customers may bump the "asks" counter only (used to spot popular / missing items).
