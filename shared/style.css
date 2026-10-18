@@ -131,9 +131,6 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 
 /* ---------- v1.2: Selcom-style pieces ---------- */
 /* stage frame: green = live (production), yellow = test / example, red = down */
-:root{--stage:#F6B41C}
-:root[data-stage="live"]{--stage:#22B35E} :root[data-stage="down"]{--stage:#D9483B}
-html::after{content:"";position:fixed;inset:0;border:2px solid var(--stage);pointer-events:none;z-index:999}
 /* sun loader */
 .sunload{display:inline-grid;place-items:center;width:36px;height:36px}
 .sunload svg{width:100%;height:100%}
@@ -144,9 +141,9 @@ html::after{content:"";position:fixed;inset:0;border:2px solid var(--stage);poin
 .boot{min-height:100vh;display:grid;place-items:center}
 .boot .sunload{width:64px;height:64px}
 /* round header buttons (theme, language, profile) */
-.hbtn{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--on-navy);display:grid;place-items:center;font-weight:700;font-size:13px;letter-spacing:.02em;flex:none;position:relative;z-index:1}
-.hbtn svg{width:21px;height:21px}
-.hbtn.av{background:var(--jua);color:#12283C;font-family:var(--display);font-weight:800;font-size:14px;box-shadow:0 0 0 2px var(--navy),0 0 0 4px #C98B4E}
+.hbtn{width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--on-navy);display:grid;place-items:center;font-weight:700;font-size:11.5px;letter-spacing:.03em;flex:none;position:relative;z-index:1}
+.hbtn svg{width:17px;height:17px}
+.hbtn.av{width:36px;height:36px;background:var(--jua);color:#12283C;font-family:var(--display);font-weight:800;font-size:13px;box-shadow:0 0 0 2px var(--navy),0 0 0 4px #C98B4E}
 /* action tiles: icon in a circle, short label under it */
 .tilegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 8px}
 .qt{display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:0;padding:0;color:var(--ink);text-decoration:none;font-size:12.5px;font-weight:500;text-align:center;line-height:1.2;position:relative}
@@ -170,3 +167,47 @@ html::after{content:"";position:fixed;inset:0;border:2px solid var(--stage);poin
 .ver{text-align:center;color:var(--faint);font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 0}
 .check{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--dim)}
 .check input{width:20px;height:20px;accent-color:var(--navy)}
+
+/* ---------- v2: calmer, simpler ---------- */
+.brandmark{width:30px;height:30px;flex:none;display:block}
+.mark{gap:9px}
+.mark .t{font-size:18px;letter-spacing:-.02em}
+/* framed icon: every standalone icon sits in a soft circle */
+.fi{width:38px;height:38px;border-radius:50%;background:var(--sunk);color:var(--ink);display:grid;place-items:center;border:0;flex:none;position:relative}
+.fi svg{width:19px;height:19px}
+.fi.sm{width:32px;height:32px}.fi.sm svg{width:16px;height:16px}
+.fi.wa{background:#E3F6EA;color:#128C4A}
+:root[data-theme="dark"] .fi.wa{background:#10301E;color:#3CC47E}
+.fi.jua{background:var(--jua);color:#12283C}
+.fi .bdg,.badge-n{position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;font-weight:700;display:grid;place-items:center;padding:0 4px;font-family:var(--num);box-shadow:0 0 0 2px var(--card)}
+.stars{color:#E8A317;letter-spacing:1px;font-size:11px;line-height:1}
+.stars i{color:var(--line);font-style:normal}
+/* bottom sheet handle + quantity stepper */
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}
+.qty button{width:36px;height:36px;border:0;background:transparent;font-size:18px;font-weight:600;color:var(--ink)}
+.qty b{min-width:30px;text-align:center;font-family:var(--num);font-weight:600}
+.radio{display:flex;align-items:center;gap:12px;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--card);cursor:pointer}
+.radio input{width:20px;height:20px;accent-color:var(--navy)}
+.radio[data-on="true"]{border-color:var(--ink)}
+.radio .rt{font-weight:600}.radio .rs{font-size:12.5px;color:var(--dim)}
+.radio .rp{margin-left:auto;font-family:var(--num);font-weight:600;font-size:13.5px}
+/* error screen */
+.errscreen{position:fixed;inset:0;z-index:95;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:32px;text-align:center}
+.errscreen .erricon{width:72px;height:72px;border-radius:50%;background:var(--sunk);display:grid;place-items:center;color:var(--dim)}
+.errscreen .erricon svg{width:34px;height:34px}
+.errscreen p{color:var(--dim);max-width:30ch;margin:0}
+.errscreen .btn{min-width:220px;border-radius:999px;margin-top:8px}
+/* status pills for orders */
+.ost{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--sunk);color:var(--dim);white-space:nowrap}
+.ost::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.ost.new{background:var(--blue-soft);color:var(--blue)} .ost.progress,.ost.invoiced{background:var(--amber-soft);color:var(--amber)}
+.ost.paid{background:var(--green-soft);color:var(--green)} .ost.done{background:var(--sunk);color:var(--green)} .ost.cancelled{background:var(--red-soft);color:var(--red)}
+.timeline{display:flex;flex-direction:column;gap:0;padding-left:4px}
+.timeline .st{display:flex;gap:12px;align-items:flex-start;position:relative;padding-bottom:14px}
+.timeline .st::before{content:"";position:absolute;left:7px;top:16px;bottom:0;width:2px;background:var(--line)}
+.timeline .st:last-child::before{display:none}
+.timeline .dot{width:16px;height:16px;border-radius:50%;background:var(--line);flex:none;margin-top:2px;position:relative;z-index:1}
+.timeline .st.on .dot{background:var(--green)}
+.timeline .st.cur .dot{background:var(--jua);box-shadow:0 0 0 4px rgba(246,180,28,.25)}
+.timeline .st .tt{font-weight:600;font-size:14px}.timeline .st .ss{font-size:12px;color:var(--dim)}
+.timeline .st:not(.on):not(.cur) .tt{color:var(--faint)}

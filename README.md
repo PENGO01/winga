@@ -29,18 +29,15 @@ It works. But it lives in WhatsApp status that disappears in 24 hours, in a phon
 
 | Side | Screen | What it does |
 |---|---|---|
-| Mteja (customer) | **Duka** | Categories on top, search and basket at the bottom where the thumb is. A bulb icon opens **Jinsi ya kuagiza** (shown once on the first visit) |
-| Mteja | **Kapu** | Pick several products, add a note on each (size, colour, a question). **Tuma oda** sends one WhatsApp message with every item, note and link |
-| Boss | **Nyumbani** | "Una bidhaa N dukani", Selcom-style icon tiles (add, products, archive, shop, share, assistants, start here, settings), the shop link with share / copy icons and a live preview |
-| Boss | **Ongeza bidhaa** | Pick photos from the gallery. Up to 3 photos, name, category, one price, description. **+ Bidhaa nyingine** or **Hifadhi, Maliza**. Uploads run in the background |
-| Boss | **Bidhaa zilizopo** | Two-column cards, Zote / Zilizofichwa, category filter, search. **Chagua** to edit many at once in a table (price, hide) or one in a form. Delete asks twice |
-| Boss | **Profile** | Round buttons on top switch theme (moon / sun) and language (SW / EN). The avatar opens a menu: shop settings, WhatsApp number, several payment numbers (M-PESA, Airtel Money, HaloPesa, Mixx by Yas, CRDB, NMB, Selcom), assistants, version and a status dot |
-
-Every product shows for 60 days, then moves to **Archive** by itself (a daily database job). **Rudisha dukani** brings it back for another 60 days.
-
-A shop can have **assistants (wasaidizi)**: the Boss adds them in the app; they can add and edit products but can't delete or change settings.
-
-The database still has a private table for inside prices (`product_private`, admins only). The form no longer asks for it, by request; it can come back when margin tracking is needed.
+| Mteja | **Nyumbani** | Masonry grid: photo, name, short description, price, WhatsApp "Ulizia", quality stars, how many ordered, add to basket. Search and 6 categories with sub-categories |
+| Mteja | **Aina** | Temu-style: categories on the left, sub-categories as circles on the right |
+| Mteja | **Kapu → Tuma oda** | Quantities, delivery (Fasta / Utume Leo), address. Creates order **#NK-XXXXX** and sends the seller one WhatsApp message with a link to that order |
+| Mteja | **Oda page** | Live status (Imepokelewa → Nakurudia → Ankara → Imelipwa → Imekamilika), items, total, payment numbers |
+| Mteja | **Mimi** | Optional account: username + 6-digit PIN, WhatsApp number, history and reorder, addresses (map search or typed), settings, delete account |
+| Boss | **Nyumbani** | Dashboard: sales, orders, visitors, conversion, 7-day chart, customer funnel, top products, then shortcuts and a peek at the shop |
+| Boss | **Oda** | Every order with one next step: Nakurudia → Tuma ankara (summary + payment numbers to WhatsApp) → Imelipwa (optional transaction ID) → Imekamilika, or Sitisha with a reason |
+| Boss | **Ongeza / Bidhaa** | Up to 3 photos, category + sub-category, price or "Acha mteja aulize bei", quality stars, #tags. Bulk edit, archive after 60 days |
+| Boss | **Profile** | Shop settings (WhatsApp, payment numbers, delivery fees), assistants, username + PIN |
 
 ## How it works
 
@@ -105,7 +102,7 @@ The anon key in `shared/config.js` is public by design. Row Level Security decid
 Effort follows one rule: **metrics 50% · onboarding 40% · features 10%.**
 
 ```
- ✅ Shop + Boss side ──► ✅ Onboarding pass 1 ──► ✅ Review #1 (basket, Swahili, themes) ──► ▶ Metrics ──► In-app orders ──► Delivery · rating · reorder · alerts ──► WhatsApp forward bot · Instagram cards
+ ✅ Shop + Boss side ──► ✅ Onboarding pass 1 ──► ✅ Review #1 ──► ✅ v2: orders, accounts, dashboard ──► ▶ Learn from real orders ──► In-app orders ──► Delivery · rating · reorder · alerts ──► WhatsApp forward bot · Instagram cards
 ```
 
 - **Metrics next:** visits, product views, order taps, products added per day, days active.
