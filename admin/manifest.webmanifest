@@ -1,18 +1,33 @@
 {
   "id": "./admin/",
-  "name": "Niagize Boss",
-  "short_name": "Niagize Boss",
-  "description": "Boss Deus's side of Niagize Kariakoo: add products, keep the shop fresh.",
+  "name": "Niagize",
+  "short_name": "Niagize",
+  "description": "Boss side of Niagize Kariakoo: orders, products, numbers.",
   "lang": "sw",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#12283C",
-  "theme_color": "#0F2A44",
+  "background_color": "#121212",
+  "theme_color": "#121212",
   "icons": [
-    { "src": "../icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "../icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "../icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "../icon-boss-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../icon-boss-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../icon-boss-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

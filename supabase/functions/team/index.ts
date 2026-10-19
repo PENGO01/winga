@@ -1,4 +1,4 @@
-// Niagize team: a shop owner (boss or super admin) adds or removes assistants.
+// Niagize team: a shop owner (boss or super admin) adds or removes assistants, or resets an assistant's password.
 // The caller's own token proves who they are; the service key (server-side only) creates the account.
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
     const password = String(body.password ?? "");
     const name = String(body.name ?? "").trim().slice(0, 40);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "email" }, 400);
-    if (password.length < 8) return json({ error: "password_short" }, 400);
+    if (password.length < 6) return json({ error: "password_short" }, 400);
     if (!name) return json({ error: "name" }, 400);
     const { data: made, error: ce } = await admin.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: { name } });
     if (ce || !made.user) return json({ error: /already/i.test(ce?.message ?? "") ? "exists" : "create_failed" }, 400);
@@ -49,6 +49,18 @@ Deno.serve(async (req) => {
     return json({ ok: true });
   }
 
+  // an owner sets a new password for an assistant who forgot theirs
+  if (body.action === "reset") {
+    const id = String(body.user_id ?? "");
+    const password = String(body.password ?? "");
+    if (password.length < 6 || password.length > 72) return json({ error: "password_short" }, 400);
+    const { data: row } = await admin.from("admins").select("role").eq("user_id", id).maybeSingle();
+    if (!row || row.role !== "assistant") return json({ error: "not_assistant" }, 400);
+    const { error } = await admin.auth.admin.updateUserById(id, { password });
+    if (error) return json({ error: "reset_failed" }, 400);
+    return json({ ok: true });
+  }
+
   if (body.action === "list") {
     const { data: isSuper } = await asCaller.rpc("is_super");
     const { data: rows } = await admin.from("admins").select("user_id,name,role,added_at").order("added_at");
@@ -56,7 +68,8 @@ Deno.serve(async (req) => {
     for (const r of rows ?? []) {
       if (r.role === "super_admin" && isSuper !== true) continue;   // the super admin stays out of a boss's list
       const { data: u } = await admin.auth.admin.getUserById(r.user_id);
-      out.push({ ...r, email: u?.user?.email ?? "" });
+      const { data: pr } = await admin.from("profiles").select("username").eq("id", r.user_id).maybeSingle();
+      out.push({ ...r, email: u?.user?.email ?? "", username: pr?.username ?? null });
     }
     return json({ ok: true, team: out });
   }

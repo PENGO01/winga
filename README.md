@@ -29,15 +29,15 @@ It works. But it lives in WhatsApp status that disappears in 24 hours, in a phon
 
 | Side | Screen | What it does |
 |---|---|---|
-| Mteja | **Nyumbani** | Masonry grid: photo, name, short description, price, WhatsApp "Ulizia", quality stars, how many ordered, add to basket. Search and 6 categories with sub-categories |
-| Mteja | **Aina** | Temu-style: categories on the left, sub-categories as circles on the right |
-| Mteja | **Kapu → Tuma oda** | Quantities, delivery (Fasta / Utume Leo), address. Creates order **#NK-XXXXX** and sends the seller one WhatsApp message with a link to that order |
+| Mteja | **Nyumbani** | Masonry grid: photo, name, short description, price, WhatsApp "Chat nasi", quality stars, how many ordered, add to basket. Search and 6 categories (Nguo & Fashion, Viatu, Electronics, Urembo, Mama & Watoto, Nyingine); the chosen one scrolls into view |
+| Mteja | **Aina** | Temu-style: categories on the left, sub-categories as icon circles on the right |
+| Mteja | **Kapu → Tuma oda** | Quantities, a Maelekezo (spec) note per item, delivery (Inaharaka / Utumwe Leo), address. Creates order **#NK-XXXXX** and sends the seller one WhatsApp message with a link to that order |
 | Mteja | **Oda page** | Live status (Imepokelewa → Nakurudia → Ankara → Imelipwa → Imekamilika), items, total, payment numbers |
-| Mteja | **Mimi** | Optional account: username + 6-digit PIN, WhatsApp number, history and reorder, addresses (map search or typed), settings, delete account |
-| Boss | **Nyumbani** | Dashboard: sales, orders, visitors, conversion, 7-day chart, customer funnel, top products, then shortcuts and a peek at the shop |
-| Boss | **Oda** | Every order with one next step: Nakurudia → Tuma ankara (summary + payment numbers to WhatsApp) → Imelipwa (optional transaction ID) → Imekamilika, or Sitisha with a reason |
-| Boss | **Ongeza / Bidhaa** | Up to 3 photos, category + sub-category, price or "Acha mteja aulize bei", quality stars, #tags. Bulk edit, archive after 60 days |
-| Boss | **Profile** | Shop settings (WhatsApp, payment numbers, delivery fees), assistants, username + PIN |
+| Mteja | **Mimi** | Optional account: username + password (Google sign-in ready), one account per WhatsApp number, history and reorder, addresses (map search or typed), help centre, settings, delete account |
+| Boss | **Nyumbani** | Shortcuts first (Oda, Archive, Share link, Cheki duka), then sales, orders, visitors, conversion, 7-day chart, customer funnel, top products |
+| Boss | **Oda** | Mpya · Zinasubiri · Zimekamilika, search by order number. One next step per order: opened orders move to "Inafanyiwa kazi" after 2 minutes → Tuma ankara (delivery fee per order, agreed total after bargaining) → Imelipwa → Imekamilika, or Sitisha with a written reason |
+| Boss | **Ongeza / Bidhaa** | Pick up to 3 photos at once, name, category + sub-category, price (always), quality stars. Edit and archive icons on every card; archive after 60 days |
+| Boss | **Profile** | Shop settings (WhatsApp, payment numbers), assistants (share sign-in link, reset password), username + password |
 
 ## How it works
 

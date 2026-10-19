@@ -2,17 +2,32 @@
   "id": "./",
   "name": "Niagize Kariakoo",
   "short_name": "Niagize",
-  "description": "Bidhaa za Kariakoo, mlangoni kwako.",
+  "description": "Ni chap na salama, mpaka mlangoni kwako.",
   "lang": "sw",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F6F4EE",
-  "theme_color": "#0F2A44",
+  "background_color": "#121212",
+  "theme_color": "#121212",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
