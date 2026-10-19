@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oda · Niagize</title>
+<meta property="og:title" content="Niagize">
+<meta property="og:description" content="Oda mpya · Niagize Kariakoo">
+<meta property="og:image" content="https://pengo01.github.io/winga/docs/social-preview.png">
+<meta name="theme-color" content="#121212">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="../icon-boss-192.png">
+<link rel="apple-touch-icon" href="../icon-boss-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/style.css">
+<style>
+/* WhatsApp handoff: the link in a customer's order message lands here.
+   Team signed in on this browser -> straight to the order. Otherwise: the order at a glance + the way into the app. */
+body{background:var(--bg)}
+.ho{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.ho header{background:var(--navy);color:var(--on-navy);padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:8px}
+.ho header .mark{margin-right:auto}
+.ho header .lang{background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--on-navy);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600}
+.ho main{padding:16px;display:flex;flex-direction:column;gap:12px;flex:1}
+.ho .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ho .top h1{font-size:22px;margin:0;flex:1;font-family:var(--num)}
+.ho .when{font-size:13px;color:var(--dim)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.ci{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.ci:first-child{border-top:0}
+.ci img{width:52px;height:52px;border-radius:10px;object-fit:cover;background:var(--sunk)}
+.ci .n{font-weight:600;font-size:14px;line-height:1.25}
+.ci .p{font-family:var(--num);font-size:12.5px;color:var(--dim)}
+.ci .note{font-size:12.5px;color:var(--jua-text);margin-top:2px}
+.ci b{font-family:var(--num);font-size:13.5px}
+.sum{display:flex;justify-content:space-between;align-items:baseline;padding:4px 2px;font-size:14px}
+.sum b{font-family:var(--num);font-size:20px}
+.sum .d{color:var(--dim)}
+.acts{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.tip{display:none;background:var(--jua-soft);color:var(--ink);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.4;gap:10px;align-items:flex-start}
+.tip.on{display:flex}
+.tip svg{width:22px;height:22px;flex:none}
+.track{text-align:center;font-size:13.5px;color:var(--dim);padding:6px}
+.track a{color:inherit;font-weight:600}
+.wait{flex:1;display:grid;place-items:center;gap:10px;text-align:center;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="ho" id="app"><div class="wait" id="wait"></div></div>
+<div id="toastRoot"></div>
+<script>window.NIAGIZE_APP = "boss";</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="../shared/config.js"></script>
+<script src="../shared/core.js"></script>
+<script>
+(function(){
+var W=window.Winga,t=W.t,esc=W.esc,$=function(s){return document.querySelector(s);};
+var code=decodeURIComponent((location.hash||"").replace(/^#(o-)?/,"")).toUpperCase().replace(/[^A-Z0-9-]/g,"");
+var inApp="./#o-"+encodeURIComponent(code), O=null;
+var PHONE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>';
+var ARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+$("#wait").innerHTML=W.SUN;
+function go(){ $("#app").innerHTML='<div class="wait">'+W.SUN+'<div>'+esc(t("ho_opening"))+'</div></div>'; location.replace(inApp); }
+function head(){ return '<header><div class="mark">'+W.MARK+'<span class="t">Niagize</span>'+W.betaPill()+'</div><button class="lang" id="lang">'+(W.lang==="sw"?"EN":"SW")+'</button></header>'; }
+function draw(){
+  var a=$("#app"), track=W.shopUrl()+"#o-"+encodeURIComponent(code);
+  if(!O){ a.innerHTML=head()+'<main><div class="wait"><h2>'+esc(t("o_notfound"))+'</h2><a class="btn ghost" href="'+esc(track)+'">'+esc(t("ho_track"))+'</a></div></main>'; bind(); return; }
+  var ios=W.push.ios(), items=O.items||[];
+  var h=head()+'<main>'+
+    '<div class="top"><h1>'+esc(t("ho_title",{code:O.code}))+'</h1><span class="ost '+esc(O.status)+'">'+esc(t("st_"+O.status))+'</span></div>'+
+    '<div class="when">'+esc(W.when(O.created_at))+' · '+esc(t(O.delivery==="leo"?"del_leo":"del_fasta"))+'</div>'+
+    '<div class="card">'+items.map(function(i){return '<div class="ci"><img src="'+esc(W.img(i.thumb))+'" alt=""><div><div class="n">'+esc(i.name)+'</div><div class="p">'+i.qty+' × '+(i.price!=null?"TSh "+W.money(i.price):esc(t("noPrice")))+'</div>'+(i.note?'<div class="note">'+esc(i.note)+'</div>':'')+'</div><b>'+(i.price!=null?W.money(i.price*i.qty):"–")+'</b></div>';}).join("")+'</div>'+
+    '<div class="sum"><span class="d">'+esc(t("cart_total"))+(O.delivery_fee==null&&O.agreed_total==null?' · '+esc(t("fee_tbd")):'')+'</span><b>TSh '+W.money(W.total(O))+'</b></div>'+
+    '<div class="acts">'+
+      (ios?'<button class="btn sun block" id="openApp">'+PHONE+esc(t("ho_open"))+'</button>'+
+           '<div class="tip" id="tip" role="status">'+PHONE+'<span>'+esc(t("ho_ios"))+'</span></div>'+
+           '<a class="btn ghost block" id="here" href="'+esc(inApp)+'">'+esc(t("ho_here"))+ARROW+'</a>'
+          :'<a class="btn sun block" id="here" href="'+esc(inApp)+'">'+PHONE+esc(t("ho_open"))+'</a>')+
+    '</div>'+
+    '<div class="track"><a href="'+esc(track)+'">'+esc(t("ho_track"))+'</a></div>'+
+  '</main>';
+  a.innerHTML=h; bind();
+}
+function bind(){
+  var l=$("#lang"); if(l)l.onclick=function(){W.setLang(W.lang==="sw"?"en":"sw");draw();};
+  var b=$("#openApp"); if(b)b.onclick=function(){var tp=$("#tip");tp.classList.add("on");tp.scrollIntoView({block:"nearest",behavior:"smooth"});};
+}
+async function boot(){
+  if(!code){ location.replace("./"); return; }
+  var team=W.db.teamHere().catch(function(){return false;});
+  var ord=W.db.getOrder(code).catch(function(){return null;});
+  if(await team){ go(); return; }
+  O=await ord; draw();
+}
+boot();
+addEventListener("hashchange",function(){location.reload();});
+})();
+</script>
+</body>
+</html>

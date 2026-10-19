@@ -493,7 +493,7 @@ async function placeOrder(items){
   try{
     var addr=S.me&&!S.me.needsProfile&&S.addrs.length?S.addrId:null;
     var r=await W.db.createOrder(items,S.delivery,addr,null,null);
-    var link=W.adminUrl()+"#o-"+r.code;
+    var link=W.adminUrl()+"o.html#"+r.code;   // handoff page: order at a glance, then into the Boss app
     var msg=t("wa_hello")+"\n"+t("wa_items",{code:r.code,n:r.count})+"\n"+link;
     var url=W.wa(S.shop.whatsapp,msg);
     if(w)w.location.href=url;

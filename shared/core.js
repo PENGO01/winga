@@ -330,7 +330,14 @@ W.STRINGS = [
  ["push_i1","Boss · Alerts","Fungua Niagize kwenye Safari, gusa Share","Open Niagize in Safari, tap Share"],
  ["push_i2","Boss · Alerts","Chagua \"Add to Home Screen\"","Choose \"Add to Home Screen\""],
  ["push_i3","Boss · Alerts","Fungua Niagize kutoka Home Screen, ingia, kisha rudi hapa","Open Niagize from the Home Screen, sign in, come back here"],
- ["push_fail","Boss · Alerts","Imeshindikana kuwasha arifa. Jaribu tena","Couldn't turn on alerts. Try again"]
+ ["push_fail","Boss · Alerts","Imeshindikana kuwasha arifa. Jaribu tena","Couldn't turn on alerts. Try again"],
+ // WhatsApp handoff page (admin/o.html)
+ ["ho_title","Handoff","Oda {code}","Order {code}"],
+ ["ho_open","Handoff","Fungua Niagize","Open Niagize"],
+ ["ho_here","Handoff","Endelea hapa","Continue here"],
+ ["ho_ios","Handoff","Gusa app ya Niagize kwenye Home Screen. Oda hii itafunguka yenyewe.","Tap the Niagize app on your Home Screen. This order opens by itself."],
+ ["ho_track","Handoff","Mteja? Fuatilia oda yako","Customer? Track your order"],
+ ["ho_opening","Handoff","Inafungua…","Opening…"]
 ];
 /* categories: 6 groups + sub-groups, in shop order.
    [key, Kiswahili, English, icon, [[subKey, sw, en, icon], …]]. Keys never change; labels can. */
@@ -797,6 +804,8 @@ W.db = {
     if (/@/.test(login)) { var r = await sb.auth.signInWithPassword({ email: login, password: secret }); if (!r.error) return r.data.session; }
     return this.account("login", { login: login, password: secret });
   },
+  /* handoff page: is a team member signed in in this browser? (demo: only when a test sets winga.demoTeam) */
+  async teamHere() { if (!live) return ls("winga.demoTeam") === "1"; var s = await this.session(); return !!s && await this.isAdmin(); },
   async isAdmin() { if (!live) return true; var r = await sb.rpc("is_admin"); return !r.error && r.data === true; },
   async me() {
     if (!live) return { id: "demo-boss", name: "Boss Deus", role: ls("winga.demoRole") || "boss", email: "boss@mfano", username: "bossdeus" };
@@ -807,6 +816,6 @@ W.db = {
   },
   async signOut() { if (!live) { if (W.APP === "shop") { var d = demoGet(); d.me = null; demoSave(d); } return; } await sb.auth.signOut(); }
 };
-W.shopUrl = function () { var u = location.href.split("#")[0].split("?")[0]; return u.replace(/admin\/?(index\.html)?$/, "").replace(/index\.html$/, ""); };
+W.shopUrl = function () { var u = location.href.split("#")[0].split("?")[0]; return u.replace(/admin\/?([a-z]+\.html)?$/, "").replace(/index\.html$/, ""); };
 W.adminUrl = function () { return W.shopUrl() + "admin/"; };
 })();
