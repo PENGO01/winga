@@ -832,13 +832,23 @@ async function loadDash(){try{S.dash=await W.db.dashboard(S.days);}catch(e){cons
 async function reloadOrders(){try{S.orders=await W.db.orders();}catch(e){console.error(e);}if(S.stage==="ready"){render();}}
 /* the Oda badge stays fresh: every minute while the app is open, and on coming back to it */
 function startPolling(){clearInterval(S.poll);S.poll=setInterval(function(){if(document.visibilityState==="visible"&&S.stage==="ready")reloadOrders();},60000);}
-document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&S.stage==="ready"){reloadOrders();loadDash();}});
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&S.stage==="ready"){reloadOrders().then(autoOpenFresh);loadDash();}});
+/* coming from a WhatsApp link or an alert: the newest order nobody has opened yet (last 15 min) opens by itself, once */
+function autoOpenFresh(){
+  if(S.stage!=="ready"||stack.length||S.pendingOrder)return false;
+  var done=[];try{done=JSON.parse(localStorage.getItem("winga.autoOpened")||"[]");}catch(e){}
+  var o=(S.orders||[]).find(function(x){return x.status==="new"&&!x.seen_at&&Date.now()-new Date(x.created_at)<900000&&done.indexOf(x.code)<0;});
+  if(!o)return false;
+  done.unshift(o.code);try{localStorage.setItem("winga.autoOpened",JSON.stringify(done.slice(0,40)));}catch(e){}
+  S.tab="orders";render();openOrder(o.code);return true;
+}
 async function load(){
   var r=await Promise.all([W.db.getShop(),W.db.listProducts(true),W.db.me(),W.db.ping(),W.db.orders().catch(function(){return [];})]);
   S.shop=r[0]||{};S.products=r[1];S.me=r[2];S.status=r[3];S.orders=r[4];S.stage="ready";render();
   loadDash();startPolling();
   W.push.state().then(function(st){S.push=st;if(S.tab==="home")render();});
   if(S.pendingOrder){var c=S.pendingOrder;S.pendingOrder=null;S.tab="orders";render();openOrder(c);}
+  else autoOpenFresh();
 }
 async function afterAuth(){if(!(await W.db.isAdmin())){S.stage="denied";render();return;}await load();}
 var ptrProxy={get classList(){return ($("#ptr")||document.createElement("i")).classList;},set innerHTML(v){var p=$("#ptr");if(p)p.innerHTML=v;}};
