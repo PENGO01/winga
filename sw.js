@@ -6,7 +6,7 @@ self.addEventListener("install", e => { e.waitUntil(caches.open(SHELL).then(c =>
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x.startsWith("winga-full") && x !== SHELL).map(x => caches.delete(x)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
-  if (e.request.method !== "GET" || u.origin !== location.origin || u.pathname.includes("/pocket/")) return;
+  if (e.request.method !== "GET" || u.origin !== location.origin || u.pathname.includes("/pocket/") || u.pathname.includes("/beta/")) return;   // pocket and beta run their own workers
   e.respondWith(fetch(e.request).then(r => { const c = r.clone(); caches.open(SHELL).then(x => x.put(e.request, c)); return r; })
     .catch(() => caches.match(e.request).then(r => r || caches.match("./index.html"))));
 });
