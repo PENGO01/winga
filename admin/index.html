@@ -297,7 +297,7 @@ function bad(errId,wrapId,msg){
 function shell(inner){
   var up=Q.total&&Q.done<Q.total?W.SUN+'<span class="upn">'+(Q.done+1)+'/'+Q.total+'</span>':"";
   var nm=(S.me&&S.me.name)||"Boss",n=newCount();
-  return '<header class="top"><div class="mark">'+W.MARK+'<span class="t">Niagize</span></div>'+up+hbtns()+
+  return '<header class="top"><div class="mark">'+W.MARK+'<span class="t">Niagize</span>'+W.betaPill()+'</div>'+up+hbtns()+
    '<button class="hbtn av" data-act="profile" aria-label="'+esc(nm)+'">'+esc(initials(nm))+'</button></header>'+
    '<main><div class="ptr" id="ptr"></div>'+inner+'</main>'+
    '<nav class="tabs" aria-label="Menu"><div class="in">'+

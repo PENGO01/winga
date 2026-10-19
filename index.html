@@ -243,7 +243,7 @@ function render(){
   renderTabs();
   var a=$("#app");
   if(!S.loaded){a.innerHTML=W.splash("Niagize");return;}
-  var head='<header class="shop"><div class="bar"><div class="mark">'+W.MARK+'<span class="t">'+esc(S.shop.name||"Niagize Kariakoo")+'</span></div>'+hbtns()+'</div><div class="tag">'+esc(t("tagline"))+'</div></header>';
+  var head='<header class="shop"><div class="bar"><div class="mark">'+W.MARK+'<span class="t">'+esc(S.shop.name||"Niagize Kariakoo")+'</span>'+W.betaPill()+'</div>'+hbtns()+'</div><div class="tag">'+esc(t("tagline"))+'</div></header>';
   if(S.tab==="cats"){a.innerHTML=head+'<main>'+vCats()+'</main>';return;}
   if(S.tab==="cart"){a.innerHTML='<main style="padding-top:calc(14px + env(safe-area-inset-top,0px))">'+vCart()+'</main>';return;}
   if(S.tab==="me"){a.innerHTML='<main style="padding-top:calc(12px + env(safe-area-inset-top,0px))">'+vMe()+'</main>';return;}

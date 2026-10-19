@@ -454,7 +454,9 @@ var C = window.WINGA_CONFIG || {};
 var live = !!(C.url && C.anonKey && window.supabase && window.supabase.createClient);
 var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, storageKey: W.APP === "boss" ? "winga.auth" : "niagize.customer" } }) : null;
 W.mode = live ? "live" : "demo";
-W.stage = C.stage || "pilot";   // "production" or "pilot"
+W.stage = C.stage || "pilot";
+W.beta = !!C.beta;          // the /beta/ copy shows a small BETA pill
+W.betaPill = function () { return W.beta ? '<span class="betapill">BETA</span>' : ""; };   // "production" or "pilot"
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 W.img = pub;
