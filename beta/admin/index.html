@@ -191,6 +191,11 @@ nav.tabs .bdg{position:absolute;top:8px;left:calc(50% + 4px);min-width:17px;heig
 .sendbtn{width:46px;height:46px;border-radius:50%;border:0;background:var(--red);color:#fff;display:grid;place-items:center;flex:none}
 .sendbtn svg{width:19px;height:19px}
 .spinning svg{animation:spin .8s linear infinite}
+.nudge{display:flex;align-items:center;gap:12px;background:var(--jua-soft);border:1px solid var(--line-soft);border-radius:16px;padding:12px 8px 12px 14px}
+.nudge b{font-size:14.5px}
+.alertshero{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 4px}
+.alertshero .ring{width:84px;height:84px;border-radius:50%;background:var(--jua);color:#121212;display:grid;place-items:center}
+.alertshero .ring svg{width:38px;height:38px}
 .login .brandmark{display:block}
 </style>
 </head>
@@ -261,6 +266,8 @@ var IC={
  trend:P+'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
  pin:P+'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
  truck:P+'<path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>',
+ bell:P+'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>',
+ share2:P+'<rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M12 7v6M9.5 9.5L12 7l2.5 2.5"/></svg>',
  send:P+'<path d="M4 12l16-8-6 16-2.5-6.5z"/><path d="M11.5 13.5L20 4"/></svg>',
  clock:P+'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/></svg>'
@@ -328,7 +335,9 @@ function vLogin(){
 /* ---------------- home: quick actions first, then the numbers ---------------- */
 function vHome(){
   var d=S.dash,live=S.products.filter(isLive).length,u=W.shopUrl();
-  var h='<section class="qtiles" style="margin-top:14px">'+[["goOrders",IC.inbox,t("q_orders"),newCount()],["goArchive",IC.archive,t("q_archive"),S.products.filter(function(p){return p.status==="archived";}).length],["shareShop",IC.share,t("q_share")],["openShop",IC.store,t("q_shop")]].map(function(x){
+  var h='';
+  if((S.push==="off"||S.push==="install")&&W.ls("winga.pushNudge")!=="x")h+='<section class="nudge" style="margin-top:14px"><span class="fi jua">'+IC.bell+'</span><button class="grow" data-act="alerts" style="all:unset;cursor:pointer;flex:1;min-width:0"><b>'+esc(t("push_nudge"))+'</b><br><span class="small muted">'+esc(t("push_nudge_s"))+'</span></button><button class="iconbtn" data-act="pushNudgeX" aria-label="'+esc(t("back"))+'">'+IC.x+'</button></section>';
+  h+='<section class="qtiles" style="margin-top:14px">'+[["goOrders",IC.inbox,t("q_orders"),newCount()],["goArchive",IC.archive,t("q_archive"),S.products.filter(function(p){return p.status==="archived";}).length],["shareShop",IC.share,t("q_share")],["openShop",IC.store,t("q_shop")]].map(function(x){
     return '<button class="qt" data-act="'+x[0]+'"><span class="fi">'+x[1]+(x[3]?'<span class="bdg">'+x[3]+'</span>':'')+'</span>'+esc(x[2])+'</button>';}).join("")+'</section>';
   h+='<div class="sec-h"><span class="sdot '+S.status+'" title="'+esc(t("st_"+S.status))+'"></span><h2 class="small muted" style="font-family:var(--body);font-weight:500">'+live+' '+esc(t("d_live"))+'</h2>'+
    '<span class="period">'+[1,7,30].map(function(n){return '<button data-act="days" data-n="'+n+'" aria-pressed="'+(S.days===n)+'">'+(n===1?(W.lang==="sw"?"Leo":"Today"):n+(W.lang==="sw"?" siku":"d"))+'</button>';}).join("")+'</span></div>';
@@ -570,6 +579,7 @@ async function moveOrder(status,extra,msgKey){
 PAGES.profile=function(){
   var me=S.me||{name:"Boss",role:"boss"},rows='';
   if(owner()){rows+=mrow("settings",IC.gear,t("shop_settings"),t("shop_settings_s"));rows+=mrow("team",IC.team,t("team"),t("team_s"));}
+  rows+=mrow("alerts",IC.bell,t("push_title"),S.push==="on"?"✓ "+t("push_on"):t("push_off"));
   rows+=mrow("pin",IC.key,t("pin_title"),me.username?'@'+me.username:t("pin_title_s"));
   if(W.mode!=="live")rows+=mrow("resetDemo",IC.refresh,t("reset_demo"),"");
   rows+='<button class="mrow red" data-act="signout"><span class="fi red">'+IC.out+'</span><span class="tt">'+esc(t("signOut"))+'</span></button>';
@@ -577,6 +587,17 @@ PAGES.profile=function(){
    '<div class="ver"><span class="num">v'+esc(W.VERSION)+'</span>·<span>'+esc(W.UPDATED[W.lang])+'</span>·<span class="sdot '+S.status+'" title="'+esc(t("st_"+S.status))+'"></span></div></div>';
 };
 function mrow(act,icon,title,sub){return '<button class="mrow" data-act="'+act+'"><span class="fi">'+icon+'</span><span class="grow"><span class="tt">'+esc(title)+'</span>'+(sub?'<br><span class="ss">'+esc(sub)+'</span>':'')+'</span>'+chev()+'</button>';}
+PAGES.alerts=function(){
+  var st=S.push||"off",h=hd(t("push_title"))+'<div class="bd"><div class="alertshero"><span class="ring">'+IC.bell+'</span><div class="muted" style="max-width:32ch;text-align:center">'+esc(t("push_s"))+'</div>'+
+   '<span class="pill '+(st==="on"?"good":"ok")+'">'+esc(st==="on"?"✓ "+t("push_on"):t("push_off"))+'</span></div>';
+  if(st==="install")h+='<div class="card stack" style="gap:10px"><b>'+esc(t("push_install"))+'</b>'+[["1",IC.share2,"push_i1"],["2",IC.plus,"push_i2"],["3",IC.bell,"push_i3"]].map(function(x){return '<div class="row" style="gap:12px"><span class="fi sm">'+x[1]+'</span><span class="grow">'+esc(t(x[2]))+'</span><span class="num muted">'+x[0]+'</span></div>';}).join("")+'</div>';
+  else if(st==="denied")h+='<div class="banner">'+esc(t("push_denied"))+'</div>';
+  else if(st==="unsupported")h+='<div class="banner">'+esc(t("push_unsupported"))+'</div>';
+  h+='<div class="ferr" id="push_err" role="alert"></div></div>';
+  if(st==="off")h+='<div class="ft"><button class="btn primary block" data-act="pushOn" style="border-radius:999px;min-height:50px">'+IC.bell+esc(t("push_enable"))+'</button></div>';
+  if(st==="on")h+='<div class="ft"><div class="ft2"><button class="btn ghost" data-act="pushOff" style="border-radius:999px">'+esc(t("push_disable"))+'</button><button class="btn primary" data-act="pushTest" style="border-radius:999px">'+esc(t("push_test"))+'</button></div></div>';
+  return h;
+};
 PAGES.pin=function(){
   return hd(t("pin_title"))+'<div class="bd"><div class="hint">'+esc(t("pin_title_s"))+'</div>'+
    '<label class="ifield" id="w_k_user"><span class="pre">@</span><input id="k_user" autocapitalize="none" autocorrect="off" placeholder="'+esc(t("f_user"))+'" value="'+esc(K.user||"")+'" maxlength="20"></label>'+
@@ -666,6 +687,12 @@ document.addEventListener("click",async function(e){
       if(stack[stack.length-1]==="steps")stack.pop();open("settings");break;
     case "team":T={name:"",email:"",pw:""};if(POP[stack[stack.length-1]])stack.pop();open("team");loadTeam();break;
     case "pin":K={user:(S.me&&S.me.username)||""};open("pin");break;
+    case "alerts":if(stack[stack.length-1]!=="alerts")open("alerts");break;
+    case "pushNudgeX":W.ls("winga.pushNudge","x");render();break;
+    case "pushOn":el.disabled=true;try{S.push=await W.push.enable();}catch(x){console.error(x);bad("push_err",null,t("push_fail"));}el.disabled=false;
+      if(S.push==="on"){W.toast("✓ "+t("push_on"));try{await W.db.testPush();}catch(_){}}draw(false);render();break;
+    case "pushOff":S.push=await W.push.disable();draw(false);render();break;
+    case "pushTest":var tr=await W.db.testPush();W.toast(tr&&tr.sent?t("push_test_ok"):t("push_fail"));break;
     case "steps":open("steps");break;
     case "pickPhotos":closeAll();$("#pick").click();break;
     case "shareShop":await shareShop();break;
@@ -810,6 +837,7 @@ async function load(){
   var r=await Promise.all([W.db.getShop(),W.db.listProducts(true),W.db.me(),W.db.ping(),W.db.orders().catch(function(){return [];})]);
   S.shop=r[0]||{};S.products=r[1];S.me=r[2];S.status=r[3];S.orders=r[4];S.stage="ready";render();
   loadDash();startPolling();
+  W.push.state().then(function(st){S.push=st;if(S.tab==="home")render();});
   if(S.pendingOrder){var c=S.pendingOrder;S.pendingOrder=null;S.tab="orders";render();openOrder(c);}
 }
 async function afterAuth(){if(!(await W.db.isAdmin())){S.stage="denied";render();return;}await load();}
@@ -817,6 +845,10 @@ var ptrProxy={get classList(){return ($("#ptr")||document.createElement("i")).cl
 W.pullToRefresh(ptrProxy,async function(){if(S.stage==="ready"&&!stack.length)await load();});
 W.watchNetwork(function(){if(S.stage==="ready")load().catch(function(){});else boot();});
 var om=location.hash.match(/^#o-(.+)$/);if(om)S.pendingOrder=decodeURIComponent(om[1]);
+/* a tapped order alert (app already open) or a changed #o-CODE opens that order */
+function openFromUrl(u){var m=String(u||"").match(/#o-([A-Za-z0-9-]+)/);if(!m)return;var code=decodeURIComponent(m[1]);if(S.stage!=="ready"){S.pendingOrder=code;return;}S.tab="orders";render();reloadOrders();openOrder(code);}
+addEventListener("hashchange",function(){if(!(O&&O.o&&location.hash==="#o-"+O.o.code))openFromUrl(location.hash);});
+if("serviceWorker" in navigator)navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.type==="open")openFromUrl(e.data.url);});
 async function boot(){
   render();
   try{var s=await W.db.session();if(!s){S.stage="login";render();return;}await afterAuth();}

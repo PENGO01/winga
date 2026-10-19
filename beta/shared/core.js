@@ -312,7 +312,25 @@ W.STRINGS = [
  ["team_reset","Boss · Assistants","Weka neno jipya la siri","Set a new password"],
  ["team_reset_s","Boss · Assistants","Kwa {x}. Mpe neno hili jipya","For {x}. Give them this new password"],
  ["team_reset_ok","Boss · Assistants","Neno jipya la siri limewekwa","New password set"],
- ["you","Boss · Assistants","Wewe","You"]
+ ["you","Boss · Assistants","Wewe","You"],
+ // boss: order notifications
+ ["push_title","Boss · Alerts","Arifa za oda","Order alerts"],
+ ["push_s","Boss · Alerts","Oda mpya inakufikia papo hapo. Gusa arifa, oda inafunguka hapa.","New orders reach you at once. Tap the alert to open the order here."],
+ ["push_on","Boss · Alerts","Zimewashwa","On"],
+ ["push_off","Boss · Alerts","Zimezimwa","Off"],
+ ["push_enable","Boss · Alerts","Washa arifa","Turn on alerts"],
+ ["push_disable","Boss · Alerts","Zima arifa","Turn off alerts"],
+ ["push_test","Boss · Alerts","Jaribu arifa","Send a test"],
+ ["push_test_ok","Boss · Alerts","Arifa ya majaribio imetumwa","Test alert sent"],
+ ["push_nudge","Boss · Alerts","Washa arifa za oda","Turn on order alerts"],
+ ["push_nudge_s","Boss · Alerts","Ujue oda mpya papo hapo, bila kusubiri WhatsApp","Know about new orders at once, without waiting for WhatsApp"],
+ ["push_denied","Boss · Alerts","Umezuia arifa. Fungua Settings → Niagize → Notifications → Allow","Alerts are blocked. Open Settings → Niagize → Notifications → Allow"],
+ ["push_unsupported","Boss · Alerts","Simu hii haiwezi kupokea arifa za Niagize","This phone can't receive Niagize alerts"],
+ ["push_install","Boss · Alerts","Kwanza weka Niagize kwenye Home Screen","First add Niagize to your Home Screen"],
+ ["push_i1","Boss · Alerts","Fungua Niagize kwenye Safari, gusa Share","Open Niagize in Safari, tap Share"],
+ ["push_i2","Boss · Alerts","Chagua \"Add to Home Screen\"","Choose \"Add to Home Screen\""],
+ ["push_i3","Boss · Alerts","Fungua Niagize kutoka Home Screen, ingia, kisha rudi hapa","Open Niagize from the Home Screen, sign in, come back here"],
+ ["push_fail","Boss · Alerts","Imeshindikana kuwasha arifa. Jaribu tena","Couldn't turn on alerts. Try again"]
 ];
 /* categories: 6 groups + sub-groups, in shop order.
    [key, Kiswahili, English, icon, [[subKey, sw, en, icon], …]]. Keys never change; labels can. */
@@ -429,6 +447,38 @@ W.pullToRefresh = function (indicator, onRefresh) {
   addEventListener("touchstart", function (e) { if (busy || window.scrollY > 0 || document.querySelector(".scrim")) { startY = null; return; } startY = e.touches[0].clientY; dist = 0; }, { passive: true });
   addEventListener("touchmove", function (e) { if (startY == null) return; dist = e.touches[0].clientY - startY; if (dist > 12) { indicator.innerHTML = W.SUN; indicator.classList.add("on"); indicator.classList.toggle("ready", dist > 70); } }, { passive: true });
   addEventListener("touchend", async function () { if (startY == null) return; startY = null; if (dist > 70) { busy = true; indicator.classList.add("spin"); try { await onRefresh(); } catch (e) {} busy = false; } indicator.classList.remove("on", "spin", "ready"); dist = 0; });
+};
+
+/* ---------------- order alerts (Web Push) ----------------
+   iPhone: works only in the Home Screen app (iOS 16.4+). The permission ask must come straight from a tap. */
+W.push = {
+  supported: function () { return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window; },
+  ios: function () { return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); },
+  /* on · off · denied · install · unsupported */
+  state: async function () {
+    if (W.mode !== "live") return ls("winga.demoPush") || "off";
+    if (this.ios() && !W.standalone()) return "install";
+    if (!this.supported()) return "unsupported";
+    if (Notification.permission === "denied") return "denied";
+    try { var r = await navigator.serviceWorker.ready, sub = await r.pushManager.getSubscription(); return sub && Notification.permission === "granted" ? "on" : "off"; } catch (e) { return "off"; }
+  },
+  enable: async function () {
+    if (W.mode !== "live") { ls("winga.demoPush", "on"); return "on"; }
+    var perm = await Notification.requestPermission();   // first, while the tap still counts
+    if (perm !== "granted") return perm === "denied" ? "denied" : "off";
+    var key = await W.db.pushKey(), r = await navigator.serviceWorker.ready;
+    var sub = await r.pushManager.getSubscription();
+    if (!sub) sub = await r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: W.push.keyBytes(key) });
+    await W.db.savePush(sub.toJSON(), W.adminUrl());
+    return "on";
+  },
+  disable: async function () {
+    if (W.mode !== "live") { ls("winga.demoPush", "off"); return "off"; }
+    var r = await navigator.serviceWorker.ready, sub = await r.pushManager.getSubscription();
+    if (sub) { await W.db.dropPush(sub.endpoint).catch(function () {}); await sub.unsubscribe(); }
+    return "off";
+  },
+  keyBytes: function (b64) { var t = b64.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((b64.length + 3) % 4), bin = atob(t), out = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; }
 };
 
 /* ---------------- photos ---------------- */
@@ -721,6 +771,21 @@ W.db = {
   },
   google: !!(live && C.google),
   async signInGoogle() { var r = await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: W.shopUrl() + "?go=me" } }); if (r.error) throw r.error; },
+  /* order alerts */
+  async pushKey() {
+    var r = await sb.rpc("push_public_key"); if (r.data) return r.data;
+    var s = await sb.functions.invoke("notify", { body: { action: "setup" } }); if (s.error) throw s.error; return s.data.publicKey;
+  },
+  async savePush(j, appUrl) {
+    var s = await sb.auth.getSession(), uid = s.data.session && s.data.session.user.id;
+    var row = { user_id: uid, endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth, app_url: appUrl, ua: navigator.userAgent.slice(0, 160), fails: 0 };
+    var r = await sb.from("push_subs").upsert(row, { onConflict: "endpoint" }); if (r.error) throw r.error;
+  },
+  async dropPush(endpoint) { var r = await sb.from("push_subs").delete().eq("endpoint", endpoint); if (r.error) throw r.error; },
+  async testPush() {
+    if (!live) return { sent: 1 };
+    var r = await sb.functions.invoke("notify", { body: { action: "test" } }); if (r.error) throw await fnErr(r); return r.data;
+  },
   resetDemo() { ls(DEMO_KEY, null); W._demoMem = null; },
   /* staff session */
   async session() {
