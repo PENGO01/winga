@@ -117,6 +117,14 @@ Deno.serve(async (req) => {
   // change password (staff and customers); staff may also pick a username here
   if (b.action === "set_pin" || b.action === "set_password") {
     if (!okPass(pass)) return json({ error: "password" }, 400);
+    // assistants don't change their own password: the boss resets it for them (team "reset")
+    const { data: staffRow } = await admin.from("admins").select("role").eq("user_id", me.id).maybeSingle();
+    if (staffRow?.role === "assistant") return json({ error: "assistant" }, 403);
+    // v2.1+ (set_password) proves the current password first; v2.0's set_pin is left as it was
+    if (b.action === "set_password") {
+      const current = String(b.current ?? "");
+      if (!current || !me.email || !(await session(me.email, current))) return json({ error: "current" }, 401);
+    }
     const username = String(b.username ?? "").trim().toLowerCase();
     if (username) {
       if (!USER.test(username)) return json({ error: "username" }, 400);
