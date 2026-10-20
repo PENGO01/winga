@@ -243,3 +243,25 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 .legal{white-space:pre-wrap;line-height:1.55;font-size:14px}
 .soon{display:inline-flex;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--jua-soft);color:var(--jua-text);border-radius:999px;padding:3px 9px}
 .betapill{font-family:var(--num);font-size:10px;font-weight:600;letter-spacing:.08em;background:var(--cyan);color:#121212;border-radius:999px;padding:2px 7px;margin-left:2px;flex:none}
+/* v2.2 (review #3) */
+.busy{pointer-events:none;opacity:.7;position:relative}
+.busy::after{content:"";width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;display:inline-block;animation:spin .7s linear infinite;margin-left:8px;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.busy::after{animation-duration:2s}}
+.timeline .st.pack::before{background:none;border-left:2px dashed var(--jua);width:0}
+.timeline .st.on+.st.cur.pack .dot,.timeline .st.cur.pack .dot{background:var(--jua)}
+.timeline .st.on.before-pack::before{background:none;border-left:2px dashed var(--jua);width:0}
+.rstars{display:flex;gap:6px;justify-content:center}
+.rstars button{border:0;background:none;font-size:34px;line-height:1;color:var(--line);padding:4px;min-width:44px;min-height:44px}
+.rstars button[aria-pressed="true"]{color:var(--jua)}
+.claimbox{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line);border-radius:16px;padding:12px;background:var(--card)}
+.claimok{display:flex;gap:10px;align-items:flex-start;background:var(--green-soft);color:var(--ink);border-radius:12px;padding:10px 12px}
+.claimok.wait{background:var(--amber-soft)}
+.claimok svg{width:18px;height:18px;flex:none;margin-top:2px}
+.inst{display:flex;flex-direction:column;gap:0}
+.inst li{display:flex;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line);list-style:none}
+.inst li:first-child{border-top:0}
+.inst .n{width:26px;height:26px;border-radius:50%;background:var(--jua);color:var(--on-jua);display:grid;place-items:center;font-family:var(--num);font-weight:600;font-size:13px;flex:none}
+.inst .ic{margin-left:auto;color:var(--dim);display:grid}
+.inst .ic svg{width:20px;height:20px}
+.inst ol{margin:0;padding:0}

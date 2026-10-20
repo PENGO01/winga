@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.1.0";
+W.VERSION = "2.2.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -37,6 +37,7 @@ W.STRINGS = [
  ["added","Common","Imetunzwa: {a}","Saved: {a}"],
  ["agoToday","Common","leo","today"],
  ["agoYday","Common","jana","yesterday"],
+ ["agoJuzi","Common","juzi","2 days ago"],
  ["agoDays","Common","siku {n} zilizopita","{n} days ago"],
  ["all","Common","Zote","All"],
  ["lang","Common","Lugha","Language"],
@@ -85,9 +86,11 @@ W.STRINGS = [
  ["wa_hello","Basket (WhatsApp)","Habari! Napata mzigo huu?","Hello! Can I get these?"],
  ["wa_items","Basket (WhatsApp)","Oda {code} · bidhaa {n}","Order {code} · {n} items"],
  ["wa_ask","Product (WhatsApp)","Habari! Naulizia hii:","Hello! I'm asking about this:"],
- ["wa_one","Product share","Mdau… Tuagize Kariakoo, ni chap na salama","Order from Kariakoo, fast and safe"],
+ ["wa_one","Product share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
+ ["wa_total","Basket (WhatsApp)","Jumla: TSh {x}","Total: TSh {x}"],
+ ["wa_del","Basket (WhatsApp)","Usafiri: {d} · {fee}","Delivery: {d} · {fee}"],
  ["order_sent","Order","Oda imetumwa","Order sent"],
- ["order_sent_s","Order","Maliza kwenye WhatsApp. Fuatilia oda yako hapa.","Finish in WhatsApp. Track your order here."],
+ ["order_sent_s","Order","Unaweza kufuatilia hapa, status ya oda yako","You can follow your order status here"],
  ["guest_hint","Order","Jisajili uone historia na kuagiza tena","Sign up to see your history and reorder"],
  ["o_title","Order","Oda {code}","Order {code}"],
  ["o_items","Order","Bidhaa","Items"],
@@ -102,6 +105,35 @@ W.STRINGS = [
  ["st_paid","Order","Imelipwa","Paid"],
  ["st_done","Order","Imekamilika","Completed"],
  ["st_cancelled","Order","Imesitishwa","Cancelled"],
+ ["st_pack","Order","Tunafunga mzigo na kukutumia","Packing and sending"],
+ ["o_pay_wait","Order","Njia za malipo zitaonekana ukishapokea ankara","Payment options show once you get the invoice"],
+ ["claim_title","Order","Umeshalipa? Tuma taarifa za malipo","Paid? Send the payment details"],
+ ["claim_channel","Order","Njia ya malipo","Payment channel"],
+ ["claim_ref","Order","Namba ya muamala / risiti","Transaction ID / receipt"],
+ ["claim_name","Order","Jina la aliyelipa","Payer name"],
+ ["claim_send","Order","Tuma kwa muuzaji","Send to seller"],
+ ["claim_sent","Order","Imetumwa · Inasubiri uthibitisho","Sent · Waiting for confirmation"],
+ ["claim_ok","Order","Malipo yamethibitishwa","Payment confirmed"],
+ ["claim_wa","Order","Habari! Nimelipia oda {code}.\nNjia: {ch}\nMuamala: {ref}\nJina: {name}","Hello! I paid for order {code}.\nChannel: {ch}\nTransaction: {ref}\nName: {name}"],
+ ["received","Order","Nimepokea","I've received it"],
+ ["rate_title","Order","Umeridhika na huduma?","How was the service?"],
+ ["rate_note","Order","Maoni (si lazima)","Comment (optional)"],
+ ["rate_send","Order","Funga oda","Close the order"],
+ ["rate_thanks","Order","Asante! Oda imefungwa","Thank you! Order closed"],
+ ["rate_your","Order","Umetoa nyota {n}","You gave {n} stars"],
+ ["chat_order","Order","Habari! Kuhusu oda {code}:","Hello! About order {code}:"],
+ ["g_wa","Basket","Namba yako ya WhatsApp","Your WhatsApp number"],
+ ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
+ ["g_hint","Basket","Ankara na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
+ ["inst_title","Install","Weka Niagize kwenye simu yako","Put Niagize on your phone"],
+ ["inst_1","Install","Fungua link","Open the link"],
+ ["inst_2","Install","Ukiwa kwenye ukurasa wa Niagize Kariakoo","On the Niagize Kariakoo page"],
+ ["inst_3","Install","Bonyeza dot tatu (⋮) chini au juu upande wa kulia","Tap the three dots (⋮) at the bottom or top right"],
+ ["inst_4","Install","Au tafuta alama ya Share","Or look for the Share icon"],
+ ["inst_5","Install","Shuka chini, chagua \"Add to Home Screen\"","Scroll down, choose \"Add to Home Screen\""],
+ ["inst_6","Install","Jina: Niagize Kariakoo, bonyeza Add","Name: Niagize Kariakoo, tap Add"],
+ ["inst_7","Install","Hongera! Fungua duka kirahisi kwa icon yetu kwenye Home Screen","Done! Open the shop from our icon on your Home Screen"],
+ ["inst_close","Install","Sawa, nimeelewa","Got it"],
  // customer account
  ["me_guest","Me","Karibu!","Welcome!"],
  ["me_guest_s","Me","Ingia uone oda zako, weka anwani na rudia kuagiza bidhaa kwa urahisi","Sign in to see your orders, save addresses and reorder easily"],
@@ -183,12 +215,17 @@ W.STRINGS = [
  // boss: dashboard
  ["d_sales","Boss · Dashboard","Mauzo","Sales"],
  ["d_orders","Boss · Dashboard","Oda","Orders"],
- ["d_visitors","Boss · Dashboard","Wageni","Visitors"],
+ ["d_visitors","Boss · Dashboard","Wateja wapya","New visitors"],
  ["d_conv","Boss · Dashboard","Conversion","Conversion"],
  ["d_open","Boss · Dashboard","Oda wazi","Open orders"],
  ["d_new","Boss · Dashboard","mpya","new"],
+ ["d_pending","Boss · Dashboard","zinasubiri","pending"],
+ ["d_done","Boss · Dashboard","zimekamilika","completed"],
+ ["d_cancelled","Boss · Dashboard","zimesitishwa","cancelled"],
+ ["d_views_s","Boss · Dashboard","{n} wameangalia bidhaa","{n} product views"],
+ ["d_rating","Boss · Dashboard","Wastani wa nyota","Average stars"],
  ["d_funnel","Boss · Dashboard","Safari ya mteja","Customer funnel"],
- ["d_views","Boss · Dashboard","Wameona","Viewed"],
+ ["d_views","Boss · Dashboard","Wameangalia bidhaa","Product views"],
  ["d_carts","Boss · Dashboard","Kapuni","In basket"],
  ["d_chats","Boss · Dashboard","Wameulizia","Asked"],
  ["d_paid","Boss · Dashboard","Wamelipa","Paid"],
@@ -198,15 +235,15 @@ W.STRINGS = [
  ["q_archive","Boss · Home","Archive","Archive"],
  ["q_share","Boss · Home","Share link","Share link"],
  ["q_shop","Boss · Home","Cheki duka","See shop"],
- ["my_shop","Boss · Home","Duka langu","My shop"],
+ ["my_shop","Boss · Home","Niagize Kariakoo (online)","Niagize Kariakoo (online)"],
  ["t_ending","Boss · Home","Bado zipo?","Still there?"],
- ["stillHere","Boss · Home","Bado upo?","Still here"],
+ ["stillHere","Boss · Home","Bado ipo?","Still here?"],
  ["st_live","Boss · Home","Live","Live"],
  ["st_pilot","Boss · Home","Test","Test"],
  ["st_down","Boss · Home","Haipatikani","Down"],
  ["share_title","Boss · Share","Shiriki duka","Share the shop"],
  ["share_link","Boss · Share","Link yangu","My link"],
- ["shareText","Boss · Share","Niagize Kariakoo, ni chap na salama","Niagize Kariakoo, fast and safe"],
+ ["shareText","Boss · Share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
  ["emptyHome","Boss · Home","Ongeza picha ya bidhaa zako","Add photos of your products"],
  ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
  ["step1","Boss · Discover","Namba ya WhatsApp","WhatsApp number"],
@@ -228,7 +265,14 @@ W.STRINGS = [
  ["f_complete","Boss · Orders","Kamili","Complete"],
  ["f_cancelled","Boss · Orders","Zimesitishwa","Cancelled"],
  ["no_orders_b","Boss · Orders","Hakuna oda hapa","No orders here"],
- ["guest","Boss · Orders","Mgeni","Guest"],
+ ["guest","Boss · Orders","Mteja mpya","New customer"],
+ ["name_add","Boss · Orders","Weka jina la mteja","Add the customer's name"],
+ ["paid_q","Boss · Orders","Umehakiki malipo ya oda {code}?","Have you checked the payment for {code}?"],
+ ["paid_claim","Boss · Orders","Mteja ametuma","The customer sent"],
+ ["paid_none","Boss · Orders","Mteja hajatuma taarifa. Hakiki kwenye simu au benki kwanza.","No details from the customer. Check your phone or bank first."],
+ ["paid_yes","Boss · Orders","Ndiyo, nimehakiki malipo","Yes, payment checked"],
+ ["claim_badge","Boss · Orders","Mteja amelipa","Customer paid"],
+ ["by_customer","Boss · Orders","Mteja amethibitisha kupokea","Customer confirmed receipt"],
  ["auto_hint","Boss · Orders","Itahamia \"Inafanyiwa kazi\" baada ya dakika 2","Moves to In progress after 2 minutes"],
  ["a_progress","Boss · Orders","Nakurudia","Working on it"],
  ["a_invoice","Boss · Orders","Tuma ankara","Send invoice"],
@@ -254,8 +298,8 @@ W.STRINGS = [
  ["inv_after","Boss · Orders (WhatsApp)","Ukisha fanya malipo, tutumie namba ya muamala/risiti na Jina litakalokuja.","After paying, send us the transaction ID/receipt and the name that shows."],
  ["inv_track","Boss · Orders (WhatsApp)","Unaweza kufuatilia oda yako hapa:","You can track your order here:"],
  ["msg_progress","Boss · Orders (WhatsApp)","Tumepokea oda {code}. Tunaishughulikia sasa hivi.","We got order {code}. Working on it now."],
- ["msg_paid","Boss · Orders (WhatsApp)","Tumepokea malipo ya oda {code}. Asante! 🙏","Payment received for order {code}. Thank you! 🙏"],
- ["msg_done","Boss · Orders (WhatsApp)","Oda {code} imekamilika. Asante kwa kuagiza Niagize Kariakoo! Agiza tena:","Order {code} is complete. Thank you! Order again:"],
+ ["msg_paid","Boss · Orders (WhatsApp)","Tumepokea malipo ya oda {code}. Asante! 🤝\n\nTunashughulikia na tutakutaarifu hivi punde!\n\nUnaweza kufuatilia oda yako hapa: {link}","Payment received for order {code}. Thank you! 🤝\n\nWe're on it and will update you shortly!\n\nTrack your order here: {link}"],
+ ["msg_done","Boss · Orders (WhatsApp)","Oda {code} imekamilika.\n\nAsante kwa kutuamini na kuagiza nasi, Karibu tena.\n\n*Niagize Kariakoo!*\nNi chap na salama, mpaka mlangoni kwako.\n\nUnataka kuagiza kitu kingine?\n{shop}","Order {code} is complete.\n\nThank you for trusting us and ordering with us. Welcome back.\n\n*Niagize Kariakoo!*\nFast and safe, to your door.\n\nWant something else?\n{shop}"],
  ["msg_cancel","Boss · Orders (WhatsApp)","Rafiki, pole kwa changamoto! Oda {code}, imesitishwa. Sababu: {reason}.","Friend, sorry for the trouble! Order {code} has been cancelled. Reason: {reason}."],
  // boss: add / edit product
  ["add_title","Boss · Add product","Ongeza bidhaa","Add product"],
@@ -294,6 +338,9 @@ W.STRINGS = [
  ["pin_title","Boss · Profile","Username & neno la siri","Username & password"],
  ["pin_title_s","Boss · Profile","Ingia kwa username na neno la siri","Sign in with username and password"],
  ["pin_done","Boss · Profile","Imehifadhiwa. Ingia kwa username na neno la siri","Saved. Sign in with username and password"],
+ ["f_current","Boss · Profile","Neno la siri la sasa","Current password"],
+ ["err_current","Boss · Profile","Neno la siri la sasa si sahihi","Current password is wrong"],
+ ["pin_assistant","Boss · Profile","Kubadili neno la siri, muombe Boss akusaidie","To change your password, ask the Boss"],
  ["wa_label","Boss · Settings","Namba ya WhatsApp","WhatsApp number"],
  ["pay_title","Boss · Settings","Namba za malipo","Payment numbers"],
  ["pay_num","Boss · Settings","Namba ya malipo","Payment number"],
@@ -308,7 +355,7 @@ W.STRINGS = [
  ["team_exists","Boss · Assistants","Barua pepe hii tayari ina akaunti","This email already has an account"],
  ["team_confirm","Boss · Assistants","Ondoa {x}?","Remove {x}?"],
  ["team_share","Boss · Assistants","Tuma link ya kuingia","Send sign-in link"],
- ["team_share_msg","Boss · Assistants","Habari {name}! Ingia Niagize Boss hapa: {url}\nIngia kwa: {login}","Hi {name}! Sign in to Niagize Boss here: {url}\nSign in with: {login}"],
+ ["team_share_msg","Boss · Assistants","Habari {name}!\nKaribu tufanye kazi, tumia taarifa zako hapo chini kuingia Niagize: {url}\nJina: {login}","Hello {name}!\nWelcome to the team. Use the details below to sign in to Niagize: {url}\nName: {login}"],
  ["team_reset","Boss · Assistants","Weka neno jipya la siri","Set a new password"],
  ["team_reset_s","Boss · Assistants","Kwa {x}. Mpe neno hili jipya","For {x}. Give them this new password"],
  ["team_reset_ok","Boss · Assistants","Neno jipya la siri limewekwa","New password set"],
@@ -436,6 +483,51 @@ W.money = function (n) { return Math.round(+n || 0).toLocaleString("en-US"); };
 W.parseMoney = function (v) { if (v == null || v === "") return null; var s = String(v).toLowerCase().replace(/tsh|tzs|sh/g, "").trim(); var k = /k$/.test(s); s = s.replace(/[^0-9.]/g, ""); if (!s) return null; var n = parseFloat(s); return Math.round(k ? n * 1000 : n); };
 W.waPhone = function (p) { var d = String(p || "").replace(/\D/g, ""); if (!d) return ""; if (d[0] === "0") d = "255" + d.slice(1); else if (d.length === 9) d = "255" + d; return d; };
 W.wa = function (phone, text) { return "https://wa.me/" + (W.waPhone(phone) || "") + "?text=" + encodeURIComponent(text); };
+/* open WhatsApp without leaving a blank tab behind. Phones: the WhatsApp app directly (this screen stays as it is);
+   if WhatsApp doesn't answer in 2.5 s, fall back to wa.me in this same tab. Computers: wa.me in a new tab. */
+W.mobile = function () { return /android|iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); };
+W.openWaUrl = function (web) {
+  W._lastWa = web;
+  var m = String(web).match(/^https:\/\/wa\.me\/(\d*)\?text=(.*)$/);
+  if (!W.mobile() || !m) { var w = null; try { w = window.open(web, "_blank"); if (w) w.opener = null; } catch (e) {} if (!w) location.href = web; return; }
+  var app = "whatsapp://send?" + (m[1] ? "phone=" + m[1] + "&" : "") + "text=" + m[2], gone = false;
+  var off = function () { gone = true; };
+  addEventListener("blur", off); addEventListener("pagehide", off); document.addEventListener("visibilitychange", off);
+  location.href = app;
+  setTimeout(function () { removeEventListener("blur", off); removeEventListener("pagehide", off); document.removeEventListener("visibilitychange", off); if (!gone && document.visibilityState === "visible") location.href = web; }, 2500);
+};
+W.openWa = function (phone, text) { W.openWaUrl(W.wa(phone, text)); };
+/* any wa.me link in either app goes through the same opener */
+document.addEventListener("click", function (e) { var a = e.target.closest && e.target.closest('a[href^="https://wa.me/"]'); if (!a || e.defaultPrevented) return; e.preventDefault(); W.openWaUrl(a.href); }, true);
+/* share the shop: the agreed message, the same from both apps */
+W.shareShop = async function () {
+  var text = W.t("shareText", { url: W.shopUrl() });
+  if (navigator.share) { try { await navigator.share({ text: text }); return true; } catch (e) { if (e && e.name === "AbortError") return false; } }
+  W.openWa("", text); return true;
+};
+/* time for lists: "14:05 · Leo", "Jana", "Juzi"; older shows the date. English has Today / Yesterday only */
+W.whenRel = function (iso) {
+  if (!iso) return "";
+  var d = new Date(iso), now = new Date(), day = function (x) { return new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime(); };
+  var diff = Math.round((day(now) - day(d)) / 864e5), tm = d.toTimeString().slice(0, 5), sw = W.lang === "sw";
+  var lbl = diff === 0 ? (sw ? "Leo" : "Today") : diff === 1 ? (sw ? "Jana" : "Yesterday") : (diff === 2 && sw) ? "Juzi" : d.toLocaleDateString(sw ? "sw-TZ" : "en-GB", { day: "numeric", month: "short" });
+  return tm + " · " + lbl;
+};
+/* money fields: 1,250,000 as you type */
+W.fmtMoneyInput = function (el) {
+  var raw = el.value, pos = el.selectionStart == null ? raw.length : el.selectionStart;
+  var digitsBefore = raw.slice(0, pos).replace(/\D/g, "").length, digits = raw.replace(/\D/g, "").replace(/^0+(?=\d)/, "").slice(0, 10);
+  var out = digits ? Number(digits).toLocaleString("en-US") : "";
+  if (out === raw) return;
+  el.value = out;
+  var i = 0, seen = 0; while (i < out.length && seen < digitsBefore) { if (/\d/.test(out[i])) seen++; i++; }
+  try { el.setSelectionRange(i, i); } catch (e) {}
+};
+document.addEventListener("input", function (e) { if (e.target && e.target.classList && e.target.classList.contains("money")) W.fmtMoneyInput(e.target); });
+/* a button that starts slow work shows the sun and can't be tapped twice */
+W.busy = function (el, on) { if (!el || el.tagName !== "BUTTON") return; if (on) { el.dataset.busy = "1"; el.classList.add("busy"); el.setAttribute("aria-busy", "true"); } else { delete el.dataset.busy; el.classList.remove("busy"); el.removeAttribute("aria-busy"); } };
+/* boot can't hang forever: after ms, show the retry screen (it reloads the page) */
+W.guard = function (promise, ms) { return Promise.race([promise, new Promise(function (_, rej) { setTimeout(function () { rej(new Error("timeout")); }, ms || 12000); })]); };
 W.DAY = 864e5; W.SHOW_DAYS = 60;   // products move to Archive after 60 days
 W.daysLeft = function (p) { return W.SHOW_DAYS - Math.floor((Date.now() - new Date(p.refreshed_at).getTime()) / W.DAY); };
 W.ago = function (iso) { var d = Math.floor((Date.now() - new Date(iso).getTime()) / W.DAY); return d <= 0 ? W.t("agoToday") : d === 1 ? W.t("agoYday") : W.t("agoDays", { n: d }); };
@@ -509,7 +601,7 @@ W.prepPhotos = async function (files) { var out = []; for (var i = 0; i < files.
 /* ---------------- data layer ---------------- */
 var C = window.WINGA_CONFIG || {};
 var live = !!(C.url && C.anonKey && window.supabase && window.supabase.createClient);
-var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, storageKey: W.APP === "boss" ? "winga.auth" : "niagize.customer" } }) : null;
+var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, storageKey: W.APP === "boss" ? "winga.auth" : "niagize.customer", lock: function (name, timeout, fn) { return fn(); } } }) : null;
 W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";
 W.beta = !!C.beta;          // the /beta/ copy shows a small BETA pill
@@ -678,6 +770,19 @@ W.db = {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); return o ? demoOrderView(o, d) : null; }
     var r = await sb.rpc("get_order", { c: code }); if (r.error) throw r.error; return r.data;
   },
+  /* customer: payment details after the invoice; "Nimepokea" + stars */
+  async submitPayment(code, ref, payer, channel) {
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || o.status !== "invoiced") throw new Error("status"); o.claim_ref = ref; o.claim_name = payer; o.claim_channel = channel || null; o.claim_at = new Date().toISOString(); demoSave(d); return demoOrderView(o, d); }
+    var r = await sb.rpc("submit_payment", { c: code, ref: ref, payer: payer, channel: channel || null }); if (r.error) throw new Error((r.error.message || "").match(/ref|payer|status/) ? r.error.message.match(/ref|payer|status/)[0] : "error"); return r.data;
+  },
+  async customerReceived(code, stars, note) {
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || (o.status !== "paid" && o.status !== "done")) throw new Error("status"); if (o.status !== "done") o.history.push({ s: "done", at: new Date().toISOString(), by: "customer" }); o.status = "done"; o.rating = stars; o.rating_note = note || null; o.received_at = o.received_at || new Date().toISOString(); demoSave(d); return demoOrderView(o, d); }
+    var r = await sb.rpc("customer_received", { c: code, stars: stars, note: note || null }); if (r.error) throw r.error; return r.data;
+  },
+  async setOrderName(code, name) {
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); o.customer_name = name; demoSave(d); return demoOrderView(o, d); }
+    var r = await sb.rpc("set_order_name", { c: code, name: name }); if (r.error) throw r.error; return r.data;
+  },
   async myOrders() {
     if (!live) { var d = demoGet(); return d.orders.filter(function (o) { return d.me && o.customer === d.me; }); }
     var s = await sb.auth.getSession(); if (!s.data.session) return [];
@@ -717,6 +822,8 @@ W.db = {
       return { visitors: Object.keys(sessions).length + 61, views: ev.filter(function (e) { return e.type === "view"; }).length + 140, carts: ev.filter(function (e) { return e.type === "cart"; }).length + 23, chats: ev.filter(function (e) { return e.type === "chat"; }).length + 9,
         orders: os.length + 13, paid: paid.length + 8, sales: paid.reduce(function (s, o) { return s + W.total(o); }, 0) + 412000,
         open: d.orders.filter(function (o) { return ["new","progress","invoiced","paid"].indexOf(o.status) >= 0; }).length, new: d.orders.filter(function (o) { return o.status === "new"; }).length, by_day: byDay,
+        p_new: os.filter(function (o) { return o.status === "new"; }).length + 2, pending: os.filter(function (o) { return ["progress","invoiced","paid"].indexOf(o.status) >= 0; }).length + 3, done: os.filter(function (o) { return o.status === "done"; }).length + 8, cancelled: os.filter(function (o) { return o.status === "cancelled"; }).length,
+        customers: 11, new_customers: 7, rating: 4.6,
         top: d.products.slice().sort(function (a, b) { return (b.ordered || 0) - (a.ordered || 0); }).slice(0, 5).map(function (p) { return { id: p.id, name: p.name, thumb: p.thumbs[0], ordered: p.ordered || 0, views: (p.ordered || 0) * 4 }; }) };
     }
     var r = await sb.rpc("dashboard", { days: days }); if (r.error) throw r.error; return r.data;
