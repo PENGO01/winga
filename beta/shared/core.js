@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.3.0";
+W.VERSION = "2.3.1";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -76,7 +76,7 @@ W.STRINGS = [
  ["cart_send","Basket","Tuma oda","Send order"],
  ["cart_total","Basket","Jumla","Total"],
  ["cart_empty","Basket","Kapu lako ni tupu","Your basket is empty"],
- ["cart_clear","Basket","Futa","Clear"],
+ ["cart_clear","Basket","Futa kapu","Empty basket"],
  ["delivery","Basket","Usafiri","Delivery"],
  ["del_fasta","Basket","Inaharaka","Urgent"],
  ["del_leo","Basket","Utumwe Leo","Send today"],
