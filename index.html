@@ -81,11 +81,13 @@ nav.tabs button svg{width:23px;height:23px}
 nav.tabs button[aria-current="page"]{color:var(--cyan);font-weight:600}
 nav.tabs .bdg{position:absolute;top:6px;left:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--jua);color:#121212;font-size:10.5px;font-weight:700;display:grid;place-items:center;padding:0 4px;font-family:var(--num)}
 /* categories tab */
-.catv{display:grid;grid-template-columns:116px 1fr;min-height:calc(100vh - 200px);margin:0 calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
+.catv{min-height:calc(100vh - 260px)}
+.catbar{margin-bottom:0}
 .rail{background:var(--sunk);display:flex;flex-direction:column}
 .rail button{border:0;background:transparent;text-align:left;padding:15px 12px 15px 14px;font-size:13.5px;font-weight:500;color:var(--dim);border-left:3px solid transparent;line-height:1.25}
 .rail button[aria-pressed="true"]{background:var(--paper);color:var(--ink);font-weight:600;border-left-color:var(--jua)}
-.subgrid{padding:14px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px 8px;align-content:start}
+.subgrid{padding:8px 0 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px 8px;align-content:start}
+@media (max-width:360px){.subgrid{grid-template-columns:repeat(3,1fr)}}
 .subgrid h3{grid-column:1/-1;font-size:15px}
 .sc{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;color:var(--ink);font-size:12px;font-weight:500;text-align:center;line-height:1.2}
 .sc .c{width:62px;height:62px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink)}
@@ -283,7 +285,7 @@ function render(){
   var a=$("#app");
   if(!S.loaded){a.innerHTML=W.splash("Niagize");return;}
   var head='<header class="shop"><div class="bar"><div class="mark">'+W.MARK+'<span class="t">'+esc(S.shop.name||"Niagize Kariakoo")+'</span>'+W.betaPill()+'</div>'+hbtns()+'</div><div class="tag">'+esc(t("tagline"))+'</div></header>';
-  if(S.tab==="cats"){a.innerHTML=head+'<main>'+vCats()+'</main>';return;}
+  if(S.tab==="cats"){a.innerHTML=head+vCatBar()+'<main>'+vCats()+'</main>';centerChips();return;}
   if(S.tab==="cart"){a.innerHTML='<main style="padding-top:calc(14px + env(safe-area-inset-top,0px))">'+vCart()+'</main>';driftCats();return;}
   if(S.tab==="me"){a.innerHTML='<main style="padding-top:calc(12px + env(safe-area-inset-top,0px))">'+vMe()+'</main>';driftCats();return;}
   a.innerHTML=head+vSticky()+'<main><div class="ptr" id="ptr"></div>'+vHome()+'</main>';
@@ -321,15 +323,17 @@ function vHome(){
   if(!list.length)return h+'<div class="empty">'+esc(t("noMatch"))+'</div>';
   return h+'<div class="mas">'+list.map(card).join("")+'</div>';
 }
+/* categories page: the same chip buttons as the home page filter, across the top */
+function vCatBar(){var c=S.railCat;return '<div class="sticky catbar"><div class="chips" data-row="catpage">'+W.CATS.map(function(k){return '<button class="chip" data-act="rail" data-cat="'+k+'" aria-pressed="'+(c===k)+'">'+esc(W.catLabel(k))+'</button>';}).join("")+'</div></div>';}
 function vCats(){
   var c=S.railCat;
-  var rail='<div class="rail">'+W.CATS.map(function(k){return '<button data-act="rail" data-cat="'+k+'" aria-pressed="'+(c===k)+'">'+esc(W.catLabel(k))+'</button>';}).join("")+'</div>';
+
   function n(sub){return S.products.filter(function(x){return x.category===c&&(!sub||x.subcategory===sub);}).length;}
   function pic(sub){var p=S.products.find(function(x){return x.category===c&&(!sub||x.subcategory===sub)&&x.thumbUrl;});return p?'<img src="'+esc(p.thumbUrl)+'" alt="" loading="lazy">':W.catIcon(c,sub||undefined);}
   var all=n("");
   var subs=W.subs(c).map(function(s){var k=n(s);
     return '<button class="sc" data-act="goSub" data-cat="'+c+'" data-sub="'+s+'"><span class="c">'+pic(s)+'</span>'+esc(W.catLabel(c,s))+(k?' <span class="muted small num">'+k+'</span>':'')+'</button>';}).join("");
-  return '<div class="catv">'+rail+'<div class="subgrid"><h3>'+esc(W.catLabel(c))+'</h3><button class="sc" data-act="goSub" data-cat="'+c+'" data-sub=""><span class="c">'+pic("")+'</span>'+esc(t("all"))+(all?' <span class="muted small num">'+all+'</span>':'')+'</button>'+subs+'</div></div>';
+  return '<div class="catv"><div class="subgrid"><h3>'+esc(W.catLabel(c))+'</h3><button class="sc" data-act="goSub" data-cat="'+c+'" data-sub=""><span class="c">'+pic("")+'</span>'+esc(t("all"))+(all?' <span class="muted small num">'+all+'</span>':'')+'</button>'+subs+'</div></div>';
 }
 function noteHtml(n){return n?'<div class="note">'+IC.pen.replace('<svg','<svg style="width:12px;height:12px;vertical-align:-1px;margin-right:4px"')+esc(n)+'</div>':'';}
 function vCart(){
@@ -647,7 +651,7 @@ document.addEventListener("click",async function(e){
     case "clearCart":CART=[];save("winga.cart.v2",CART);render();break;
     case "cat":S.cat=el.dataset.cat;S.sub="";render();break;
     case "sub":S.sub=el.dataset.sub;render();break;
-    case "rail":S.railCat=el.dataset.cat;render();break;
+    case "rail":S.railCat=el.dataset.cat;var cr=document.querySelector('[data-row="catpage"]');if(cr)S.sl_catpage=cr.scrollLeft;render();break;
     case "goSub":S.cat=el.dataset.cat;S.sub=el.dataset.sub;S.tab="home";render();scrollTo(0,0);break;
     case "clearQ":S.q="";S.searching=false;render();break;
     case "shareShop":await W.shareShop();break;
