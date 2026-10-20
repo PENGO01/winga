@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.2.0";
+W.VERSION = "2.3.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -59,7 +59,7 @@ W.STRINGS = [
  ["rate_3","Shop","Ubora wa juu","Top quality"],
  ["chat","Product","Chat nasi","Chat with us"],
  ["addCart","Product","Ongeza kwenye kapu","Add to basket"],
- ["kapu","Product","Kapu","Basket"],
+ ["kapu","Product","Kapuni","To basket"],
  ["buyNow","Product","Agiza sasa","Order now"],
  ["cart_added","Product","Imeongezwa kwenye kapu","Added to basket"],
  ["inCart","Product","Ipo kwenye kapu","In your basket"],
@@ -126,6 +126,10 @@ W.STRINGS = [
  ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
  ["g_hint","Basket","Ankara na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
  ["inst_title","Install","Weka Niagize kwenye simu yako","Put Niagize on your phone"],
+ ["tips_title","Tips","Vidokezo","Tips"],
+ ["tips_buy","Tips","Jinsi ya kununua","How to buy"],
+ ["tips_save","Tips","Weka app kwenye simu","Save the app"],
+ ["tips_swipe","Tips","Telezesha kuona zaidi","Swipe for more"],
  ["inst_1","Install","Fungua link","Open the link"],
  ["inst_2","Install","Ukiwa kwenye ukurasa wa Niagize Kariakoo","On the Niagize Kariakoo page"],
  ["inst_3","Install","Bonyeza dot tatu (⋮) chini au juu upande wa kulia","Tap the three dots (⋮) at the bottom or top right"],
@@ -219,6 +223,12 @@ W.STRINGS = [
  ["d_conv","Boss · Dashboard","Conversion","Conversion"],
  ["d_open","Boss · Dashboard","Oda wazi","Open orders"],
  ["d_new","Boss · Dashboard","mpya","new"],
+ ["p_all","Boss · Orders","Wakati wote","All time"],
+ ["p_today","Boss · Orders","Leo","Today"],
+ ["p_7","Boss · Orders","Siku 7","7 days"],
+ ["p_30","Boss · Orders","Siku 30","30 days"],
+ ["min_money","Boss · Orders","Kiasi kianzie TSh 1,000","Amount must be TSh 1,000 or more"],
+ ["crop","Boss · Add product","Kata picha","Crop photo"],
  ["d_pending","Boss · Dashboard","zinasubiri","pending"],
  ["d_done","Boss · Dashboard","zimekamilika","completed"],
  ["d_cancelled","Boss · Dashboard","zimesitishwa","cancelled"],
@@ -230,12 +240,12 @@ W.STRINGS = [
  ["d_chats","Boss · Dashboard","Wameulizia","Asked"],
  ["d_paid","Boss · Dashboard","Wamelipa","Paid"],
  ["d_top","Boss · Dashboard","Zinazofanya vizuri","Top products"],
- ["d_live","Boss · Dashboard","bidhaa dukani","products live"],
+ ["d_live","Boss · Dashboard","Kuna bidhaa {n}","{n} products live"],
  ["q_orders","Boss · Home","Oda","Orders"],
  ["q_archive","Boss · Home","Archive","Archive"],
  ["q_share","Boss · Home","Share link","Share link"],
  ["q_shop","Boss · Home","Cheki duka","See shop"],
- ["my_shop","Boss · Home","Niagize Kariakoo (online)","Niagize Kariakoo (online)"],
+ ["my_shop","Boss · Home","Ingia dukani","Go to the shop"],
  ["t_ending","Boss · Home","Bado zipo?","Still there?"],
  ["stillHere","Boss · Home","Bado ipo?","Still here?"],
  ["st_live","Boss · Home","Live","Live"],
@@ -270,7 +280,7 @@ W.STRINGS = [
  ["paid_q","Boss · Orders","Umehakiki malipo ya oda {code}?","Have you checked the payment for {code}?"],
  ["paid_claim","Boss · Orders","Mteja ametuma","The customer sent"],
  ["paid_none","Boss · Orders","Mteja hajatuma taarifa. Hakiki kwenye simu au benki kwanza.","No details from the customer. Check your phone or bank first."],
- ["paid_yes","Boss · Orders","Ndiyo, nimehakiki malipo","Yes, payment checked"],
+ ["paid_yes","Boss · Orders","Malipo yamepokelewa","Payment received"],
  ["claim_badge","Boss · Orders","Mteja amelipa","Customer paid"],
  ["by_customer","Boss · Orders","Mteja amethibitisha kupokea","Customer confirmed receipt"],
  ["auto_hint","Boss · Orders","Itahamia \"Inafanyiwa kazi\" baada ya dakika 2","Moves to In progress after 2 minutes"],
@@ -291,14 +301,14 @@ W.STRINGS = [
  ["pay_ref","Boss · Orders","Namba ya muamala (si lazima)","Transaction ID (optional)"],
  ["pay_name","Boss · Orders","Jina la aliyelipa (si lazima)","Payer name (optional)"],
  ["reason","Boss · Orders","Sababu","Reason"],
- ["reason_ph","Boss · Orders","Andika sababu kwa ufupi","Write the reason briefly"],
+ ["reason_ph","Boss · Orders","Weka sababu ya kusitisha","Why is it cancelled?"],
  ["need_phone","Boss · Orders","Weka namba ya mteja kwanza","Add the customer's number first"],
  ["inv_hi","Boss · Orders (WhatsApp)","{name}! Tafadhali fanya malipo ya Oda yako {code}.","{name}! Please pay for your order {code}."],
  ["inv_pay","Boss · Orders (WhatsApp)","Lipia kupitia:","Pay with:"],
  ["inv_after","Boss · Orders (WhatsApp)","Ukisha fanya malipo, tutumie namba ya muamala/risiti na Jina litakalokuja.","After paying, send us the transaction ID/receipt and the name that shows."],
- ["inv_track","Boss · Orders (WhatsApp)","Unaweza kufuatilia oda yako hapa:","You can track your order here:"],
+ ["inv_track","Boss · Orders (WhatsApp)","Unaweza kuendelea kufuatilia oda yako hapa:","You can keep tracking your order here:"],
  ["msg_progress","Boss · Orders (WhatsApp)","Tumepokea oda {code}. Tunaishughulikia sasa hivi.","We got order {code}. Working on it now."],
- ["msg_paid","Boss · Orders (WhatsApp)","Tumepokea malipo ya oda {code}. Asante! 🤝\n\nTunashughulikia na tutakutaarifu hivi punde!\n\nUnaweza kufuatilia oda yako hapa: {link}","Payment received for order {code}. Thank you! 🤝\n\nWe're on it and will update you shortly!\n\nTrack your order here: {link}"],
+ ["msg_paid","Boss · Orders (WhatsApp)","Tumepokea malipo ya oda {code}. Asante! 🤝\n\nTunashughulikia na tutakutaarifu hivi punde!\n\nUnaweza kuendelea kufuatilia oda yako hapa: {link}","Payment received for order {code}. Thank you! 🤝\n\nWe're on it and will update you shortly!\n\nTrack your order here: {link}"],
  ["msg_done","Boss · Orders (WhatsApp)","Oda {code} imekamilika.\n\nAsante kwa kutuamini na kuagiza nasi, Karibu tena.\n\n*Niagize Kariakoo!*\nNi chap na salama, mpaka mlangoni kwako.\n\nUnataka kuagiza kitu kingine?\n{shop}","Order {code} is complete.\n\nThank you for trusting us and ordering with us. Welcome back.\n\n*Niagize Kariakoo!*\nFast and safe, to your door.\n\nWant something else?\n{shop}"],
  ["msg_cancel","Boss · Orders (WhatsApp)","Rafiki, pole kwa changamoto! Oda {code}, imesitishwa. Sababu: {reason}.","Friend, sorry for the trouble! Order {code} has been cancelled. Reason: {reason}."],
  // boss: add / edit product
@@ -731,10 +741,12 @@ W.db = {
     var r = await sb.from("products").update(patch).eq("id", id); if (r.error) throw r.error;
   },
   async updateMany(rows) { for (var i = 0; i < rows.length; i++) await this.updateProduct(rows[i].id, rows[i].patch); },
-  async setPhotos(p, keep, add) {
+  async setPhotos(p, keep, add, order) {
     var images = keep.map(function (i) { return p.images[i]; }), thumbs = keep.map(function (i) { return (p.thumbs || [])[i] || p.images[i]; });
     var removed = (p.images || []).filter(function (_, i) { return keep.indexOf(i) < 0; }).concat((p.thumbs || []).filter(function (_, i) { return keep.indexOf(i) < 0; })).filter(isStored);
     if (add.length) { var up = await uploadPhotos(p.id, add, (p.images || []).length + 1); images = images.concat(up.images); thumbs = thumbs.concat(up.thumbs); }
+    /* order: [{k:i}|{a:j}] puts kept and new photos back in the slots they had (a cropped cover stays first) */
+    if (order && order.length === images.length) { var kc = keep.length, im2 = [], th2 = []; order.forEach(function (o) { var at = o.a != null ? kc + o.a : o.k; im2.push(images[at]); th2.push(thumbs[at]); }); images = im2; thumbs = th2; }
     await this.updateProduct(p.id, { images: images, thumbs: thumbs });
     if (live && removed.length) await sb.storage.from("products").remove(removed);
     return { images: images, thumbs: thumbs };
