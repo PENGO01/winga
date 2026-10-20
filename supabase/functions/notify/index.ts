@@ -2,6 +2,8 @@
 //  - action "order" (called by the database on every new order, protected by the x-niagize-hook secret)
 //      → "Oda mpya · NK-XXXXX" to every team member who switched notifications on; tapping opens that order.
 //  - action "test"  (called from the Boss app with the member's own sign-in) → a test notification to their own phones.
+//  - action "brief" (called by the database at 09:30 and 13:30 Dar es Salaam time, and every 30 min for critical findings,
+//      protected by the hook secret) → the day's numbers / what needs action, to the owners (boss + super admin).
 //  - action "setup" (anyone) → makes the VAPID keys once and returns the public key. Keys never leave the database.
 // Deployed with verify_jwt = false: the hook secret or the caller's token is checked here.
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
@@ -59,10 +61,24 @@ Deno.serve(async (req) => {
     const ids = (team ?? []).map((t) => t.user_id);
     if (!ids.length) return json({ ok: true, total: 0 });
     const { data: subs } = await admin.from("push_subs").select("id,endpoint,p256dh,auth,app_url").in("user_id", ids);
-    const who = o.customer_name || "Mgeni";
+    const who = o.customer_name || "Mteja mpya";
     const body = `${who} · bidhaa ${o.items_count}` + (o.subtotal ? ` · TSh ${money(o.subtotal)}` : "") + (o.delivery === "leo" ? " · Utumwe Leo" : "");
     const r = await deliver(subs ?? [], (s) => ({ title: `Oda mpya · ${o.code}`, body, tag: o.code, url: (s.app_url || SUBJECT + "admin/") + "#o-" + o.code }));
     return json({ ok: true, ...r });
+  }
+
+  if (b.action === "brief") {
+    if (!cfg.hook_secret || req.headers.get("x-niagize-hook") !== cfg.hook_secret) return json({ error: "hook" }, 401);
+    const kind = b.kind === "critical" ? "critical" : "daily";
+    const { data: br, error: be } = await admin.rpc("team_brief", { kind });
+    if (be || !br) return json({ error: "brief" }, 500);
+    if (!br.send) return json({ ok: true, sent: 0, quiet: true });
+    const { data: owners } = await admin.from("admins").select("user_id").in("role", ["boss", "super_admin"]);
+    const ids = (owners ?? []).map((t) => t.user_id);
+    if (!ids.length) return json({ ok: true, total: 0 });
+    const { data: subs } = await admin.from("push_subs").select("id,endpoint,p256dh,auth,app_url").in("user_id", ids);
+    const r = await deliver(subs ?? [], (s) => ({ title: br.title, body: br.body, tag: br.tag || "brief", url: (s.app_url || SUBJECT + "admin/") + (br.code ? "#o-" + br.code : "") }));
+    return json({ ok: true, kind, ...r });
   }
 
   if (b.action === "test") {

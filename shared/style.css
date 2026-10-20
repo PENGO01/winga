@@ -265,3 +265,4 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 .inst .ic{margin-left:auto;color:var(--dim);display:grid}
 .inst .ic svg{width:20px;height:20px}
 .inst ol{margin:0;padding:0}
+ol.inst{padding:0;margin:0}
