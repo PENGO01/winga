@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.6.2";
+W.VERSION = "2.6.3";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -669,7 +669,7 @@ var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persist
 W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";
 W.beta = !!C.beta;          // the /beta/ copy shows a small BETA pill
-W.betaPill = function () { return W.demoForced ? '<span class="betapill">MFANO</span>' : W.beta ? '<span class="betapill">BETA</span>' : ""; };   // "production" or "pilot"
+W.betaPill = function () { return W.demoForced ? '<span class="betapill" title="Mfano / Demo">M</span>' : W.beta ? '<span class="betapill" title="Beta">B</span>' : ""; };   // "production" or "pilot"
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 W.img = pub;
@@ -709,7 +709,7 @@ function demoSave(d) { try { localStorage.setItem(DEMO_KEY, JSON.stringify(d)); 
 function demoGet() { return W._demoMem || demoLoad(); }
 /* demo / preview shop: real Kariakoo photos (square), kept in /demo/ next to the app */
 var DEMO_BASE = (function () { try { var sc = document.currentScript && document.currentScript.src; return sc ? new URL("../demo/", sc).href : "demo/"; } catch (_) { return "demo/"; } })();
-var DEMO_SEED = 2;
+var DEMO_SEED = 3;
 function demoSeed() {
   var now = Date.now(), D = W.DAY, H = 36e5;
   /* [name, category, sub, price, description, age, photo, stars, ordered, tags] */
@@ -737,7 +737,7 @@ function demoSeed() {
   ];
   return { seed: DEMO_SEED, shop: { name: "Niagize Kariakoo", tagline: "", whatsapp: "255700000000", payments: [{ provider: "M-PESA", number: "5512 3487", name: "BOSS DEUS" }] },
     products: defs.map(function (d, i) { var at = new Date(now - d[5]).toISOString();
-      return { id: "demo-" + i, created_at: at, refreshed_at: at, name: d[0], category: d[1], subcategory: d[2], price: d[3], description: d[4], images: [DEMO_BASE + d[6] + ".jpg"], thumbs: [DEMO_BASE + d[6] + "-t.jpg"], status: i === 8 ? "archived" : "active", asks: d[8], ordered: d[8], rating: d[7], tags: d[9] }; }),
+      return { id: "demo-" + i, created_at: at, refreshed_at: at, name: d[0], category: d[1], subcategory: d[2], price: d[3], description: d[4], images: [DEMO_BASE + d[6] + ".jpg"], thumbs: [DEMO_BASE + d[6] + "-t.jpg"], status: i === 8 ? "archived" : "active", prev_price: i === 9 ? 80000 : null, price_drop_at: i === 9 ? new Date(now - 2 * D).toISOString() : null, asks: d[8], ordered: d[8], rating: d[7], tags: d[9] }; }),
     orders: [], events: [], users: [], addresses: [], me: null };
 }
 async function uploadPhotos(id, photos, startIndex) {
@@ -751,7 +751,10 @@ async function uploadPhotos(id, photos, startIndex) {
 function isStored(x) { return x && !/^data:|^https?:/.test(x); }
 function demoCode() { var a = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", c = "NK-"; for (var i = 0; i < 5; i++) c += a[Math.floor(Math.random() * a.length)]; return c; }
 function demoOrderView(o, d) { var x = JSON.parse(JSON.stringify(o)); x.payments = d.shop.payments; x.whatsapp = d.shop.whatsapp; return x; }
-var PCOLS = "id,created_at,refreshed_at,name,description,category,subcategory,tags,rating,ordered,price,images,thumbs,status,asks";
+var PCOLS0 = "id,created_at,refreshed_at,name,description,category,subcategory,tags,rating,ordered,price,images,thumbs,status,asks";
+/* price-drop columns (supabase/v2_6_price_drop.sql); until that migration runs, fall back to the old column list */
+var PCOLS = PCOLS0 + ",prev_price,price_drop_at";
+function noCol(e) { return e && (e.code === "42703" || /prev_price|price_drop_at/.test(e.message || "")); }
 
 /* --- public API --- */
 W.db = {
@@ -779,6 +782,7 @@ W.db = {
       return admin ? all : all.filter(function (p) { return p.status === "active" || p.status === "soldout"; });
     }
     var r = await sb.from("products").select(PCOLS).order("refreshed_at", { ascending: false }).limit(1000);
+    if (noCol(r.error)) { PCOLS = PCOLS0; r = await sb.from("products").select(PCOLS).order("refreshed_at", { ascending: false }).limit(1000); }
     if (r.error) { var c = !admin && cacheGet("winga.cache.products"); if (c) { W.offline = true; return c.map(decorate); } throw r.error; }
     if (!admin) cacheSet("winga.cache.products", r.data);
     r.data.forEach(archiveAged);   // the database archives once a day; show it straight away here too
@@ -791,7 +795,10 @@ W.db = {
     return decorate(r.data);
   },
   async updateProduct(id, patch) {
-    if (!live) { var d = demoGet(), p = d.products.find(function (x) { return x.id === id; }); Object.assign(p, patch); demoSave(d); return; }
+    if (!live) { var d = demoGet(), p = d.products.find(function (x) { return x.id === id; });
+      /* same rule as the database trigger: a lower price keeps the old one for 14 days */
+      if ("price" in patch && patch.price !== p.price) { if (p.price != null && patch.price != null && patch.price < p.price) { var recent = p.price_drop_at && Date.now() - new Date(p.price_drop_at) < 14 * 864e5; patch.prev_price = Math.max(p.price, recent ? (p.prev_price || 0) : 0); patch.price_drop_at = new Date().toISOString(); } else { patch.prev_price = null; patch.price_drop_at = null; } }
+      Object.assign(p, patch); demoSave(d); return; }
     var r = await sb.from("products").update(patch).eq("id", id); if (r.error) throw r.error;
   },
   async updateMany(rows) { for (var i = 0; i < rows.length; i++) await this.updateProduct(rows[i].id, rows[i].patch); },
