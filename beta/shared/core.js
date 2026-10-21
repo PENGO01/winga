@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.4.1";
+W.VERSION = "2.5.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -52,6 +52,7 @@ W.STRINGS = [
  ["nav_me","Shop · Menu","Mimi","Me"],
  ["searchPh","Shop","Tafuta bidhaa upendayo","Search products you like"],
  ["emptyShop","Shop","Kaa mkao wa kula, bidhaa mpya zinakuja","Get ready, new products are coming"],
+ ["similar","Shop","Zinazofanana","Similar items"],
  ["noMatch","Shop","Pole, hatuna bidhaa hiyo! Jaribu neno tofauti","Sorry, we don't have that! Try another word"],
  ["sold_n","Shop","{n} wameagiza","{n} ordered"],
  ["rate_1","Shop","Ubora wa kawaida","Standard quality"],
@@ -638,11 +639,21 @@ W.shrink = function (file, max, q) {
   });
 };
 W.blobToData = function (b) { return new Promise(function (res) { var fr = new FileReader(); fr.onload = function () { res(fr.result); }; fr.readAsDataURL(b); }); };
-W.prepPhotos = async function (files) { var out = []; for (var i = 0; i < files.length; i++) out.push({ full: await W.shrink(files[i], 1080, .8), thumb: await W.shrink(files[i], 400, .72) }); return out; };
+/* prepare (shrink) a photo once; started as soon as Boss picks it, so Save doesn't wait */
+var PREP = typeof WeakMap === "function" ? new WeakMap() : null;
+W.prep = function (f) {
+  if (PREP && PREP.has(f)) return PREP.get(f);
+  var pr = Promise.all([W.shrink(f, 1080, .8), W.shrink(f, 400, .72)]).then(function (r) { return { full: r[0], thumb: r[1] }; });
+  pr.catch(function () { if (PREP) PREP.delete(f); });
+  if (PREP) PREP.set(f, pr); return pr;
+};
+W.prepPhotos = function (files) { return Promise.all(files.map(W.prep)); };
 
 /* ---------------- data layer ---------------- */
 var C = window.WINGA_CONFIG || {};
 var live = !!(C.url && C.anonKey && window.supabase && window.supabase.createClient);
+/* open the line to Supabase early: first data + photos arrive sooner */
+try { if (C.url) { var pc = document.createElement("link"); pc.rel = "preconnect"; pc.href = C.url; pc.crossOrigin = ""; document.head.appendChild(pc); } } catch (_) {}
 var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, storageKey: W.APP === "boss" ? "winga.auth" : "niagize.customer", lock: function (name, timeout, fn) { return fn(); } } }) : null;
 W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";
@@ -651,6 +662,7 @@ W.betaPill = function () { return W.beta ? '<span class="betapill">BETA</span>' 
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 W.img = pub;
+W.decorateProduct = function (p) { return decorate(p); };
 function decorate(p) {
   p.thumbUrl = pub((p.thumbs && p.thumbs[0]) || (p.images && p.images[0]));
   p.imageUrls = (p.images || []).map(pub);
@@ -718,15 +730,12 @@ function demoSeed() {
     orders: [], events: [], users: [], addresses: [], me: null };
 }
 async function uploadPhotos(id, photos, startIndex) {
-  var images = [], thumbs = [];
-  for (var j = 0; j < photos.length; j++) {
-    if (!live) { images.push(await W.blobToData(photos[j].full)); thumbs.push(await W.blobToData(photos[j].thumb)); continue; }
-    var base = id + "/" + (startIndex + j) + "-" + Date.now().toString(36);
-    var u1 = await sb.storage.from("products").upload(base + ".jpg", photos[j].full, { contentType: "image/jpeg", cacheControl: "31536000", upsert: false }); if (u1.error) throw u1.error;
-    var u2 = await sb.storage.from("products").upload(base + "-t.jpg", photos[j].thumb, { contentType: "image/jpeg", cacheControl: "31536000", upsert: false }); if (u2.error) throw u2.error;
-    images.push(base + ".jpg"); thumbs.push(base + "-t.jpg");
-  }
-  return { images: images, thumbs: thumbs };
+  /* all photos (full + small) go up at the same time, not one after another */
+  if (!live) return { images: await Promise.all(photos.map(function (x) { return W.blobToData(x.full); })), thumbs: await Promise.all(photos.map(function (x) { return W.blobToData(x.thumb); })) };
+  var stamp = Date.now().toString(36), bases = photos.map(function (_, j) { return id + "/" + (startIndex + j) + "-" + stamp; });
+  function put(path, blob) { return sb.storage.from("products").upload(path, blob, { contentType: "image/jpeg", cacheControl: "31536000", upsert: false }).then(function (u) { if (u.error) throw u.error; }); }
+  await Promise.all(photos.map(function (x, j) { return Promise.all([put(bases[j] + ".jpg", x.full), put(bases[j] + "-t.jpg", x.thumb)]); }));
+  return { images: bases.map(function (b) { return b + ".jpg"; }), thumbs: bases.map(function (b) { return b + "-t.jpg"; }) };
 }
 function isStored(x) { return x && !/^data:|^https?:/.test(x); }
 function demoCode() { var a = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", c = "NK-"; for (var i = 0; i < 5; i++) c += a[Math.floor(Math.random() * a.length)]; return c; }
