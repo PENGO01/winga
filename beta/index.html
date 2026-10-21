@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="sw">
 <head>
-<meta charset="utf-8">
 <meta name="robots" content="noindex">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Niagize Kariakoo</title>
 <meta name="description" content="Ni chap na salama, mpaka mlangoni kwako. Bidhaa za Kariakoo kutoka kwa winga unayemwamini.">
@@ -290,6 +290,7 @@ function renderTabs(){
     return '<button data-tab="'+x[0]+'" aria-current="'+(S.tab===x[0]?"page":"false")+'">'+x[1]+'<span>'+esc(x[2])+'</span>'+(x[0]==="cart"&&n?'<span class="bdg">'+n+'</span>':'')+'</button>';}).join("")+'</div>';
 }
 function render(){
+  if(S.tab!==S.lastTab){if(S.lastTab!==undefined){S.fy="";if(!S.keepCat){S.cat="all";S.sub="";}}S.keepCat=false;S.lastTab=S.tab;}
   renderTabs();
   var a=$("#app");
   if(!S.loaded){a.innerHTML=W.splash("Niagize");return;}
@@ -661,7 +662,7 @@ document.addEventListener("click",async function(e){
     case "cat":S.cat=el.dataset.cat;S.sub="";render();break;
     case "sub":S.sub=el.dataset.sub;render();break;
     case "rail":S.railCat=el.dataset.cat;render();break;
-    case "goSub":S.cat=el.dataset.cat;S.sub=el.dataset.sub;S.tab="home";render();scrollTo(0,0);break;
+    case "goSub":S.keepCat=true;S.cat=el.dataset.cat;S.sub=el.dataset.sub;S.tab="home";render();scrollTo(0,0);break;
     case "clearQ":S.q="";S.searching=false;render();break;
     case "shareShop":await W.shareShop();break;
     case "lang":readAuth();W.setLang(W.lang==="sw"?"en":"sw");render();draw(false);break;

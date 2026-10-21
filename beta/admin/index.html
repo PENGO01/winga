@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="sw">
 <head>
-<meta charset="utf-8">
 <meta name="robots" content="noindex">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Niagize</title>
 <meta property="og:title" content="Niagize">
@@ -774,7 +774,7 @@ async function setArchived(id,arch){
 }
 document.addEventListener("click",async function(e){
   var el=e.target.closest("[data-act],[data-tab]");if(!el)return;
-  if(el.dataset.tab){S.tab=el.dataset.tab;render();scrollTo(0,0);if(S.tab==="orders")reloadOrders();return;}
+  if(el.dataset.tab){if(S.tab!==el.dataset.tab){S.filter="all";S.cat="";S.oper="all";S.osub="all";}S.tab=el.dataset.tab;render();scrollTo(0,0);if(S.tab==="orders")reloadOrders();return;}
   var a=el.dataset.act,id=el.dataset.id;
   if(a==="scrim"){if(e.target===el&&POP[stack[stack.length-1]])back();return;}
   var slow=el.tagName==="BUTTON"&&SLOW[a];if(slow){if(el.dataset.busy)return;W.busy(el,true);}
