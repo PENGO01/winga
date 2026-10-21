@@ -266,6 +266,7 @@ function forYou(n){
 /* the category row drifts slowly by itself; a touch stops it, it starts again after a few seconds */
 function driftCats(){
   var row=$("#fyrow");if(!row||row.dataset.on)return;row.dataset.on="1";
+  row.style.scrollBehavior="auto";   /* smooth scrolling would swallow the tiny steps */
   var belts=row.querySelectorAll(".belt");if(belts.length<2)return;
   var span=function(){return belts[1].offsetLeft-belts[0].offsetLeft;};
   var still=matchMedia("(prefers-reduced-motion: reduce)").matches,hold=0,pos=row.scrollLeft;
