@@ -11,9 +11,11 @@
   --line-soft:#F3D98A;
   --green:#0D7F48; --green-soft:#E3F4EA; --red:#B8392A; --red-soft:#FBE7E3; --amber:#9A5B00; --amber-soft:#FFF0D2; --blue:#12375A; --blue-soft:#E1ECF4;
   --wa:#1FA855; --scrim:rgba(18,18,18,.55); --shadow:0 8px 24px rgba(18,18,18,.14);
-  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --num:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  /* type: Mobile-money calm (21 Oct 2026). One family, Onest, in 400 / 500 / 600 / 800.
+     Numbers use the same font (natural digit widths read best on big prices). */
+  --display:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --num:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:14px; --gl:max(16px, env(safe-area-inset-left, 0px)); --gr:max(16px, env(safe-area-inset-right, 0px));
   color-scheme: light;
 }
@@ -42,8 +44,8 @@ img{max-width:100%}
 [hidden]{display:none!important}
 body{overscroll-behavior-y:contain}
 :focus-visible{outline:3px solid var(--jua);outline-offset:2px;border-radius:8px}
-.num{font-family:var(--num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.015em;text-wrap:balance}
+.num{font-family:var(--num);font-variant-numeric:normal;letter-spacing:-.01em;font-weight:600}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em;text-wrap:balance}
 h1{font-size:24px;font-weight:800} h2{font-size:18px;font-weight:600} h3{font-size:16px;font-weight:600}
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
 .muted{color:var(--dim)} .small{font-size:13px}
@@ -267,6 +269,6 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 .inst ol{margin:0;padding:0}
 ol.inst{padding:0;margin:0}
 .ifield.phone select{flex:0 0 auto;width:auto;padding-right:4px;font-family:var(--num);font-size:16px;color:var(--ink);border-right:1px solid var(--line);margin-right:2px;-webkit-appearance:none;appearance:none;padding:13px 8px 13px 0}
-.ifield.phone input.local{font-family:var(--num);letter-spacing:.02em}
+.ifield.phone input.local{font-family:var(--num);letter-spacing:.01em}
 .ifield.phone{min-width:0}
 .ifield.phone input.local{min-width:0;width:100%}
