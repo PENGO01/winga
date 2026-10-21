@@ -266,3 +266,7 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 .inst .ic svg{width:20px;height:20px}
 .inst ol{margin:0;padding:0}
 ol.inst{padding:0;margin:0}
+.ifield.phone select{flex:0 0 auto;width:auto;padding-right:4px;font-family:var(--num);font-size:16px;color:var(--ink);border-right:1px solid var(--line);margin-right:2px;-webkit-appearance:none;appearance:none;padding:13px 8px 13px 0}
+.ifield.phone input.local{font-family:var(--num);letter-spacing:.02em}
+.ifield.phone{min-width:0}
+.ifield.phone input.local{min-width:0;width:100%}

@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.3.3";
+W.VERSION = "2.3.4";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -166,7 +166,8 @@ W.STRINGS = [
  ["err_pass","Me","Neno la siri liwe herufi 6 au zaidi","Password must be 6 or more characters"],
  ["err_pass2","Me","Maneno ya siri hayafanani","Passwords don't match"],
  ["err_user","Me","Username: herufi 3–20 (a-z, 0-9, _ .)","Username: 3–20 characters (a-z, 0-9, _ .)"],
- ["err_wa","Me","Weka namba sahihi ya WhatsApp","Enter a valid WhatsApp number"],
+ ["err_wa","Me","Weka namba sahihi: tarakimu {n} baada ya +{cc}","Enter a valid number: {n} digits after +{cc}"],
+ ["cc_pick","Me","Nchi","Country"],
  ["err_name","Me","Weka jina kamili","Enter your full name"],
  ["err_terms","Me","Kubali vigezo na masharti kwanza","Accept the terms first"],
  ["complete_title","Me","Kamilisha akaunti","Finish your account"],
@@ -494,6 +495,35 @@ W.esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, fun
 W.money = function (n) { return Math.round(+n || 0).toLocaleString("en-US"); };
 W.parseMoney = function (v) { if (v == null || v === "") return null; var s = String(v).toLowerCase().replace(/tsh|tzs|sh/g, "").trim(); var k = /k$/.test(s); s = s.replace(/[^0-9.]/g, ""); if (!s) return null; var n = parseFloat(s); return Math.round(k ? n * 1000 : n); };
 W.waPhone = function (p) { var d = String(p || "").replace(/\D/g, ""); if (!d) return ""; if (d[0] === "0") d = "255" + d.slice(1); else if (d.length === 9) d = "255" + d; return d; };
+/* phone numbers: country picker (Tanzania +255 first) + the local digits. Stored as full digits, e.g. 255712345678 */
+W.CC = [["255","🇹🇿",9,/^[67]/],["254","🇰🇪",9,/^[17]/],["256","🇺🇬",9,/^7/],["250","🇷🇼",9,/^7/],["257","🇧🇮",8,/^[67]/],["243","🇨🇩",9,/^[89]/],["260","🇿🇲",9,/^[79]/],["265","🇲🇼",9,/^[89]/],["258","🇲🇿",9,/^8/]];
+W.ccOf = function (code) { return W.CC.find(function (c) { return c[0] === code; }) || W.CC[0]; };
+W.splitPhone = function (full) {
+  var d = String(full || "").replace(/\D/g, "");
+  if (!d) return ["255", ""];
+  if (d[0] === "0") return ["255", d.slice(1)];
+  var c = W.CC.find(function (x) { return d.indexOf(x[0]) === 0 && d.length > x[0].length + 4; });
+  return c ? [c[0], d.slice(c[0].length)] : ["255", d];
+};
+W.phoneOk = function (full) { var p = W.splitPhone(full), c = W.ccOf(p[0]); return p[1].length === c[2] && c[3].test(p[1]); };
+W.groupLocal = function (d) { return d.replace(/^(\d{3})(\d{1,3})?(\d{1,3})?$/, function (_, a, b, c) { return [a, b, c].filter(Boolean).join(" "); }); };
+W.phoneField = function (id, full, icon, ph) {
+  var p = W.splitPhone(full), c = W.ccOf(p[0]);
+  return '<label class="ifield phone" id="w_' + id + '">' + (icon || "") + '<select id="' + id + '_cc" aria-label="' + W.esc(W.t("cc_pick")) + '">' + W.CC.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === p[0] ? " selected" : "") + '>' + x[1] + ' +' + x[0] + '</option>'; }).join("") +
+    '</select><input id="' + id + '" class="local" type="tel" inputmode="numeric" autocomplete="tel-national" data-phone="1" placeholder="' + W.esc(ph || (p[0] === "255" ? "7XX XXX XXX" : "")) + '" value="' + W.esc(W.groupLocal(p[1].slice(0, c[2]))) + '"></label>';
+};
+/* the full number from a phone field ("" when empty) */
+W.phoneVal = function (id) { var i = document.getElementById(id), s = document.getElementById(id + "_cc"); if (!i) return ""; var d = i.value.replace(/\D/g, "").replace(/^0+/, ""), cc = s ? s.value : "255"; var cx = W.ccOf(cc); if (d.indexOf(cc) === 0 && (d.length > cx[2] || !cx[3].test(d))) d = d.slice(cc.length); return d ? cc + d : ""; };
+W.phoneErr = function (id) { var s = document.getElementById(id + "_cc"), c = W.ccOf(s ? s.value : "255"); return W.t("err_wa", { n: c[2], cc: c[0] }); };
+/* while typing: digits only, no leading 0, grouped 3-3-3, never more than the country allows */
+document.addEventListener("input", function (e) {
+  var el = e.target; if (!el || !el.dataset || !el.dataset.phone) return;
+  var s = document.getElementById(el.id + "_cc"), c = W.ccOf(s ? s.value : "255");
+  var d = el.value.replace(/\D/g, "").replace(/^0+/, "");
+  if (d.indexOf(c[0]) === 0 && (d.length > c[2] || !c[3].test(d))) d = d.slice(c[0].length);
+  var v = W.groupLocal(d.slice(0, c[2])); if (v !== el.value) el.value = v;
+});
+document.addEventListener("change", function (e) { var el = e.target; if (el && el.id && /_cc$/.test(el.id)) { var i = document.getElementById(el.id.slice(0, -3)), c = W.ccOf(el.value); if (i) { i.placeholder = el.value === "255" ? "7XX XXX XXX" : ""; i.dispatchEvent(new Event("input", { bubbles: true })); } } });
 W.wa = function (phone, text) { return "https://wa.me/" + (W.waPhone(phone) || "") + "?text=" + encodeURIComponent(text); };
 /* open WhatsApp without leaving a blank tab behind. Phones: the WhatsApp app directly (this screen stays as it is);
    if WhatsApp doesn't answer in 2.5 s, fall back to wa.me in this same tab. Computers: wa.me in a new tab. */
