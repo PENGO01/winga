@@ -78,6 +78,9 @@ main{padding:0 var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px
 .oc .r b{font-family:var(--num);font-size:13.5px}
 .oc.new{border-color:var(--blue)}
 .operiod{align-self:flex-start}
+.phonerow{display:flex;gap:8px;align-items:center;min-width:0}
+.phonerow .ifield{flex:1 1 auto;min-width:0}
+.phonerow .fi{width:48px;height:48px;flex:none}
 .slot.full .crp{position:absolute;left:6px;bottom:6px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(18,18,18,.72);color:#fff;display:grid;place-items:center;padding:0}
 .slot.full .crp svg{width:15px;height:15px}
 .cropv{display:flex;gap:12px;align-items:center;justify-content:center;padding:12px;flex:1;min-height:0}
@@ -600,7 +603,8 @@ PAGES.order=function(){
   var noName=!o.customer_name;
   h+='<div class="card cust">'+(noName?'<button class="av tap" data-act="nameAdd" aria-label="'+esc(t("name_add"))+'">'+IC.user+'</button>':'<span class="av">'+esc(initials(o.customer_name))+'</span>')+'<div class="grow"><div style="font-weight:600">'+(noName?'<button class="linkbtn" data-act="nameAdd" style="font-weight:600">'+esc(t("guest"))+' ✎</button>':esc(o.customer_name))+'</div><div class="small muted num">'+(phone?'+'+esc(phone):'')+'</div></div>'+
    (phone?'<a class="fi" href="tel:+'+esc(phone)+'" aria-label="'+esc(t("a_call"))+'">'+IC.phone+'</a><a class="fi wa" href="'+esc(W.wa(phone,""))+'" target="_blank" rel="noopener" aria-label="WhatsApp">'+IC.wa+'</a>':'')+'</div>';
-  if(!phone&&!closed)h+='<label class="ifield" id="w_o_phone">'+IC.wa+'<input id="o_phone" type="tel" inputmode="tel" placeholder="'+esc(t("cust_phone"))+'" value="'+esc(O.phone||"")+'"><button class="btn sm ghost" data-act="savePhone" style="border-radius:999px">'+esc(t("save"))+'</button></label>';
+  /* no valid number yet: country + 9 digits, saved before the invoice can go */
+  if((!phone||!W.phoneOk(phone))&&!closed)h+='<div class="phonerow">'+W.phoneField("o_phone",O.phone||(phone||""),IC.wa)+'<button class="fi jua" data-act="savePhone" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div>';
   if(addr)h+='<a class="mrow" href="'+(addr.lat?'https://maps.google.com/?q='+addr.lat+','+addr.lng:'https://maps.google.com/?q='+encodeURIComponent(addr.line))+'" target="_blank" rel="noopener" style="text-decoration:none"><span class="fi">'+IC.pin+'</span><span class="grow"><span class="tt">'+esc(addr.label||t("deliver_to"))+'</span><br><span class="ss">'+esc(addr.line)+(addr.landmark?' · '+esc(addr.landmark):'')+'</span></span>'+chev()+'</a>';
   if(st==="new"&&o.seen_at)h+='<div class="hint row" style="gap:6px">'+IC.clock.replace('<svg','<svg style="width:14px;height:14px"')+esc(t("auto_hint"))+'</div>';
   h+='<div class="card">'+o.items.map(function(i){return '<div class="ci"><img src="'+esc(W.img(i.thumb))+'" alt=""><div><div class="n">'+esc(i.name)+'</div><div class="p">'+i.qty+' × '+(i.price!=null?"TSh "+W.money(i.price):esc(t("noPrice")))+'</div>'+(i.note?'<div class="note">'+esc(i.note)+'</div>':'')+'</div><b>'+(i.price!=null?W.money(i.price*i.qty):'–')+'</b></div>';}).join("")+'</div>';
@@ -713,11 +717,11 @@ PAGES.settings=function(){
      '<div class="two"><input class="num" data-pay="number" data-i="'+i+'" inputmode="numeric" placeholder="'+esc(t("pay_num"))+'" value="'+esc(p.number||"")+'"><input data-pay="name" data-i="'+i+'" placeholder="'+esc(t("pay_acc"))+'" value="'+esc(p.name||"")+'"></div></div>';
   }).join("");
   return hd(t("shop_settings"))+'<div class="bd">'+
-   '<div class="eyebrow">'+esc(t("wa_label"))+'</div><label class="ifield" id="w_s_wa">'+IC.wa+'<input id="s_wa" type="tel" inputmode="tel" placeholder="0712 345 678" value="'+esc(D.whatsapp)+'"></label>'+
+   '<div class="eyebrow">'+esc(t("wa_label"))+'</div>'+W.phoneField("s_wa",D.whatsapp,IC.wa)+
    '<div class="row between"><div class="eyebrow">'+esc(t("pay_title"))+'</div><button type="button" class="fi sm" data-act="addPay" aria-label="+">'+IC.plus+'</button></div>'+pays+
    '<div class="ferr" id="s_err" role="alert"></div></div><div class="ft"><button class="btn primary block" data-act="saveSettings" style="border-radius:999px">'+esc(t("save"))+'</button></div>';
 };
-function readSettings(){var w=$("#s_wa");if(!w||!D)return;D.whatsapp=w.value;document.querySelectorAll("[data-pay]").forEach(function(el){D.payments[+el.dataset.i][el.dataset.pay]=el.value;});}
+function readSettings(){var w=$("#s_wa");if(!w||!D)return;D.whatsapp=W.phoneVal("s_wa");document.querySelectorAll("[data-pay]").forEach(function(el){D.payments[+el.dataset.i][el.dataset.pay]=el.value;});}
 PAGES.team=function(){
   var list=S.team?S.team.map(function(m){
     var me=S.me&&m.user_id===S.me.id,login=m.username?"@"+m.username:/@users\.niagize\.app$/.test(m.email||"")?"":m.email||"";
@@ -809,7 +813,7 @@ document.addEventListener("click",async function(e){
     case "cropZ":zoomTo(CR.z*(+el.dataset.d),{cx:CR.x,cy:CR.y,z:CR.z});paint();break;
     case "cropOk":var cf;try{cf=await cropFile();}catch(x){console.error(x);W.toast(t("error"));break;}if(A)A.photos[CR.i]=cf;else E.items[CR.i]={f:cf};CR=null;back();break;
     case "openOrder":await openOrder(el.dataset.code);break;
-    case "savePhone":var ph=$("#o_phone").value;if(W.waPhone(ph).length<12)return bad("o_err","w_o_phone",t("err_wa"));keepFee();O.phone=ph;O.o=await W.db.setOrder(O.o.code,O.o.status,{phone:W.waPhone(ph)});syncList(O.o);W.toast(t("saved"));draw(false);break;
+    case "savePhone":var ph=W.phoneVal("o_phone");if(!W.phoneOk(ph))return bad("o_err","w_o_phone",W.phoneErr("o_phone"));keepFee();O.phone=ph;O.o=await W.db.setOrder(O.o.code,O.o.status,{phone:ph});syncList(O.o);W.toast(t("saved"));draw(false);break;
     case "nextStep":
       var st=O.o.status,nx=NEXT[st];keepFee();
       if(nx==="invoiced"){
@@ -817,7 +821,7 @@ document.addEventListener("click",async function(e){
         else if(!(W.parseMoney(O.fee)>=1000))return bad("o_err","w_o_fee",t("min_money"));
         var tot=O.o.agreed_total!=null?O.o.agreed_total:(O.o.subtotal||0)+(O.fee!=null&&String(O.fee).trim()!==""?W.parseMoney(O.fee):(O.o.delivery_fee||0));
         if(!(tot>0)){bad("o_err",null,t("need_field",{f:t("cart_total").toLowerCase()}));open("total");break;}
-        if(!W.waPhone(O.o.customer_phone))return bad("o_err","w_o_phone",t("need_phone"));
+        if(!W.phoneOk(O.o.customer_phone))return bad("o_err","w_o_phone",t("need_phone"));
       }
       if(nx==="paid"){open("paid");break;}
       await moveOrder(nx,{},nx==="progress"?"msg_progress":nx==="invoiced"?"invoice":nx==="done"?"msg_done":null);break;
@@ -888,7 +892,7 @@ async function saveEdit(){
   closeAll();W.toast(t("saved"));render();
 }
 async function saveSettings(){
-  if(W.waPhone(D.whatsapp).length<12)return bad("s_err","w_s_wa",t("err_wa"));
+  if(!W.phoneOk(D.whatsapp))return bad("s_err","w_s_wa",W.phoneErr("s_wa"));
   var pays=D.payments.filter(function(p){return String(p.number||"").trim();}).map(function(p){return {provider:p.provider,number:String(p.number).trim(),name:String(p.name||"").trim()};});
   var patch={whatsapp:W.waPhone(D.whatsapp),payments:pays};
   if(pays[0]){patch.lipa=pays[0].number;patch.lipa_name=pays[0].name;patch.network=pays[0].provider;}

@@ -1,0 +1,3 @@
+-- Niagize v2.3.4 (21 Oct 2026): set_order_v2 refuses a customer phone that isn't a full international number
+-- (country code + local digits, 11–15 digits, e.g. 255712345678). Applied live; same body as v2_1 plus the phone check.
+-- See the applied function in the database (migration v2_5_phone_check).

@@ -364,7 +364,7 @@ function guestBlock(){
   if(!isGuest())return "";
   var g=S.guest||(S.guest=load("niagize.guest",{wa:"",name:""}));
   return '<div class="stack" style="gap:8px"><div class="eyebrow">'+esc(t("g_wa"))+'</div>'+
-   field("g_wa",IC.wa.replace('<svg','<svg style="color:#128C4A"'),"07XX XXX XXX",g.wa,' type="tel" inputmode="tel" autocomplete="tel" data-guest="wa"')+
+   W.phoneField("g_wa",g.wa,IC.wa.replace('<svg','<svg style="color:#128C4A"'))+
    field("g_name",IC.me,t("g_name"),g.name,' autocomplete="name" maxlength="60" data-guest="name"')+
    '<div class="hint" style="margin-top:-2px">'+esc(t("g_hint"))+'</div><div class="ferr" id="g_err" role="alert"></div></div>';
 }
@@ -501,7 +501,7 @@ var PAGES={
   return hd(up?t("signup"):t("signin"))+'<form class="bd" data-form="auth" novalidate>'+g+
    (up?field("a_name",IC.me,t("f_name"),f.name,' autocomplete="name" maxlength="60"'):'')+
    '<label class="ifield" id="w_a_user"><span class="pre">@</span><input id="a_user" placeholder="'+esc(up?t("f_user"):t("f_login"))+'" value="'+esc(f.user||"")+'" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username" maxlength="80"></label>'+
-   (up?field("a_wa",IC.wa.replace('<svg','<svg style="color:#128C4A"'),t("f_wa"),f.wa,' type="tel" inputmode="tel" autocomplete="tel"')+field("a_email",IC.doc,t("f_email"),f.email,' type="email" inputmode="email" autocomplete="email"'):'')+
+   (up?W.phoneField("a_wa",f.wa,IC.wa.replace('<svg','<svg style="color:#128C4A"'))+field("a_email",IC.doc,t("f_email"),f.email,' type="email" inputmode="email" autocomplete="email"'):'')+
    '<label class="ifield" id="w_a_pass">'+IC.lock+'<input id="a_pass" type="password" placeholder="'+esc(up?t("f_pass"):t("f_secret"))+'" autocomplete="'+(up?"new-password":"current-password")+'" maxlength="72"><button type="button" class="eye" data-act="eye" data-for="a_pass" aria-label="Show" style="border:0;background:none;color:var(--dim);display:grid">'+IC.eye+'</button></label>'+
    (up?'<label class="ifield" id="w_a_pass2">'+IC.lock+'<input id="a_pass2" type="password" placeholder="'+esc(t("f_pass2"))+'" autocomplete="new-password" maxlength="72"></label>'+
     '<div class="check" id="w_a_terms"><input type="checkbox" id="a_terms"'+(f.terms?" checked":"")+' aria-label="'+esc(t("set_terms"))+'"><span><label for="a_terms">'+esc(t("agree"))+'</label> <button type="button" class="linkbtn" data-act="terms">'+esc(t("set_terms").toLowerCase())+'</button></span></div>':'')+
@@ -516,14 +516,14 @@ var PAGES={
   return hd(t("complete_title"))+'<form class="bd" data-form="complete" novalidate><div class="hint">'+esc(t("complete_s"))+'</div>'+
    field("c_name",IC.me,t("f_name"),f.name,' autocomplete="name" maxlength="60"')+
    '<label class="ifield" id="w_c_user"><span class="pre">@</span><input id="c_user" placeholder="'+esc(t("f_user"))+'" value="'+esc(f.user||"")+'" autocapitalize="none" autocorrect="off" maxlength="20"></label>'+
-   field("c_wa",IC.wa.replace('<svg','<svg style="color:#128C4A"'),t("f_wa"),f.wa,' type="tel" inputmode="tel"')+
+   W.phoneField("c_wa",f.wa,IC.wa.replace('<svg','<svg style="color:#128C4A"'))+
    '<div class="ferr" id="c_err" role="alert"></div><button class="btn primary block" type="submit" style="border-radius:999px;min-height:50px">'+(c.busy?W.SUN:esc(t("save")))+'</button></form>';
  },
  settings:function(){
   var m=S.me||{};
   return hd(t("set_title"))+'<div class="bd">'+
    '<div class="eyebrow">'+esc(t("set_contacts"))+'</div>'+
-   field("s_wa",IC.wa.replace('<svg','<svg style="color:#128C4A"'),t("f_wa"),m.whatsapp?"+"+m.whatsapp:"",' type="tel" inputmode="tel"')+
+   W.phoneField("s_wa",m.whatsapp||"",IC.wa.replace('<svg','<svg style="color:#128C4A"'))+
    field("s_email",IC.doc,t("f_email"),m.email||"",' type="email" inputmode="email"')+
    '<div class="ferr" id="s_err" role="alert"></div><button class="btn primary" data-act="saveContacts" style="border-radius:999px;align-self:flex-start">'+esc(t("save"))+'</button>'+
    '<hr class="sep">'+
@@ -586,7 +586,7 @@ function bad(errId,wrapId,msg){
 /* ---------------- actions ---------------- */
 function readAddr(){var c=top().c,a=c.a;var l=$("#ad_label");if(!l)return;a.label=l.value;a.line=$("#ad_line").value;a.landmark=$("#ad_land").value;a.accepted_terms=$("#ad_terms").checked;c.q=$("#ad_q").value;}
 function readQty(){var n=$("#q_note"),c=top();if(n&&c&&c.n==="qty")c.c.note=n.value;}
-function readAuth(){var c=top();if(!c||c.n!=="auth")return;var v=function(id){var x=$(id);return x?x.value.trim():undefined;};var f=c.c.f=c.c.f||{};["name","user","wa","email"].forEach(function(k){var x=v("#a_"+k);if(x!==undefined)f[k]=x;});var tm=$("#a_terms");if(tm)f.terms=tm.checked;}
+function readAuth(){var c=top();if(!c||c.n!=="auth")return;var v=function(id){var x=$(id);return x?x.value.trim():undefined;};var f=c.c.f=c.c.f||{};["name","user","email"].forEach(function(k){var x=v("#a_"+k);if(x!==undefined)f[k]=x;});if($("#a_wa"))f.wa=W.phoneVal("a_wa");var tm=$("#a_terms");if(tm)f.terms=tm.checked;}
 function addToCart(id,q,note){
   note=String(note||"").trim().slice(0,200);
   var c=inCart(id);
@@ -596,10 +596,10 @@ function addToCart(id,q,note){
 }
 async function placeOrder(items){
   var guest=isGuest(),g=S.guest||load("niagize.guest",{wa:"",name:""});
-  if(guest){if(W.waPhone(g.wa).length<12){bad("g_err","w_g_wa",t("err_wa"));return false;}save("niagize.guest",g);}
+  if(guest){if($("#g_wa"))g.wa=W.phoneVal("g_wa");if(!W.phoneOk(g.wa)){bad("g_err","w_g_wa",$("#g_wa")?W.phoneErr("g_wa"):t("err_wa",{n:9,cc:"255"}));return false;}S.guest=g;save("niagize.guest",g);}
   try{
     var addr=!guest&&S.addrs.length?S.addrId:null;
-    var r=await W.db.createOrder(items,S.delivery,addr,guest?(String(g.name||"").trim()||null):null,guest?W.waPhone(g.wa):null);
+    var r=await W.db.createOrder(items,S.delivery,addr,guest?(String(g.name||"").trim()||null):null,guest?g.wa:null);
     var msg=t("wa_hello")+"\n\n"+t("wa_items",{code:r.code,n:r.count})+"\n"+t("wa_total",{x:W.money(r.subtotal||0)})+"\n"+t("wa_del",{d:t("del_"+S.delivery),fee:r.fee!=null?"TSh "+W.money(r.fee):t("fee_tbd")})+"\n\n"+W.adminUrl()+"o.html#"+r.code;
     MYORDERS.unshift(r.code);MYORDERS=MYORDERS.slice(0,30);save("niagize.myorders",MYORDERS);
     S.products.forEach(function(p){var it=items.find(function(i){return i.id===p.id;});if(it)p.ordered=(p.ordered||0)+it.qty;});
@@ -682,8 +682,8 @@ document.addEventListener("click",async function(e){
     case "delAcc":open("confirm",{title:t("del_acc"),body:t("del_acc_s"),yes:t("yesDelAcc"),act:"delAccYes"});break;
     case "delAccYes":await W.db.account("delete");await W.db.signOut();S.me=null;S.addrs=[];save("niagize.me",null);save("niagize.hist",null);closeAll();break;
     case "saveContacts":
-      var sw=$("#s_wa").value.trim(),se=$("#s_email").value.trim();
-      if(W.waPhone(sw).length<12)return bad("s_err","w_s_wa",t("err_wa"));
+      var sw=W.phoneVal("s_wa"),se=$("#s_email").value.trim();
+      if(!W.phoneOk(sw))return bad("s_err","w_s_wa",W.phoneErr("s_wa"));
       if(se&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(se))return bad("s_err","w_s_email",t("need_field",{f:t("email")}));
       try{await W.db.account("contacts",{whatsapp:sw,email:se});}catch(x){if(x.message==="duplicate")return bad("s_err","w_s_wa",t("err_dup"));throw x;}
       await refreshMe();W.toast(t("saved"));draw(false);break;
@@ -723,6 +723,7 @@ document.addEventListener("change",function(e){
   if(el.dataset.act==="ad"){S.addrId=el.value;if(stack.length)draw(false);else render();}
 });
 document.addEventListener("input",function(e){
+  if(e.target.id==="g_wa"){S.guest=S.guest||load("niagize.guest",{wa:"",name:""});S.guest.wa=W.phoneVal("g_wa");}
   var gk=e.target.dataset&&e.target.dataset.guest;if(gk){S.guest=S.guest||load("niagize.guest",{wa:"",name:""});S.guest[gk]=e.target.value;}
   if(e.target.id==="q"){S.q=e.target.value;S.searching=true;S.focusQ=true;render();}
   if(e.target.closest&&e.target.closest(".ifield.bad"))e.target.closest(".ifield").classList.remove("bad");
@@ -734,10 +735,10 @@ document.addEventListener("submit",async function(e){
   var form=e.target.dataset.form;if(form!=="auth"&&form!=="complete")return;e.preventDefault();
   var c=top().c;if(c.busy)return;
   if(form==="complete"){
-    var cf=c.f={name:$("#c_name").value.trim(),user:$("#c_user").value.trim().toLowerCase().replace(/^@/,""),wa:$("#c_wa").value.trim()};
+    var cf=c.f={name:$("#c_name").value.trim(),user:$("#c_user").value.trim().toLowerCase().replace(/^@/,""),wa:W.phoneVal("c_wa")};
     if(cf.name.length<2)return bad("c_err","w_c_name",t("err_name"));
     if(!/^[a-z0-9_.]{3,20}$/.test(cf.user))return bad("c_err","w_c_user",t("err_user"));
-    if(W.waPhone(cf.wa).length<12)return bad("c_err","w_c_wa",t("err_wa"));
+    if(!W.phoneOk(cf.wa))return bad("c_err","w_c_wa",W.phoneErr("c_wa"));
     c.busy=true;draw(false);
     try{await W.db.account("complete",{full_name:cf.name,username:cf.user,whatsapp:cf.wa});c.busy=false;await refreshMe();closeAll();S.tab="me";render();}
     catch(x){c.busy=false;draw(false);var cm=x.message;if(cm==="taken")bad("c_err","w_c_user",t("err_taken"));else if(cm==="duplicate")bad("c_err","w_c_wa",t("err_dup"));else bad("c_err",null,t("error"));}
@@ -750,7 +751,7 @@ document.addEventListener("submit",async function(e){
     f.user=f.user.toLowerCase().replace(/^@/,"");
     if(f.name.length<2)return bad("a_err","w_a_name",t("err_name"));
     if(!/^[a-z0-9_.]{3,20}$/.test(f.user))return bad("a_err","w_a_user",t("err_user"));
-    if(W.waPhone(f.wa).length<12)return bad("a_err","w_a_wa",t("err_wa"));
+    if(!W.phoneOk(f.wa))return bad("a_err","w_a_wa",W.phoneErr("a_wa"));
     if(f.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email))return bad("a_err","w_a_email",t("need_field",{f:t("email").toLowerCase()}));
     if(pass.length<6)return bad("a_err","w_a_pass",t("err_pass"));
     if(pass!==$("#a_pass2").value)return bad("a_err","w_a_pass2",t("err_pass2"));
