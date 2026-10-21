@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.3.2";
+W.VERSION = "2.3.3";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -114,7 +114,7 @@ W.STRINGS = [
  ["claim_send","Order","Tuma kwa muuzaji","Send to seller"],
  ["claim_sent","Order","Imetumwa · Inasubiri uthibitisho","Sent · Waiting for confirmation"],
  ["claim_ok","Order","Malipo yamethibitishwa","Payment confirmed"],
- ["claim_wa","Order","Habari! Nimelipia oda {code}.\nNjia: {ch}\nMuamala: {ref}\nJina: {name}","Hello! I paid for order {code}.\nChannel: {ch}\nTransaction: {ref}\nName: {name}"],
+ ["claim_wa","Order","Habari! Nimelipia oda {code}.\nKupitia: {ch}\nMuamala: {ref}\nJina: {name}\n\n{link}","Hello! I paid for order {code}.\nVia: {ch}\nTransaction: {ref}\nName: {name}\n\n{link}"],
  ["received","Order","Nimepokea","I've received it"],
  ["rate_title","Order","Umeridhika na huduma?","How was the service?"],
  ["rate_note","Order","Maoni (si lazima)","Comment (optional)"],
@@ -122,11 +122,13 @@ W.STRINGS = [
  ["rate_thanks","Order","Asante! Oda imefungwa","Thank you! Order closed"],
  ["rate_your","Order","Umetoa nyota {n}","You gave {n} stars"],
  ["chat_order","Order","Habari! Kuhusu oda {code}:","Hello! About order {code}:"],
+ ["chat_status","Order","Habari! Naulizia status ya oda yangu: {code}\n{link}","Hello! I'm asking about the status of my order: {code}\n{link}"],
  ["g_wa","Basket","Namba yako ya WhatsApp","Your WhatsApp number"],
  ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
  ["g_hint","Basket","Ankara na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
  ["inst_title","Install","Weka Niagize kwenye simu yako","Put Niagize on your phone"],
- ["tips_title","Tips","Vidokezo","Tips"],
+ ["tips_title","Tips","Karibu tuanze pamoja","Welcome, let's start together"],
+ ["tips_sub","Tips","Hatua chache tu, uagize kwa urahisi","A few steps and you're ordering"],
  ["tips_buy","Tips","Jinsi ya kununua","How to buy"],
  ["tips_save","Tips","Weka app kwenye simu","Save the app"],
  ["tips_swipe","Tips","Telezesha kuona zaidi","Swipe for more"],
@@ -137,7 +139,7 @@ W.STRINGS = [
  ["inst_5","Install","Shuka chini, chagua \"Add to Home Screen\"","Scroll down, choose \"Add to Home Screen\""],
  ["inst_6","Install","Jina: Niagize Kariakoo, bonyeza Add","Name: Niagize Kariakoo, tap Add"],
  ["inst_7","Install","Hongera! Fungua duka kirahisi kwa icon yetu kwenye Home Screen","Done! Open the shop from our icon on your Home Screen"],
- ["inst_close","Install","Sawa, nimeelewa","Got it"],
+ ["inst_close","Install","Nimeelewa","Got it"],
  // customer account
  ["me_guest","Me","Karibu!","Welcome!"],
  ["me_guest_s","Me","Ingia uone oda zako, weka anwani na rudia kuagiza bidhaa kwa urahisi","Sign in to see your orders, save addresses and reorder easily"],
@@ -170,7 +172,7 @@ W.STRINGS = [
  ["complete_title","Me","Kamilisha akaunti","Finish your account"],
  ["complete_s","Me","Hatua moja tu: username na namba ya WhatsApp","One step: a username and your WhatsApp number"],
  ["unverified","Me","Haijathibitishwa","Not verified"],
- ["me_orders","Me","Historia","History"],
+ ["me_orders","Me","Track oda","Track orders"],
  ["me_addr","Me","Anwani","Addresses"],
  ["me_help","Me","Msaada","Help"],
  ["me_for_you","Me","Kwa ajili yako","For you"],
