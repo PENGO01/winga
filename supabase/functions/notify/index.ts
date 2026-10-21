@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
     const ids = (owners ?? []).map((t) => t.user_id);
     if (!ids.length) return json({ ok: true, total: 0 });
     const { data: subs } = await admin.from("push_subs").select("id,endpoint,p256dh,auth,app_url").in("user_id", ids);
-    const r = await deliver(subs ?? [], (s) => ({ title: br.title, body: br.body, tag: br.tag || "brief", url: (s.app_url || SUBJECT + "admin/") + (br.code ? "#o-" + br.code : "") }));
+    const r = await deliver(subs ?? [], (s) => ({ title: br.title, body: br.body, tag: br.tag || "brief", url: (s.app_url || SUBJECT + "admin/") + (br.code ? "#o-" + br.code : "#b=" + encodeURIComponent(br.title + "\n" + br.body)) }));
     return json({ ok: true, kind, ...r });
   }
 

@@ -49,9 +49,11 @@ begin
   -- mark today's findings as sent so the 30-minute check doesn't repeat them
   for r in select value v from jsonb_array_elements(f) loop insert into private.brief_sent(key) values (r.v->>'key') on conflict do nothing; end loop;
   return jsonb_build_object('send', true, 'tag', 'brief',
-    'title', case when extract(hour from now() at time zone tz) < 12 then 'Habari za asubuhi · Niagize' else 'Muhtasari wa mchana · Niagize' end,
-    'body', 'Leo: oda ' || (n_new + n_pend + n_done) || ' (' || n_new || ' mpya, ' || n_pend || ' zinasubiri, ' || n_done || ' zimekamilika)'
-      || E'\nMauzo TSh ' || to_char(sales, 'FM999,999,999') || ' · Wateja wapya ' || visitors || ' · Kuna bidhaa ' || live
+    -- v2.6.2: the numbers sit in the title so the lock-screen preview is readable; tap opens the full brief in the app
+    'title', case when extract(hour from now() at time zone tz) < 12 then 'Asubuhi' else 'Mchana' end
+      || ' · oda ' || (n_new + n_pend + n_done) || ' · TSh ' || to_char(sales, 'FM999,999,999'),
+    'body', n_new || ' mpya · ' || n_pend || ' zinasubiri · ' || n_done || ' zimekamilika'
+      || E'\nWateja wapya ' || visitors || ' · Kuna bidhaa ' || live
       || case when claims > 0 then E'\n' || claims || ' wamelipa, hakiki malipo' else '' end
       || case when jsonb_array_length(f) > 0 then E'\n⚠️ ' || (select string_agg(x->>'text', ' · ') from (select x from jsonb_array_elements(f) x limit 3) y) else '' end);
 end $$;

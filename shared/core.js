@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.6.1";
+W.VERSION = "2.6.2";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -260,6 +260,7 @@ W.STRINGS = [
  ["shareText","Boss · Share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
  ["emptyHome","Boss · Home","Ongeza picha ya bidhaa zako","Add photos of your products"],
  ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
+ ["brief_open","Boss · Brief","Fungua dashboard","Open the dashboard"],
  ["step0","Boss · Discover","Weka app kwenye simu","Save the app on your phone"],
  ["step0s","Boss · Discover","Oda na arifa zikufikie haraka, kama app nyingine","Orders and alerts reach you fast, like any app"],
  ["step0b","Boss · Discover","Jinsi","How"],
