@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.5.0";
+W.VERSION = "2.6.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -651,14 +651,16 @@ W.prepPhotos = function (files) { return Promise.all(files.map(W.prep)); };
 
 /* ---------------- data layer ---------------- */
 var C = window.WINGA_CONFIG || {};
-var live = !!(C.url && C.anonKey && window.supabase && window.supabase.createClient);
+/* ?demo opens a preview shop with sample products, kept only on this phone; nothing touches real orders */
+W.demoForced = /[?&]demo(=|&|$)/.test(location.search);
+var live = !W.demoForced && !!(C.url && C.anonKey && window.supabase && window.supabase.createClient);
 /* open the line to Supabase early: first data + photos arrive sooner */
 try { if (C.url) { var pc = document.createElement("link"); pc.rel = "preconnect"; pc.href = C.url; pc.crossOrigin = ""; document.head.appendChild(pc); } } catch (_) {}
 var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persistSession: true, storageKey: W.APP === "boss" ? "winga.auth" : "niagize.customer", lock: function (name, timeout, fn) { return fn(); } } }) : null;
 W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";
 W.beta = !!C.beta;          // the /beta/ copy shows a small BETA pill
-W.betaPill = function () { return W.beta ? '<span class="betapill">BETA</span>' : ""; };   // "production" or "pilot"
+W.betaPill = function () { return W.demoForced ? '<span class="betapill">MFANO</span>' : W.beta ? '<span class="betapill">BETA</span>' : ""; };   // "production" or "pilot"
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 W.img = pub;
@@ -693,40 +695,40 @@ async function fnErr(r) { var msg = "error", extra = {}; try { extra = await r.e
 
 /* --- example mode store --- */
 var DEMO_KEY = "winga.demo.v5";
-function demoLoad() { var d = cacheGet(DEMO_KEY); if (d && d.products) return d; d = demoSeed(); demoSave(d); return d; }
+function demoLoad() { var d = cacheGet(DEMO_KEY); if (d && d.products && d.seed === DEMO_SEED) return d; d = demoSeed(); demoSave(d); return d; }
 function demoSave(d) { try { localStorage.setItem(DEMO_KEY, JSON.stringify(d)); } catch (e) { W._demoMem = d; } }
 function demoGet() { return W._demoMem || demoLoad(); }
-function sample(label, bg, fg, shape, h) {
-  var c = document.createElement("canvas"); c.width = 600; c.height = h || 600; var x = c.getContext("2d"), H = c.height, oy = (H - 600) / 2;
-  x.fillStyle = bg; x.fillRect(0, 0, 600, H); x.fillStyle = fg; x.translate(0, oy);
-  if (shape === "shoe") { x.beginPath(); x.moveTo(90,380); x.quadraticCurveTo(100,265,210,250); x.lineTo(310,312); x.quadraticCurveTo(460,325,510,400); x.lineTo(510,440); x.lineTo(90,440); x.closePath(); x.fill(); x.fillStyle="rgba(0,0,0,.25)"; x.fillRect(90,428,420,16); }
-  else if (shape === "phone") { x.beginPath(); x.roundRect ? x.roundRect(200,100,200,380,30) : x.rect(200,100,200,380); x.fill(); x.fillStyle="rgba(255,255,255,.35)"; x.fillRect(220,135,160,300); }
-  else if (shape === "cloth") { for (var i=0;i<7;i++){ x.fillStyle = i%2?fg:"rgba(255,255,255,.55)"; x.fillRect(100,100+i*52,400,52);} x.fillStyle="rgba(0,0,0,.18)"; for (var j=0;j<6;j++){ x.beginPath(); x.arc(160+j*56,126+j*52,15,0,7); x.fill(); } }
-  else if (shape === "bag") { x.beginPath(); x.roundRect ? x.roundRect(140,220,320,250,30) : x.rect(140,220,320,250); x.fill(); x.strokeStyle=fg; x.lineWidth=20; x.beginPath(); x.arc(300,225,86,Math.PI,0); x.stroke(); }
-  else if (shape === "bottle") { x.beginPath(); x.roundRect ? x.roundRect(240,180,120,300,26) : x.rect(240,180,120,300); x.fill(); x.fillRect(270,120,60,70); }
-  else if (shape === "glasses") { x.lineWidth = 18; x.strokeStyle = fg; x.beginPath(); x.arc(200,300,80,0,7); x.stroke(); x.beginPath(); x.arc(400,300,80,0,7); x.stroke(); x.beginPath(); x.moveTo(280,290); x.lineTo(320,290); x.stroke(); }
-  else { x.beginPath(); x.arc(300,290,140,0,7); x.fill(); }
-  x.setTransform(1,0,0,1,0,0);
-  x.fillStyle = "rgba(15,42,68,.8)"; x.fillRect(0, H - 64, 600, 64); x.fillStyle = "#fff"; x.font = "600 26px 'Onest', sans-serif"; x.fillText(label, 22, H - 24);
-  x.fillStyle = "#F6B41C"; x.font = "600 16px 'Onest', sans-serif"; x.fillText("MFANO", 500, H - 24);
-  return c.toDataURL("image/jpeg", 0.8);
-}
+/* demo / preview shop: real Kariakoo photos (square), kept in /demo/ next to the app */
+var DEMO_BASE = (function () { try { var sc = document.currentScript && document.currentScript.src; return sc ? new URL("../demo/", sc).href : "demo/"; } catch (_) { return "demo/"; } })();
+var DEMO_SEED = 2;
 function demoSeed() {
-  var now = Date.now(), D = W.DAY;
+  var now = Date.now(), D = W.DAY, H = 36e5;
+  /* [name, category, sub, price, description, age, photo, stars, ordered, tags] */
   var defs = [
-    ["Raba brown, Air style", "shoes", "men", 35000, "Ngozi laini, soli imara. Saizi 40–44. Inafaa kazini na mtaani.", now - 2*36e5, "#C9A27E", "#6B3E1E", "shoe", 760, 3, 14, ["nike","raba"]],
-    ["Sandals za kike", "shoes", "women", 18000, "Nyeusi na beige. Saizi 37–40.", now - D, "#E9D7C5", "#2B2B2B", "shoe", 600, 2, 6, ["sandals"]],
-    ["Tecno Spark 20, 128GB", "electronics", "phones", 320000, "Mpya kwenye boksi, warranty ya mwaka mmoja.", now - 2*D, "#D3DEE8", "#1C3A54", "phone", 820, 3, 3, ["tecno"]],
-    ["Chaja Type-C 33W", "electronics", "gadgets", 12000, "Inachaji haraka. Kwa simu zote za Type-C.", now - 3*36e5, "#E7ECEF", "#3B4A57", "phone", 640, 2, 21, ["chaja"]],
-    ["Gauni la kitenge", "fashion", "women", 22000, "Pamba halisi, rangi haitoki.", now - 3*D, "#F6C85F", "#1F6F5C", "cloth", 700, 3, 9, ["kitenge"]],
-    ["Begi la mgongoni", "accessories", "bags", 27000, "Laptop ya 15\" inaingia. Lina mifuko 4.", now - 55*D, "#B9C9B0", "#2F4B32", "bag", 600, 2, 4, ["begi"]],
-    ["Mafuta ya nywele, 250ml", "other", null, 9500, "", now - 64*D, "#F2D7E0", "#8A2E4E", "bottle", 680, 1, 2, []],
-    ["Miwani ya jua", "accessories", "eyewear", 15000, "UV400. Fremu nyeusi.", now - 5*D, "#EDE6DA", "#2B2B2B", "glasses", 560, 2, 7, ["miwani"]],
-    ["Shati la kitambaa", "fashion", "men", 25000, "M, L, XL.", now - 6*D, "#E4EEF7", "#1F5C8F", "cloth", 720, 2, 0, []]
+    ["Raba brown za suede", "shoes", "men", 35000, "Suede laini, soli nyeupe nyepesi. Saizi 40–45.", 2*H, "loafers", 3, 14, ["loafers","raba"]],
+    ["Clogs za camo, blue", "shoes", "men", 25000, "Nyepesi, zinavutika. Zina pini za mapambo. Saizi 39–45.", 5*H, "clogblue", 2, 9, ["clogs","camo"]],
+    ["Clogs za camo, rangi 6", "shoes", "women", 25000, "Nyekundu, kijani, nyeusi, blue, brown, kijivu. Saizi 36–44.", D, "clog6", 3, 17, ["clogs"]],
+    ["Raba nyeupe & blue", "shoes", "men", 85000, "Ngozi + denim. Saizi 40–45. Boksi lake lipo.", 3*H, "sneaker", 3, 6, ["raba","sneakers"]],
+    ["Mkoba pink wa nyota", "accessories", "bags", 38000, "Mnyororo wa silver na lulu. Unabeba laptop ndogo.", 2*D, "pinkbag", 2, 4, ["mkoba"]],
+    ["Mkoba wa wingu, rangi 4", "accessories", "bags", 32000, "Pink, blue, nyeusi, cream. Unakuja na kidoli cha wingu.", 6*H, "cloudbag", 3, 11, ["mkoba"]],
+    ["Seti ya saa na vito", "accessories", "jewelry", 45000, "Saa, bangili 2, mkufu, hereni na pete. Kwenye boksi la zawadi.", D, "jewel", 3, 8, ["zawadi","vito"]],
+    ["Saa ya chuma, analog + digital", "accessories", "watches", 55000, "Chuma kizito, haiingii maji (50m). Betri miaka 10.", 3*D, "watch", 2, 5, ["saa"]],
+    ["Sweta ya patches", "fashion", "men", 30000, "Kijani, cream na brown. M, L, XL.", 9*D, "sweater", 2, 0, ["sweta"]],
+    ["Jacket ya corduroy", "fashion", "men", 65000, "Brown, zipu ya silver, mifuko 2. M–XXL.", 4*H, "jacket", 3, 7, ["jacket"]],
+    ["Suti ya kike, M–4XL", "fashion", "women", 75000, "Blazer + suruali pana. Kijivu. Saizi M hadi 4XL.", D, "suit", 3, 10, ["suti","ofisini"]],
+    ["Shati jekundu + kaptula", "fashion", "men", 40000, "Linen, kola ya kisasa. Kaptula nyeupe. M–XL.", 2*D, "redshirt", 2, 3, ["shati","linen"]],
+    ["Cover ya S23 Ultra", "electronics", "gadgets", 15000, "Ina ring ya kushikilia, inalinda kamera. Haishiki alama za vidole.", 7*H, "case", 2, 21, ["cover","samsung"]],
+    ["Mouse ya kioo, wireless", "electronics", "gadgets", 25000, "Bluetooth + USB. Inachajiwa. Nyeupe au nyeusi.", D, "mouse", 3, 12, ["mouse"]],
+    ["Spika ya Bluetooth T8II", "electronics", "gadgets", 120000, "Sauti nzito, mkanda wa kubebea. Nyeusi au ya rangi.", 3*D, "speaker", 3, 5, ["spika"]],
+    ["Joypad ya PC, USB", "electronics", "gadgets", 18000, "Inafanya kazi na PC na laptop. Chomeka uanze.", 2*D, "joypad", 2, 9, ["games"]],
+    ["TV 65\" QLED, Google TV", "electronics", "gadgets", 1850000, "Mpya kwenye boksi. 4K, Google TV. Warranty.", 4*D, "tv", 3, 2, ["tv"]],
+    ["Dryer ya saluni, stand", "other", null, 280000, "Nyeupe, nyeusi au nyekundu. Magurudumu 5.", 5*D, "dryer", 2, 3, ["saluni"]],
+    ["Water dispenser, moto & baridi", "other", null, 420000, "Bomba 2, tanki la chuma. Warranty miaka 2.", 3*D, "water", 3, 4, ["nyumbani"]],
+    ["Masanduku, seti ya 4", "accessories", "bags", 180000, "Magurudumu 4, kufuli. Saizi 4 tofauti.", 6*D, "luggage", 3, 6, ["safari"]]
   ];
-  return { shop: { name: "Niagize Kariakoo", tagline: "", whatsapp: "255700000000", payments: [{ provider: "M-PESA", number: "5512 3487", name: "BOSS DEUS" }] },
-    products: defs.map(function (d, i) { var img = sample(d[0].split(",")[0], d[6], d[7], d[8], d[9]);
-      return { id: "demo-" + i, created_at: new Date(d[5]).toISOString(), refreshed_at: new Date(d[5]).toISOString(), name: d[0], category: d[1], subcategory: d[2], price: d[3], description: d[4], images: [img], thumbs: [img], status: i === 8 ? "archived" : "active", asks: d[11], ordered: d[11], rating: d[10], tags: d[12] }; }),
+  return { seed: DEMO_SEED, shop: { name: "Niagize Kariakoo", tagline: "", whatsapp: "255700000000", payments: [{ provider: "M-PESA", number: "5512 3487", name: "BOSS DEUS" }] },
+    products: defs.map(function (d, i) { var at = new Date(now - d[5]).toISOString();
+      return { id: "demo-" + i, created_at: at, refreshed_at: at, name: d[0], category: d[1], subcategory: d[2], price: d[3], description: d[4], images: [DEMO_BASE + d[6] + ".jpg"], thumbs: [DEMO_BASE + d[6] + "-t.jpg"], status: i === 8 ? "archived" : "active", asks: d[8], ordered: d[8], rating: d[7], tags: d[9] }; }),
     orders: [], events: [], users: [], addresses: [], me: null };
 }
 async function uploadPhotos(id, photos, startIndex) {
@@ -758,6 +760,8 @@ W.db = {
     var r = await sb.from("shop").update(patch).eq("id", 1).select().maybeSingle(); if (r.error) throw r.error; return r.data;
   },
   async ping() { if (!live) return "pilot"; try { var r = await sb.from("shop").select("id").eq("id", 1).maybeSingle(); return r.error ? "down" : (W.stage === "production" ? "live" : "pilot"); } catch (e) { return "down"; } },
+  /* instant open: the copy saved on this phone last time (live shop only) */
+  cached() { if (!live) return null; var p = cacheGet("winga.cache.products"); if (!p || !p.length) return null; return { shop: cacheGet("winga.cache.shop") || {}, products: p.map(decorate) }; },
   /* products */
   async listProducts(admin) {
     if (!live) {
