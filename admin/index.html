@@ -522,7 +522,7 @@ PAGES.add=function(){
 };
 function newA(saved){return {photos:[],name:"",cat:S.lastCat,sub:S.lastSub,price:"",desc:"",rating:2,saved:saved||0};}
 /* several photos picked at once all go to one product; anything past 3 is dropped */
-function takePhotos(list,files){var room=W.MAX_PHOTOS-list.length,took=files.slice(0,Math.max(0,room));if(files.length>took.length)W.toast(t("photos_drop",{n:took.length}));return list.concat(took);}
+function takePhotos(list,files){var room=W.MAX_PHOTOS-list.length,took=files.slice(0,Math.max(0,room));took.forEach(function(f){W.prep(f).catch(function(){});});if(files.length>took.length)W.toast(t("photos_drop",{n:took.length}));return list.concat(took);}
 function startAdd(files){A=newA(0);A.photos=takePhotos([],files);stack=["add"];draw(true);}
 function commitAdd(){S.lastCat=A.cat;S.lastSub=A.sub;enqueue(productData(A),A.photos.slice());A.saved++;}
 function enqueue(data,files){Q.jobs.push({data:data,files:files});Q.total++;render();run();}
@@ -811,7 +811,7 @@ document.addEventListener("click",async function(e){
     case "oper":S.oper=el.dataset.f;render();break;
     case "crop":var o5=A||E;readFields(o5);startCrop(+el.dataset.i);break;
     case "cropZ":zoomTo(CR.z*(+el.dataset.d),{cx:CR.x,cy:CR.y,z:CR.z});paint();break;
-    case "cropOk":var cf;try{cf=await cropFile();}catch(x){console.error(x);W.toast(t("error"));break;}if(A)A.photos[CR.i]=cf;else E.items[CR.i]={f:cf};CR=null;back();break;
+    case "cropOk":var cf;try{cf=await cropFile();}catch(x){console.error(x);W.toast(t("error"));break;}W.prep(cf).catch(function(){});if(A)A.photos[CR.i]=cf;else E.items[CR.i]={f:cf};CR=null;back();break;
     case "openOrder":await openOrder(el.dataset.code);break;
     case "savePhone":var ph=W.phoneVal("o_phone");if(!W.phoneOk(ph))return bad("o_err","w_o_phone",W.phoneErr("o_phone"));keepFee();O.phone=ph;O.o=await W.db.setOrder(O.o.code,O.o.status,{phone:ph});syncList(O.o);W.toast(t("saved"));draw(false);break;
     case "nextStep":
@@ -886,9 +886,9 @@ async function saveEdit(){
   var keep=E.items.filter(function(x){return !x.f;}).map(function(x){return x.k;}),add=E.items.filter(function(x){return x.f;}).map(function(x){return x.f;});
   var changedPhotos=add.length||keep.length!==(p.images||[]).length||keep.some(function(k,i){return k!==i;});
   var ai=0,ki=0,order=E.items.map(function(x){return x.f?{a:ai++}:{k:ki++};});
-  if(changedPhotos)await W.db.setPhotos(p,keep,await W.prepPhotos(add),order);
+  var ph=changedPhotos?await W.db.setPhotos(p,keep,await W.prepPhotos(add),order):null;
   await W.db.updateProduct(p.id,patch);Object.assign(p,patch);
-  if(changedPhotos){var fresh=(await W.db.listProducts(true)).find(function(x){return x.id===p.id;});if(fresh)Object.assign(p,fresh);}
+  if(ph){Object.assign(p,ph);W.decorateProduct(p);}   /* no full reload of the product list */
   closeAll();W.toast(t("saved"));render();
 }
 async function saveSettings(){
