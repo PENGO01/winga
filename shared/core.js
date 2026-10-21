@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.3.4";
+W.VERSION = "2.4.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -695,8 +695,8 @@ function sample(label, bg, fg, shape, h) {
   else if (shape === "glasses") { x.lineWidth = 18; x.strokeStyle = fg; x.beginPath(); x.arc(200,300,80,0,7); x.stroke(); x.beginPath(); x.arc(400,300,80,0,7); x.stroke(); x.beginPath(); x.moveTo(280,290); x.lineTo(320,290); x.stroke(); }
   else { x.beginPath(); x.arc(300,290,140,0,7); x.fill(); }
   x.setTransform(1,0,0,1,0,0);
-  x.fillStyle = "rgba(15,42,68,.8)"; x.fillRect(0, H - 64, 600, 64); x.fillStyle = "#fff"; x.font = "600 26px 'IBM Plex Sans', sans-serif"; x.fillText(label, 22, H - 24);
-  x.fillStyle = "#F6B41C"; x.font = "600 16px 'IBM Plex Mono', monospace"; x.fillText("MFANO", 500, H - 24);
+  x.fillStyle = "rgba(15,42,68,.8)"; x.fillRect(0, H - 64, 600, 64); x.fillStyle = "#fff"; x.font = "600 26px 'Onest', sans-serif"; x.fillText(label, 22, H - 24);
+  x.fillStyle = "#F6B41C"; x.font = "600 16px 'Onest', sans-serif"; x.fillText("MFANO", 500, H - 24);
   return c.toDataURL("image/jpeg", 0.8);
 }
 function demoSeed() {
