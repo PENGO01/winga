@@ -1,5 +1,5 @@
 /* Winga service worker: app shell offline (network first, cache fallback). Data and photos come from Supabase. */
-const SHELL = "winga-beta-v13";
+const SHELL = "winga-beta-v14";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./shared/style.css", "./shared/core.js", "./shared/config.js",
   "./admin/", "./admin/index.html", "./admin/manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-boss-192.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
@@ -14,6 +14,13 @@ self.addEventListener("fetch", e => {
     return;
   }
   if (e.request.method !== "GET" || u.origin !== location.origin || u.pathname.includes("/pocket/")) return;
+  /* instant open: the app files saved at install answer at once; a new version installs in the background
+     (every release renames SHELL) and is used from the next open */
+  const shell = e.request.mode === "navigate" || FILES.some(f => new URL(f, self.registration.scope).pathname === u.pathname);
+  if (shell && !u.search.includes("demo")) {
+    e.respondWith(caches.open(SHELL).then(c => c.match(e.request, { ignoreSearch: true }).then(hit => hit || fetch(e.request).then(r => { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(() => c.match("./index.html")))));
+    return;
+  }
   e.respondWith(fetch(e.request).then(r => { const c = r.clone(); caches.open(SHELL).then(x => x.put(e.request, c)); return r; })
     .catch(() => caches.match(e.request).then(r => r || caches.match("./index.html"))));
 });

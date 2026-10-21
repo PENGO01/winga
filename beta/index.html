@@ -101,7 +101,7 @@ nav.tabs .bdg{position:absolute;top:6px;left:calc(50% + 6px);min-width:17px;heig
 /* product page */
 .gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;background:var(--sunk);scrollbar-width:none;margin:0 calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
 .gal::-webkit-scrollbar{display:none}
-.gal img{flex:0 0 100%;width:100%;height:min(112vw,64vh);object-fit:contain;scroll-snap-align:center}
+.gal img{flex:0 0 100%;width:100%;height:min(100vw,64vh);object-fit:contain;scroll-snap-align:center}
 .pbd{padding-top:0!important;gap:8px!important}
 .pbd h2{margin:-2px 0 0}
 .galw{position:relative}
@@ -799,20 +799,26 @@ document.addEventListener("submit",async function(e){
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&stack.length)back();});
 
 /* ---------------- boot ---------------- */
-async function fetchAll(){
-  try{S.shop=await W.db.getShop()||{};}catch(e){S.shop={};}
-  S.products=(await W.db.listProducts(false)).filter(function(p){return p.status==="active";});
-  S.loaded=true;
+function dataKey(){return JSON.stringify([S.shop,S.products.map(function(p){return [p.id,p.name,p.price,p.status,p.refreshed_at,p.thumbUrl,p.ordered,p.rating,p.description];})]);}
+function useData(shop,products){
+  S.shop=shop||{};S.products=products.filter(function(p){return p.status==="active";});S.loaded=true;
   fuse=window.Fuse?new Fuse(S.products.map(function(p){return Object.assign({catLabel:W.catLabel(p.category)+" "+(p.subcategory?W.catLabel(p.category,p.subcategory):"")},p);}),{keys:["name","description","catLabel"],threshold:.38,ignoreLocation:true}):null;
-  render();
+  var k=dataKey();if(k===S.dataKey&&$("#app main"))return;   /* same as what's on screen: don't redraw */
+  S.dataKey=k;render();
+}
+async function fetchAll(){
+  var shop;try{shop=await W.db.getShop()||{};}catch(e){shop={};}
+  useData(shop,await W.db.listProducts(false));
 }
 var ptrProxy={get classList(){return ($("#ptr")||document.createElement("i")).classList;},set innerHTML(v){var p=$("#ptr");if(p)p.innerHTML=v;}};
 W.pullToRefresh(ptrProxy,fetchAll);
 W.watchNetwork(function(){fetchAll().catch(function(){});});
 async function boot(){
   S.me=load("niagize.me",null);
-  render();
-  try{await W.guard(fetchAll(),15000);}catch(e){console.error(e);W.errorScreen(function(){location.reload();});return;}
+  /* instant open: show last time's shop straight away, then swap in fresh data quietly */
+  var warm=null;try{warm=W.db.cached();}catch(_){}
+  if(warm)useData(warm.shop,warm.products);else render();
+  try{await W.guard(fetchAll(),15000);}catch(e){console.error(e);if(!warm){W.errorScreen(function(){location.reload();});return;}}
   try{await W.guard(refreshMe(),8000);}catch(e){}
   W.db.log("visit");
   var m=location.hash.match(/^#p-(.+)$/),o=location.hash.match(/^#o-(.+)$/);

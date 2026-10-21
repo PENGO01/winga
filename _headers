@@ -1,0 +1,11 @@
+# Cloudflare Pages settings (GitHub Pages ignores this file)
+/sw.js
+  Cache-Control: no-cache
+/beta/sw.js
+  Cache-Control: no-cache
+/beta/*
+  X-Robots-Tag: noindex
+/*.html
+  Cache-Control: no-cache
+/beta/demo/*
+  Cache-Control: public, max-age=604800
