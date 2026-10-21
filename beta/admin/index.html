@@ -205,6 +205,9 @@ nav.tabs .bdg{position:absolute;top:8px;left:calc(50% + 4px);min-width:17px;heig
 .binst li{display:flex;gap:10px;align-items:flex-start}
 .binst .bn{width:22px;height:22px;border-radius:50%;background:var(--jua);color:#121212;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
 .step .n svg{width:16px;height:16px}
+.bline{display:flex;gap:10px;align-items:center;padding:11px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:15px;line-height:1.35;text-align:left;color:var(--ink);font:inherit;width:100%}
+.bline.warn{background:var(--amber-soft);border-color:transparent}
+.bline svg{width:18px;height:18px;flex:none}
 .step .tt{font-weight:600}.step .ss{font-size:12.5px;color:var(--dim)}
 .delbox{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:6px 0}
 .delbox .big{width:64px;height:64px;border-radius:50%;background:var(--red-soft);color:var(--red);display:grid;place-items:center;position:relative}
@@ -470,7 +473,7 @@ function vProducts(){
 }
 
 /* ---------------- pages and popups ---------------- */
-var POP={steps:1,cats:1,confirm:1,share:1,paid:1,total:1,reset:1,name:1};
+var POP={brief:1,steps:1,cats:1,confirm:1,share:1,paid:1,total:1,reset:1,name:1};
 var PAGES={};
 function open(name){stack.push(name);draw(true);}
 function back(){
@@ -747,6 +750,18 @@ PAGES.reset=function(){
 };
 function readTeam(){var n=$("#t_name");if(!n||!T)return;T.name=n.value;T.email=$("#t_email").value;T.pw=$("#t_pw").value;}
 async function loadTeam(){try{var r=await W.db.team("list");S.team=r.team||[];}catch(e){S.team=[];W.toast(t("error"));}if(stack[stack.length-1]==="team")draw(false);}
+/* the full team brief (from a tapped alert): every line readable, order codes tappable */
+var BRIEF="";
+function openBrief(tx){BRIEF=String(tx||"");if(stack[stack.length-1]==="brief")draw(false);else open("brief");}
+PAGES.brief=function(){
+  var L=BRIEF.split("\n"),title=L.shift()||"Niagize";
+  var lines=L.join("\n").split(/\n| · (?=NK-)/).filter(Boolean).map(function(x){
+    var code=(x.match(/NK-[A-Z0-9]{5}/)||[])[0],warn=/^⚠️/.test(x)||!!code;
+    var txt=esc(x.replace(/^⚠️\s*/,""));
+    return code?'<button class="bline warn" data-act="briefOrder" data-code="'+code+'">'+IC.bell+'<span class="grow">'+txt+'</span>'+chev()+'</button>':'<div class="bline'+(warn?' warn':'')+'">'+txt+'</div>';
+  }).join("");
+  return hd(title)+'<div class="bd">'+lines+'</div><div class="ft"><button class="btn primary block" data-act="briefHome" style="border-radius:999px">'+esc(t("brief_open"))+'</button></div>';
+};
 PAGES.steps=function(){
   var st=steps(),acts=["settings","pickPhotos","shareShop"],inApp=W.standalone(),open0=HOW0;
   /* step 0: save the Boss app on the Home Screen (alerts on iPhone only work from there) */
@@ -807,6 +822,8 @@ document.addEventListener("click",async function(e){
     case "pushOff":S.push=await W.push.disable();draw(false);render();break;
     case "pushTest":var tr=await W.db.testPush();W.toast(tr&&tr.sent?t("push_test_ok"):t("push_fail"));break;
     case "steps":HOW0=!W.standalone();open("steps");break;
+    case "briefOrder":closeAll();S.tab="orders";render();reloadOrders();openOrder(el.dataset.code);break;
+    case "briefHome":closeAll();S.tab="home";render();scrollTo(0,0);break;
     case "howInstall":HOW0=!HOW0;draw(false);break;
     case "pickPhotos":closeAll();$("#pick").click();break;
     case "shareShop":await shareShop();break;
@@ -975,6 +992,7 @@ async function load(){
   loadDash();startPolling();
   W.push.state().then(function(st){S.push=st;if(S.tab==="home")render();});
   if(S.pendingOrder){var c=S.pendingOrder;S.pendingOrder=null;S.tab="orders";render();openOrder(c);}
+  else if(S.pendingBrief){var bt=S.pendingBrief;S.pendingBrief=null;openBrief(bt);}
   else autoOpenFresh();
 }
 async function afterAuth(){if(!(await W.db.isAdmin())){S.stage="denied";render();return;}await load();}
@@ -982,8 +1000,10 @@ var ptrProxy={get classList(){return ($("#ptr")||document.createElement("i")).cl
 W.pullToRefresh(ptrProxy,async function(){if(S.stage==="ready"&&!stack.length)await load();});
 W.watchNetwork(function(){if(S.stage==="ready")load().catch(function(){});else boot();});
 var om=location.hash.match(/^#o-(.+)$/);if(om)S.pendingOrder=decodeURIComponent(om[1]);
+/* a tapped brief alert carries the whole brief: #b=<title\nbody> */
+var bm=location.hash.match(/^#b=(.+)$/);if(bm){try{S.pendingBrief=decodeURIComponent(bm[1]);}catch(_){}try{history.replaceState(null,"",location.pathname+location.search);}catch(_){}}
 /* a tapped order alert (app already open) or a changed #o-CODE opens that order */
-function openFromUrl(u){var m=String(u||"").match(/#o-([A-Za-z0-9-]+)/);if(!m)return;var code=decodeURIComponent(m[1]);if(S.stage!=="ready"){S.pendingOrder=code;return;}S.tab="orders";render();reloadOrders();openOrder(code);}
+function openFromUrl(u){var bb=String(u||"").match(/#b=(.+)$/);if(bb){var tx="";try{tx=decodeURIComponent(bb[1]);}catch(_){}if(S.stage!=="ready"){S.pendingBrief=tx;return;}openBrief(tx);return;}var m=String(u||"").match(/#o-([A-Za-z0-9-]+)/);if(!m)return;var code=decodeURIComponent(m[1]);if(S.stage!=="ready"){S.pendingOrder=code;return;}S.tab="orders";render();reloadOrders();openOrder(code);}
 addEventListener("hashchange",function(){if(!(O&&O.o&&location.hash==="#o-"+O.o.code))openFromUrl(location.hash);});
 if("serviceWorker" in navigator)navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.type==="open")openFromUrl(e.data.url);});
 async function boot(){
