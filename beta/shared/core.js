@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.6.0";
+W.VERSION = "2.6.1";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -260,6 +260,14 @@ W.STRINGS = [
  ["shareText","Boss · Share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
  ["emptyHome","Boss · Home","Ongeza picha ya bidhaa zako","Add photos of your products"],
  ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
+ ["step0","Boss · Discover","Weka app kwenye simu","Save the app on your phone"],
+ ["step0s","Boss · Discover","Oda na arifa zikufikie haraka, kama app nyingine","Orders and alerts reach you fast, like any app"],
+ ["step0b","Boss · Discover","Jinsi","How"],
+ ["binst_1","Boss · Discover","Fungua Boss app kwenye Safari (iPhone) au Chrome (Android)","Open the Boss app in Safari (iPhone) or Chrome (Android)"],
+ ["binst_2","Boss · Discover","iPhone: bonyeza Share (□↑) chini. Android: bonyeza dot tatu (⋮) juu kulia","iPhone: tap Share (□↑) at the bottom. Android: tap the three dots (⋮) top right"],
+ ["binst_3","Boss · Discover","Shuka chini, chagua \"Add to Home Screen\"","Scroll down, choose \"Add to Home Screen\""],
+ ["binst_4","Boss · Discover","Jina: Niagize, bonyeza Add","Name: Niagize, tap Add"],
+ ["binst_5","Boss · Discover","Fungua kwa icon mpya, kisha washa Arifa","Open it from the new icon, then switch on Alerts"],
  ["step1","Boss · Discover","Namba ya WhatsApp","WhatsApp number"],
  ["step1s","Boss · Discover","Oda zitakufikia hapa","Orders reach you here"],
  ["step2","Boss · Discover","Weka bidhaa 3","Add 3 products"],

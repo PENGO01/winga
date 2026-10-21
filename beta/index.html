@@ -103,6 +103,11 @@ nav.tabs .bdg{position:absolute;top:6px;left:calc(50% + 6px);min-width:17px;heig
 .gal::-webkit-scrollbar{display:none}
 .gal img{flex:0 0 100%;width:100%;height:min(100vw,64vh);object-fit:contain;scroll-snap-align:center}
 .pbd{padding-top:0!important;gap:8px!important}
+/* while a page is open the list behind it can't move; scrolling stays inside the page */
+html.sheet-open,html.sheet-open body{overflow:hidden}
+.scrim,.sheet .bd{overscroll-behavior:contain}
+.scrim.page .sheet .bd{flex:1 1 auto;min-height:0}
+.gal,.sim{overscroll-behavior-x:contain;touch-action:pan-x pan-y}
 .pbd h2{margin:-2px 0 0}
 .galw{position:relative}
 .galback{position:absolute;z-index:2;top:10px;left:calc(10px - var(--gl));background:rgba(255,255,255,.88);color:#121212;box-shadow:0 1px 3px rgba(0,0,0,.18);width:40px;height:40px;border-radius:50%}
@@ -259,6 +264,17 @@ function stars(n){n=n||2;var s="";for(var i=1;i<=3;i++)s+=i<=n?"★":"<i>★</i>
 function priceHtml(p){return p.price!=null?'<b>TSh '+W.money(p.price)+'</b>':'<span class="ask">'+esc(t("noPrice"))+'</span>';}
 function hbtns(){return '<button class="hbtn" data-act="shareShop" aria-label="'+esc(t("share"))+'">'+IC.share+'</button><button class="hbtn" data-act="lang" aria-label="'+esc(t("lang"))+'">'+(W.lang==="sw"?"SW":"EN")+'</button><button class="hbtn" data-act="theme" aria-label="'+esc(t("theme"))+'">'+(W.isDark()?IC.sun:IC.moon)+'</button><button class="hbtn" data-act="how" aria-label="'+esc(t("how_title"))+'">'+IC.bulb+'</button>';}
 function chev(){return IC.chev.replace('<svg','<svg class="chev"');}
+/* "Zinazofanana": same group AND sub-group, and a price in the same range (¼× to 4×); best matches first.
+   A TV doesn't get phone covers. No real match → the section is hidden. */
+function similar(p){
+  var tags=p.tags||[];
+  return S.products.filter(function(x){
+    if(x.id===p.id||x.status!=="active"||x.category!==p.category||(x.subcategory||"")!==(p.subcategory||""))return false;
+    if(p.price>0&&x.price>0&&(x.price>p.price*4||x.price<p.price/4))return false;
+    return true;
+  }).map(function(x){var shared=(x.tags||[]).filter(function(g){return tags.indexOf(g)>=0;}).length,gap=(p.price>0&&x.price>0)?Math.abs(Math.log(x.price/p.price)):1;return {x:x,s:shared*2-gap};})
+   .sort(function(a,b){return b.s-a.s;}).slice(0,10).map(function(o){return o.x;});
+}
 function card(p){
   var ic=inCart(p.id);
   return '<div class="pc"><button class="pcopen" data-act="open" data-id="'+p.id+'" style="all:unset;display:block;width:100%;cursor:pointer">'+
@@ -414,7 +430,7 @@ function back(){stack.pop();if(!stack.length)try{history.replaceState(null,"",lo
 function closeAll(){stack=[];draw(false);try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}}
 function top(){return stack[stack.length-1];}
 function draw(first){
-  var r=$("#sheetRoot");if(!stack.length){r.innerHTML="";if(viewSig()!==S.sig)render();else renderTabs();return;}
+  var r=$("#sheetRoot");document.documentElement.classList.toggle("sheet-open",stack.length>0);if(!stack.length){r.innerHTML="";if(viewSig()!==S.sig)render();else renderTabs();return;}
   var cur=top(),html=PAGES[cur.n](cur.c),pop=POP[cur.n];
   var under="";if(pop&&stack.length>1){var u=stack[stack.length-2];under='<div class="scrim page"><div class="sheet">'+PAGES[u.n](u.c)+'</div></div>';}
   r.innerHTML=under+'<div class="scrim'+(pop?((cur.n==="how"||cur.n==="install"||cur.n==="rate"||cur.n==="tips")?" center":""):" page")+(first?" anim":"")+'" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true">'+html+'</div></div>';
@@ -426,7 +442,7 @@ var PAGES={
  product:function(c){
   var p=byId(c.id);if(!p)return hd("")+'<div class="bd"><div class="empty">'+esc(t("noMatch"))+'</div></div>';
   var imgs=p.imageUrls.length?p.imageUrls:[p.thumbUrl];
-  var sim=S.products.filter(function(x){return x.id!==p.id&&x.status!=="archived"&&x.category===p.category;}).slice(0,10);
+  var sim=similar(p);
   return '<div class="bd pbd"><div class="galw"><button class="iconbtn galback" data-act="back" aria-label="'+esc(t("back"))+'">'+IC.back+'</button>'+
    '<div class="gal" id="gal">'+imgs.map(function(u,i){return '<img src="'+esc(u)+'" alt="'+esc(p.name)+'"'+(i?' loading="lazy"':'')+' decoding="async">';}).join("")+'</div></div>'+
    (imgs.length>1?'<div class="dots" id="dots">'+imgs.map(function(_,i){return '<i class="'+(i?"":"on")+'"></i>';}).join("")+'</div>':'')+

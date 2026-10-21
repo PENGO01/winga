@@ -201,6 +201,10 @@ nav.tabs .bdg{position:absolute;top:8px;left:calc(50% + 4px);min-width:17px;heig
 .step:first-child{border-top:0}
 .step .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--num);font-weight:600;background:var(--sunk);flex:none}
 .step.done .n{background:var(--green);color:#fff}.step.done .tt{text-decoration:line-through;color:var(--dim)}
+.binst{list-style:none;margin:0 0 6px;padding:10px 12px;background:var(--sunk);border-radius:14px;display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.35}
+.binst li{display:flex;gap:10px;align-items:flex-start}
+.binst .bn{width:22px;height:22px;border-radius:50%;background:var(--jua);color:#121212;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.step .n svg{width:16px;height:16px}
 .step .tt{font-weight:600}.step .ss{font-size:12.5px;color:var(--dim)}
 .delbox{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:6px 0}
 .delbox .big{width:64px;height:64px;border-radius:50%;background:var(--red-soft);color:var(--red);display:grid;place-items:center;position:relative}
@@ -259,7 +263,7 @@ var W=window.Winga,t=W.t,esc=W.esc,$=W.$;
 var S={shop:{},products:[],orders:[],dash:null,days:7,me:null,status:"pilot",tab:"home",filter:"all",ofilter:"new",osub:"all",oq:"",cat:"",q:"",email:"",stage:"boot",lastCat:"fashion",lastSub:"women",team:null,pendingOrder:null,busy:false};
 var Q={jobs:[],done:0,total:0,running:false};
 var A=null,E=null,D=null,T=null,C=null,O=null,K=null,R=null;   // add · edit · settings · team · confirm · order · password · reset
-var stack=[];
+var stack=[],HOW0=false;
 var URLS=new Map(); function purl(f){if(!URLS.has(f))URLS.set(f,URL.createObjectURL(f));return URLS.get(f);}
 var P='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">';
 var IC={
@@ -333,7 +337,7 @@ function chev(){return IC.chev.replace('<svg','<svg class="chev"');}
 function hbtns(){
   return '<button class="hbtn" data-act="lang" aria-label="'+esc(t("lang"))+'">'+(W.lang==="sw"?"SW":"EN")+'</button>'+
    '<button class="hbtn" data-act="theme" aria-label="'+esc(t("theme"))+'">'+(W.isDark()?IC.sun:IC.moon)+'</button>'+
-   (owner()?'<button class="hbtn" data-act="steps" aria-label="'+esc(t("steps_title"))+'">'+IC.bulb+'</button>':'');
+   '<button class="hbtn" data-act="steps" aria-label="'+esc(t("steps_title"))+'">'+IC.bulb+'</button>';
 }
 /* the time a list shows: when it was completed, when it was last moved on, or when it came in */
 function eventAt(o){var h=o.history||[];if(o.status==="new"||!h.length)return o.created_at;for(var i=h.length-1;i>=0;i--)if(h[i].s===o.status)return h[i].at;return h[h.length-1].at||o.created_at;}
@@ -744,8 +748,12 @@ PAGES.reset=function(){
 function readTeam(){var n=$("#t_name");if(!n||!T)return;T.name=n.value;T.email=$("#t_email").value;T.pw=$("#t_pw").value;}
 async function loadTeam(){try{var r=await W.db.team("list");S.team=r.team||[];}catch(e){S.team=[];W.toast(t("error"));}if(stack[stack.length-1]==="team")draw(false);}
 PAGES.steps=function(){
-  var st=steps(),acts=["settings","pickPhotos","shareShop"];
-  return hd(t("steps_title"))+'<div class="bd" style="gap:0">'+[1,2,3].map(function(n,i){
+  var st=steps(),acts=["settings","pickPhotos","shareShop"],inApp=W.standalone(),open0=HOW0;
+  /* step 0: save the Boss app on the Home Screen (alerts on iPhone only work from there) */
+  var s0='<div class="step'+(inApp?" done":"")+'"><span class="n">'+(inApp?"✓":IC.share2)+'</span><div class="grow"><div class="tt">'+esc(t("step0"))+'</div><div class="ss">'+esc(t("step0s"))+'</div></div>'+(inApp?'':'<button class="btn sm '+(open0?'ghost':'primary')+'" data-act="howInstall" style="border-radius:999px">'+esc(t("step0b"))+'</button>')+'</div>'+
+   (!inApp&&open0?'<ol class="binst">'+[1,2,3,4,5].map(function(n){return '<li><span class="bn">'+n+'</span>'+esc(t("binst_"+n))+'</li>';}).join("")+'</ol>':'');
+  if(!owner())return hd(t("steps_title"))+'<div class="bd" style="gap:0">'+s0+'</div>';
+  return hd(t("steps_title"))+'<div class="bd" style="gap:0">'+s0+[1,2,3].map(function(n,i){
     return '<div class="step'+(st[i]?" done":"")+'"><span class="n">'+(st[i]?"✓":n)+'</span><div class="grow"><div class="tt">'+esc(t("step"+n))+'</div><div class="ss">'+esc(t("step"+n+"s"))+'</div></div>'+(st[i]?'':'<button class="btn sm primary" data-act="'+acts[i]+'" style="border-radius:999px">'+esc(t("go"))+'</button>')+'</div>';
   }).join("")+(st.every(Boolean)?'<div class="banner" style="margin-top:10px">'+esc(t("stepsDone"))+'</div>':'')+'</div>';
 };
@@ -798,7 +806,8 @@ document.addEventListener("click",async function(e){
       if(S.push==="on"){W.toast("✓ "+t("push_on"));try{await W.db.testPush();}catch(_){}}draw(false);render();break;
     case "pushOff":S.push=await W.push.disable();draw(false);render();break;
     case "pushTest":var tr=await W.db.testPush();W.toast(tr&&tr.sent?t("push_test_ok"):t("push_fail"));break;
-    case "steps":open("steps");break;
+    case "steps":HOW0=!W.standalone();open("steps");break;
+    case "howInstall":HOW0=!HOW0;draw(false);break;
     case "pickPhotos":closeAll();$("#pick").click();break;
     case "shareShop":await shareShop();break;
     case "copyLink":W.copy(W.shopUrl(),$("#shopUrl"));break;
