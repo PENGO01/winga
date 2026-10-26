@@ -1,5 +1,5 @@
 /* Winga service worker: app shell offline (network first, cache fallback). Data and photos come from Supabase. */
-const SHELL = "winga-beta-v19";
+const SHELL = "winga-beta-v20";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./shared/style.css", "./shared/core.js", "./shared/config.js",
   "./admin/", "./admin/index.html", "./admin/manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-boss-192.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });

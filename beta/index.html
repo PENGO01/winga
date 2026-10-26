@@ -69,6 +69,12 @@ main{padding:12px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 .pc{break-inside:avoid;margin:0 0 3px;background:var(--card);border:0;border-radius:0;overflow:hidden;display:block;width:100%;text-align:left;padding:0;color:inherit;position:relative}
 .pc .im{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:var(--sunk)}
 .pc.tall .im{aspect-ratio:4/5}
+.slide{display:flex;flex-direction:column;align-items:center;gap:12px}
+.slide .shot{height:min(52vh,430px);aspect-ratio:210/420;border-radius:22px;overflow:hidden;background:#121212;box-shadow:0 6px 24px rgba(0,0,0,.18);display:grid;place-items:center}
+.slide .shot img,.slide .shot svg{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.slide .scap{display:flex;gap:10px;align-items:center;font-weight:600;font-size:16px;line-height:1.3;max-width:34ch}
+.slide .scap .tn{flex:none;width:28px;height:28px;border-radius:50%;background:var(--jua);color:#121212;display:grid;place-items:center;font-size:14px}
+.sdots{display:flex;gap:6px}.sdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.sdots i.on{background:var(--ink);width:18px;border-radius:4px}
 .instbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 8px 10px 12px}
 .instbar .fi{flex:none}.instbar b{font-size:14px}
 .newstrip{margin:0 calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
@@ -394,6 +400,24 @@ function vHome(){
   return h+'<div class="mas">'+list.map(card).join("")+'</div>';
 }
 /* a slim "Add to Home Screen" bar: Android shows the real install prompt, iPhone gets the steps; hidden for 7 days after a tap */
+/* simple phone drawings for the "save the app" slides (Android: ⋮ menu at the top, iPhone: Share at the bottom) */
+function phoneArt(n,ios){
+  var ring=function(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="17" fill="rgba(255,198,45,.18)" stroke="#FFC62D" stroke-width="4"/>';};
+  var sunI=function(x,y,r){var g='';for(var k=0;k<6;k++)g+='<rect x="'+(x-r)+'" y="'+(y-r+r*2*(k*5+1)/30)+'" width="'+(r*2)+'" height="'+(r*2*3/30)+'" fill="#FFC62D"/>';return '<clipPath id="sc'+x+y+'"><circle cx="'+x+'" cy="'+y+'" r="'+r+'"/></clipPath><g clip-path="url(#sc'+x+y+')">'+g+'</g>';};
+  var top=ios?'':'<rect x="14" y="30" width="182" height="30" rx="8" fill="#F1F1F1"/><text x="26" y="50" font-size="11" fill="#555">niagize…</text><text x="180" y="51" font-size="16" font-weight="700" fill="#333" text-anchor="middle">⋮</text>';
+  var bottom=ios?'<rect x="14" y="356" width="182" height="34" rx="8" fill="#F1F1F1"/><text x="105" y="378" font-size="10" fill="#555" text-anchor="middle">niagize…</text><path d="M99 334v-14M93 326l6-7 6 7M90 330v10h18v-10" fill="none" stroke="#1A73E8" stroke-width="2"/>':'';
+  var page='<rect x="14" y="'+(ios?30:66)+'" width="182" height="'+(ios?290:320)+'" fill="#FFF7E2"/>'+sunI(40,ios?54:90,12)+'<text x="58" y="'+(ios?58:94)+'" font-size="12" font-weight="800" fill="#121212">Niagize Kariakoo</text>'+
+   [0,1,2,3].map(function(k){var x=24+(k%2)*86,y=(ios?76:112)+Math.floor(k/2)*100;return '<rect x="'+x+'" y="'+y+'" width="78" height="78" rx="6" fill="#E8DFC8"/>';}).join("");
+  var body='';
+  if(n===1)body=page+top+bottom;
+  else if(n===2)body=page+top+bottom+(ios?ring(99,329):ring(180,45));
+  else if(n===3){var items=ios?["Copy","Add to Reading List","Add to Home Screen","Print"]:["New tab","Bookmarks","Install app","Add to Home screen"],hi=ios?2:2;
+    body=page+top+bottom+'<rect x="14" y="'+(ios?170:66)+'" width="182" height="'+(ios?186:150)+'" rx="10" fill="#FFFFFF" stroke="#DDD"/>'+
+     items.map(function(it,k){var y=(ios?194:90)+k*(ios?40:34);return (k===hi||(!ios&&k===3)?'<rect x="20" y="'+(y-18)+'" width="170" height="28" rx="6" fill="rgba(255,198,45,.30)"/>':'')+'<text x="30" y="'+y+'" font-size="12" fill="#222">'+it+'</text>';}).join("");}
+  else body='<rect x="14" y="30" width="182" height="360" fill="#2B3A55"/>'+[0,1,2,3,4,5,6,7].map(function(k){var x=30+(k%4)*44,y=60+Math.floor(k/4)*64;return '<rect x="'+x+'" y="'+y+'" width="34" height="34" rx="9" fill="rgba(255,255,255,.22)"/>';}).join("")+
+     '<rect x="30" y="188" width="34" height="34" rx="9" fill="#121212"/>'+sunI(47,205,11)+ring(47,205)+'<text x="47" y="238" font-size="9" fill="#FFF" text-anchor="middle">Niagize</text>';
+  return '<svg viewBox="0 0 210 420" width="210" height="420" role="img" aria-hidden="true" font-family="system-ui,sans-serif"><rect x="4" y="4" width="202" height="412" rx="28" fill="#121212"/><rect x="14" y="16" width="182" height="388" rx="18" fill="#FFF"/>'+body+'</svg>';
+}
 function instBar(){
   if(W.standalone()||W.ls("winga.installed")==="1")return "";
   var last=+W.ls("winga.instbar")||0;if(Date.now()-last<7*864e5)return "";
@@ -551,6 +575,8 @@ var PAGES={
   if(cur==="new"||cur==="progress"){h+='<div class="hint">'+esc(t("o_pay_wait"))+'</div>';}
   else if(o.claim_ref&&(cur==="paid"||cur==="done"))h+=claimView(o,true);
   h+=phoneRow;
+  if(cur==="invoiced"||cur==="paid")h+='<button class="mrow" data-act="cardInv"><span class="fi">'+IC.receipt+'</span><span class="tt">'+esc(t("card_inv_btn"))+'</span>'+chev()+'</button>';
+  if(cur==="done")h+='<button class="mrow" data-act="cardThx"><span class="fi jua">'+IC.check+'</span><span class="tt">'+esc(t("card_thx_btn"))+'</span>'+chev()+'</button>';
   if(cur==="invoiced")h+='<div class="eyebrow" style="margin-top:6px">'+esc(t("o_title",{code:o.code}))+'</div>'+tl;
   if(cur==="done"&&o.rating)h+='<div class="hint" style="text-align:center"><span style="color:var(--jua);letter-spacing:2px">'+"★★★★★".slice(0,o.rating)+'</span> '+esc(t("rate_your",{n:o.rating}))+'</div>';
   h+=(!S.me?'<button class="mrow" data-act="signup"><span class="fi">'+IC.me+'</span><span class="tt">'+esc(t("guest_hint"))+'</span>'+chev()+'</button>':'')+'</div>';
@@ -572,14 +598,19 @@ var PAGES={
    '<div class="ft"><button class="btn primary block" data-act="back" style="border-radius:999px">'+esc(t("inst_close"))+'</button></div>';
  },
  tips:function(c){
-  var p=c.panel||0;
-  var buy=[[t("how1"),IC.cats],[t("how2"),IC.wa],[t("how3"),IC.check],[t("how4"),IC.pin]];
-  var save=[[t("inst_1"),IC.globe],[t("inst_2"),IC.home],[t("inst_3"),IC.dots],[t("inst_4"),IC.share],[t("inst_5"),IC.addHome],[t("inst_6"),IC.check],[t("inst_7"),W.sunSvg(false)]];
-  var rows=(p?save:buy).map(function(r,i,all){return '<li class="tstep'+(i===all.length-1?' last':'')+'"><span class="tn">'+(i+1)+'</span><span class="tt">'+esc(r[0])+'</span><span class="ti">'+r[1]+'</span></li>';}).join("");
+  /* picture slides, one at a time with Back / Endelea (no sideways swiping): real screens for buying, drawings for saving the app */
+  var p=c.panel||0,ios=/iphone|ipad|ipod/i.test(navigator.userAgent),i=c.i||0;
+  var slides=p?[[phoneArt(1,ios),t("sl_s1")],[phoneArt(2,ios),t(ios?"sl_s2i":"sl_s2a")],[phoneArt(3,ios),t(ios?"sl_s3i":"sl_s3a")],[phoneArt(4,ios),t("sl_s4")]]
+    :[1,2,3,4].map(function(n){return ['<img src="how/b'+n+'.webp" alt="" width="420" height="908" decoding="async">',t("sl_b"+n)];});
+  if(i>=slides.length)i=slides.length-1;
+  var sl=slides[i],last=i===slides.length-1;
   return '<div class="thero"><span class="tsun">'+W.sunSvg(false)+'</span><div class="grow"><h2>'+esc(t("tips_title"))+'</h2><p>'+esc(t("tips_sub"))+'</p></div><button class="iconbtn" data-act="back" aria-label="'+esc(t("back"))+'">'+IC.x+'</button></div>'+
-   '<div class="bd tips"><div class="ttabs" role="tablist">'+[[t("tips_buy"),IC.cart],[t("tips_save"),IC.addHome]].map(function(x,i){return '<button role="tab" data-act="tab" data-i="'+i+'" aria-pressed="'+(p===i)+'">'+x[1]+esc(x[0])+'</button>';}).join("")+'</div>'+
-   '<ol class="tsteps">'+rows+'</ol></div>'+
-   '<div class="ft"><button class="btn primary block" data-act="back" style="border-radius:999px">'+IC.check+esc(t("inst_close"))+'</button></div>';
+   '<div class="bd tips"><div class="ttabs" role="tablist">'+[[t("tips_buy"),IC.cart],[t("tips_save"),IC.addHome]].map(function(x,k){return '<button role="tab" data-act="tab" data-i="'+k+'" aria-pressed="'+(p===k)+'">'+x[1]+esc(x[0])+'</button>';}).join("")+'</div>'+
+   '<div class="slide"><div class="shot">'+sl[0]+'</div><div class="scap"><span class="tn">'+(i+1)+'</span><span>'+esc(sl[1])+'</span></div>'+
+   '<div class="sdots">'+slides.map(function(_,k){return '<i class="'+(k===i?"on":"")+'"></i>';}).join("")+'</div></div></div>'+
+   '<div class="ft"><div class="ft2">'+(i>0?'<button class="btn ghost" data-act="slide" data-d="-1" style="border-radius:999px">'+IC.back+'</button>':'')+
+   (last?(p&&W.canPrompt()?'<button class="btn primary" data-act="instGo" style="border-radius:999px">'+IC.addHome+esc(t("sl_now"))+'</button>':'<button class="btn primary" data-act="back" style="border-radius:999px">'+IC.check+esc(t("inst_close"))+'</button>'):
+    '<button class="btn primary" data-act="slide" data-d="1" style="border-radius:999px">'+esc(t("sl_next"))+IC.chev+'</button>')+'</div></div>';
  },
  how:function(){
   return hd(t("how_title"))+'<div class="bd"><ol class="howlist">'+[1,2,3,4].map(function(n){return '<li><b>'+n+'</b>'+esc(t("how"+n))+'</li>';}).join("")+'</ol></div><div class="ft"><button class="btn primary block" data-act="back" style="border-radius:999px">'+esc(t("ok"))+'</button></div>';
@@ -758,7 +789,8 @@ document.addEventListener("click",async function(e){
     case "theme":W.toggleTheme();render();draw(false);break;
     case "how":open("tips",{panel:0});break;
     case "fy":S.fy=el.dataset.cat;var row=$("#fyrow"),sl=row?row.scrollLeft:0;render();var r2=$("#fyrow");if(r2)r2.scrollLeft=sl;break;
-    case "tab":cur.c.panel=+el.dataset.i;draw(false);break;
+    case "tab":cur.c.panel=+el.dataset.i;cur.c.i=0;draw(false);break;
+    case "slide":cur.c.i=Math.max(0,(cur.c.i||0)+(+el.dataset.d));draw(false);break;
     case "help":open("help");break;
     case "eye":var f=$("#"+el.dataset.for),show=f.type==="password";f.type=show?"text":"password";el.innerHTML=show?IC.eyeOff:IC.eye;break;
     case "signin":readAuth();var keep=(cur&&cur.n==="auth"&&cur.c.f)||{};stack=stack.filter(function(s){return s.n!=="auth";});open("auth",{mode:"signin",f:{user:keep.user||""}});break;
@@ -782,6 +814,9 @@ document.addEventListener("click",async function(e){
     case "openOrder":openOrder(el.dataset.code);break;
     case "reorder":var hl=cur.c.list.find(function(o){return o.code===el.dataset.code;});hl.items.forEach(function(i){if(i.product_id&&buyable(byId(i.product_id)))addToCart(i.product_id,i.qty,i.note);});S.tab="cart";closeAll();break;
     case "copyTxt":W.copy(el.dataset.v);break;
+    case "cardInv":case "cardThx":var co=top().c.o,shopUrl=location.href.split("#")[0].split("?")[0];
+      var cb=a==="cardInv"?await W.cardInvoice(co,S.shop,shopUrl):await W.cardThanks(co,S.shop,shopUrl);
+      await W.shareCard(cb,"niagize-"+co.code+(a==="cardInv"?"-ankara":"-asante")+".png",t("o_title",{code:co.code}));break;
     case "editPhone":var oc=top().c,gq2=S.guest||load("niagize.guest",{});open("ophone",{code:oc.o.code,wa:oc.o.customer_phone||gq2.wa||""});break;
     case "savePhoneO":var nw=W.phoneVal("op_wa");if(!W.phoneOk(nw))return bad("op_err","w_op_wa",W.phoneErr("op_wa"));
       try{var oo=await W.db.setOrderPhone(top().c.code,nw);back();var oc2=top();if(oc2&&oc2.n==="order"){oc2.c.o=Object.assign(oc2.c.o,oo||{});if(!oc2.c.o.customer_phone&&isGuest())oc2.c.o.phone_tail=nw.slice(-3);}
