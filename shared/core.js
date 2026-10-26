@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.7.0";
+W.VERSION = "2.8.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -140,6 +140,18 @@ W.STRINGS = [
  ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
  ["g_hint","Basket","Ankara na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
  ["inst_title","Install","Weka Niagize kwenye simu yako","Put Niagize on your phone"],
+ ["sl_b1","Tips","Gusa bidhaa upendayo","Tap the product you like"],
+ ["sl_b2","Tips","Gusa Kapuni (au Agiza sasa)","Tap Kapuni (or Agiza sasa)"],
+ ["sl_b3","Tips","Weka namba ya WhatsApp, gusa Tuma oda","Enter your WhatsApp number, tap Tuma oda"],
+ ["sl_b4","Tips","Tutakutumia ankara. Lipia, tukuletee mlangoni","We send the invoice. Pay, we deliver to your door"],
+ ["sl_s1","Tips","Fungua Niagize kwenye Chrome (Android) au Safari (iPhone)","Open Niagize in Chrome (Android) or Safari (iPhone)"],
+ ["sl_s2a","Tips","Gusa dot tatu ⋮ juu kulia","Tap the three dots ⋮ top right"],
+ ["sl_s2i","Tips","Gusa Share □↑ chini","Tap Share □↑ at the bottom"],
+ ["sl_s3a","Tips","Chagua \"Install app\" au \"Add to Home screen\"","Choose \"Install app\" or \"Add to Home screen\""],
+ ["sl_s3i","Tips","Shuka chini, chagua \"Add to Home Screen\"","Scroll down, choose \"Add to Home Screen\""],
+ ["sl_s4","Tips","Gusa Add. Fungua Niagize kwa icon yetu","Tap Add. Open Niagize from our icon"],
+ ["sl_next","Tips","Endelea","Next"],
+ ["sl_now","Tips","Weka sasa","Add now"],
  ["tips_title","Tips","Karibu tuanze pamoja","Welcome, let's start together"],
  ["tips_sub","Tips","Hatua chache tu, uagize kwa urahisi","A few steps and you're ordering"],
  ["tips_buy","Tips","Jinsi ya kununua","How to buy"],
@@ -274,6 +286,24 @@ W.STRINGS = [
  ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
  ["brief_open","Boss · Brief","Fungua dashboard","Open the dashboard"],
  ["sign_asst","Boss · Order","— {name}, msaidizi wa Niagize Kariakoo","— {name}, Niagize Kariakoo assistant"],
+ ["card_inv","Card","ANKARA","INVOICE"],
+ ["card_to","Card","KWA","BILLED TO"],
+ ["card_item","Card","BIDHAA","ITEM"],
+ ["card_qty","Card","IDADI","QTY"],
+ ["card_amt","Card","KIASI","AMOUNT"],
+ ["card_del","Card","Usafiri","Delivery"],
+ ["card_total","Card","Jumla","Total"],
+ ["card_pay","Card","LIPA KWA","PAY TO"],
+ ["card_after","Card","Ukishalipa, tuma namba ya muamala kwenye link ya oda yako.","After paying, send the transaction ID on your order link."],
+ ["card_more","Card","+ bidhaa {n} zaidi","+ {n} more items"],
+ ["card_thx","Card","ASANTE","THANK YOU"],
+ ["card_thx_t","Card","Asante, {name}.","Thank you, {name}."],
+ ["card_thx_p1","Card","Oda yako {code} imekamilika. Tunashukuru kwa kununua Kariakoo kupitia kwetu.","Your order {code} is complete. Thank you for shopping Kariakoo with us."],
+ ["card_thx_p2","Card","Ukihitaji chochote, tuko ujumbe mmoja tu.","If you ever need anything, we are one message away."],
+ ["card_recv","Card","IMEPOKELEWA {date}","RECEIVED {date}"],
+ ["card_inv_btn","Card","Ankara (picha)","Invoice image"],
+ ["card_thx_btn","Card","Kadi ya asante","Thank-you card"],
+ ["card_saved","Card","Picha imehifadhiwa","Image saved"],
  ["step0","Boss · Discover","Weka app kwenye simu","Save the app on your phone"],
  ["step0s","Boss · Discover","Oda na arifa zikufikie haraka, kama app nyingine","Orders and alerts reach you fast, like any app"],
  ["step0b","Boss · Discover","Jinsi","How"],
@@ -409,6 +439,10 @@ W.STRINGS = [
  ["push_nudge_s","Boss · Alerts","Ujue oda mpya papo hapo, bila kusubiri WhatsApp","Know about new orders at once, without waiting for WhatsApp"],
  ["push_denied","Boss · Alerts","Umezuia arifa. Fungua Settings → Niagize → Notifications → Allow","Alerts are blocked. Open Settings → Niagize → Notifications → Allow"],
  ["push_unsupported","Boss · Alerts","Simu hii haiwezi kupokea arifa za Niagize","This phone can't receive Niagize alerts"],
+ ["push_d_and","Boss · Alerts","Android: gusa 🔒 au ⓘ kwenye link juu → Ruhusa (Permissions) → Arifa → Ruhusu. Au Settings → Apps → Chrome → Notifications → On","Android: tap 🔒 or ⓘ by the address → Permissions → Notifications → Allow. Or Settings → Apps → Chrome → Notifications → On"],
+ ["push_d_ios","Boss · Alerts","iPhone: Settings → Notifications → Niagize → Allow Notifications","iPhone: Settings → Notifications → Niagize → Allow Notifications"],
+ ["push_d_bat","Boss · Alerts","Simu nyingi za Android: Battery → Chrome → No restrictions, arifa zisizime simu ikilala","Many Android phones: Battery → Chrome → No restrictions, so alerts keep coming when the phone sleeps"],
+ ["push_welcome","Boss · Alerts","Karibu kwenye app! Washa arifa: oda mpya zikufikie papo hapo","Welcome to the app! Switch on alerts: new orders reach you at once"],
  ["push_install","Boss · Alerts","Kwanza weka Niagize kwenye Home Screen","First add Niagize to your Home Screen"],
  ["push_i1","Boss · Alerts","Fungua Niagize kwenye Safari, gusa Share","Open Niagize in Safari, tap Share"],
  ["push_i2","Boss · Alerts","Chagua \"Add to Home Screen\"","Choose \"Add to Home Screen\""],
@@ -715,6 +749,70 @@ function normalize(p) {
 }
 W.normalize = normalize;
 /* what the customer pays: the agreed total if the team changed it, else items + delivery */
+/* ---------------- order cards: the invoice and the thank-you as a picture (PNG), easy to read and to forward ---------------- */
+(function () {
+  var Wd = 1080, INK = "#121212", DIM = "#6B6150", LINE = "#EADFC4", GOLD = "#FFC62D", F = "'Onest', system-ui, sans-serif";
+  function font(c, w, px) { c.font = w + " " + px + "px " + F; }
+  function sun(c, x, y, r) { c.save(); c.beginPath(); c.arc(x, y, r, 0, 7); c.clip(); c.fillStyle = GOLD; for (var i = 0; i < 6; i++) c.fillRect(x - r, y - r + r * 2 * (i * 5 + 1) / 30, r * 2, r * 2 * 3 / 30); c.restore(); }
+  function fit(c, t, max) { t = String(t || ""); if (c.measureText(t).width <= max) return t; while (t.length > 1 && c.measureText(t + "…").width > max) t = t.slice(0, -1); return t + "…"; }
+  function wrap(c, t, x, y, max, lh) { var words = String(t).split(" "), line = ""; for (var i = 0; i < words.length; i++) { var tt = line ? line + " " + words[i] : words[i]; if (c.measureText(tt).width > max && line) { c.fillText(line, x, y); y += lh; line = words[i]; } else line = tt; } if (line) { c.fillText(line, x, y); y += lh; } return y; }
+  function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function day(d) { try { return new Date(d || Date.now()).toLocaleDateString(W.lang === "sw" ? "sw-TZ" : "en-GB", { day: "numeric", month: "short", year: "numeric" }); } catch (_) { return String(d || "").slice(0, 10); } }
+  async function ready() { try { await Promise.all(["800 40px Onest", "600 30px Onest", "400 30px Onest"].map(function (f) { return document.fonts.load(f); })); } catch (_) {} }
+  function head(c, shop, label) {
+    sun(c, 96, 112, 34); c.fillStyle = INK; font(c, 800, 40); c.textAlign = "left"; c.fillText(shop || "Niagize Kariakoo", 146, 126);
+    c.fillStyle = GOLD; c.fillRect(64, 176, 96, 6);
+    c.fillStyle = DIM; font(c, 600, 26); c.textAlign = "right"; c.fillText(label, Wd - 64, 124); c.textAlign = "left";
+  }
+  function foot(c, H, url) { c.fillStyle = LINE; c.fillRect(64, H - 128, Wd - 128, 2); c.fillStyle = INK; font(c, 800, 28); c.fillText("SHOP . DELIVER . SATISFY", 64, H - 74); c.fillStyle = DIM; font(c, 400, 26); c.textAlign = "right"; c.fillText(String(url || "").replace(/^https?:\/\//, "").replace(/\/$/, ""), Wd - 64, H - 74); c.textAlign = "left"; }
+  function canvas(H) { var cv = document.createElement("canvas"); cv.width = Wd; cv.height = H; var c = cv.getContext("2d"); c.fillStyle = "#FFFFFF"; c.fillRect(0, 0, Wd, H); c.textBaseline = "alphabetic"; return { cv: cv, c: c }; }
+  function blob(cv) { return new Promise(function (res, rej) { cv.toBlob(function (b) { b ? res(b) : rej(new Error("png")); }, "image/png"); }); }
+  W.cardInvoice = async function (o, shop, url) {
+    await ready();
+    var items = o.items || [], shown = items.slice(0, 6), pays = ((o.payments || (shop && shop.payments)) || []).filter(function (p) { return p.number; }).slice(0, 2);
+    var H = 1000 + shown.length * 76 + (items.length > 6 ? 50 : 0) + pays.length * 150;
+    var k = canvas(H), c = k.c, y;
+    head(c, shop && shop.name, W.t("card_inv"));
+    c.fillStyle = INK; font(c, 800, 64); c.fillText("Oda " + o.code, 64, 300);
+    c.fillStyle = DIM; font(c, 600, 24); c.fillText(W.t("card_to"), 64, 370); c.textAlign = "right"; c.fillText(day(o.created_at), Wd - 64, 370); c.textAlign = "left";
+    c.fillStyle = INK; font(c, 600, 38); c.fillText(fit(c, o.customer_name || "Mteja", 760), 64, 418);
+    c.fillStyle = LINE; c.fillRect(64, 456, Wd - 128, 2);
+    c.fillStyle = DIM; font(c, 600, 22); c.fillText(W.t("card_item"), 64, 506); c.textAlign = "right"; c.fillText(W.t("card_qty"), 700, 506); c.fillText(W.t("card_amt"), Wd - 64, 506); c.textAlign = "left";
+    y = 570;
+    shown.forEach(function (i) { c.fillStyle = INK; font(c, 600, 32); c.fillText(fit(c, i.name, 560), 64, y); c.textAlign = "right"; font(c, 400, 32); c.fillText(String(i.qty), 700, y); c.fillText(i.price != null ? W.money(i.price * i.qty) : "—", Wd - 64, y); c.textAlign = "left"; y += 76; });
+    if (items.length > 6) { c.fillStyle = DIM; font(c, 400, 26); c.fillText(W.t("card_more", { n: items.length - 6 }), 64, y - 20); y += 50; }
+    c.fillStyle = LINE; c.fillRect(64, y - 30, Wd - 128, 2);
+    c.fillStyle = DIM; font(c, 400, 30); c.fillText(W.t("card_del"), 600, y + 26); c.textAlign = "right"; c.fillText(o.delivery_fee != null ? W.money(o.delivery_fee) : "—", Wd - 64, y + 26); c.textAlign = "left";
+    c.fillStyle = INK; font(c, 800, 34); c.fillText(W.t("card_total"), 600, y + 92); c.textAlign = "right"; font(c, 800, 48); c.fillText("TSh " + W.money(W.total(o)), Wd - 64, y + 96); c.textAlign = "left";
+    y += 150;
+    pays.forEach(function (p) { c.fillStyle = INK; rr(c, 64, y, Wd - 128, 128, 24); c.fill(); c.fillStyle = GOLD; font(c, 600, 22); c.fillText(W.t("card_pay") + " · " + String(p.provider || "").toUpperCase(), 100, y + 42); c.fillStyle = "#FFFFFF"; font(c, 800, 46); c.fillText(p.number, 100, y + 98); c.fillStyle = "#C9C9C9"; font(c, 400, 28); c.textAlign = "right"; c.fillText(fit(c, p.name || "", 360), Wd - 100, y + 96); c.textAlign = "left"; y += 150; });
+    c.fillStyle = DIM; font(c, 400, 28); wrap(c, W.t("card_after"), 64, y + 20, Wd - 128, 38);
+    foot(c, H, url);
+    return blob(k.cv);
+  };
+  W.cardThanks = async function (o, shop, url) {
+    await ready();
+    var H = 1350, k = canvas(H), c = k.c, items = o.items || [], first = items[0] || {};
+    var nm = String(o.customer_name || "").trim().split(/\s+/)[0] || (W.lang === "sw" ? "mpendwa" : "friend");
+    head(c, shop && shop.name, W.t("card_thx"));
+    c.fillStyle = INK; font(c, 800, 84); var y = wrap(c, W.t("card_thx_t", { name: nm }), 64, 420, Wd - 128, 96);
+    c.fillStyle = DIM; font(c, 400, 36); y = wrap(c, W.t("card_thx_p1", { code: o.code }), 64, y + 50, Wd - 128, 52);
+    y = wrap(c, W.t("card_thx_p2"), 64, y + 26, Wd - 128, 52);
+    var by = H - 400; c.fillStyle = INK; rr(c, 64, by, Wd - 128, 210, 28); c.fill();
+    c.fillStyle = GOLD; font(c, 600, 24); c.fillText(W.t("card_recv", { date: day(o.received_at || o.updated_at) }).toUpperCase(), 104, by + 62);
+    c.fillStyle = "#FFFFFF"; font(c, 800, 44); c.fillText(fit(c, (first.name || "") + (items.length > 1 ? " +" + (items.length - 1) : ""), Wd - 208), 104, by + 126);
+    c.fillStyle = "#C9C9C9"; font(c, 400, 28); c.fillText("Oda " + o.code + " · TSh " + W.money(W.total(o)), 104, by + 176);
+    foot(c, H, url);
+    return blob(k.cv);
+  };
+  /* share the picture where the phone can (WhatsApp shows it with the text); otherwise save it */
+  W.shareCard = async function (b, name, text) {
+    var file = null; try { file = new File([b], name, { type: "image/png" }); } catch (_) {}
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], text: text || "" }); return "shared"; } catch (e) { if (e && e.name === "AbortError") return "cancel"; } }
+    var u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+    W.toast(W.t("card_saved")); return "saved";
+  };
+})();
 W.total = function (o) { return o.agreed_total != null ? o.agreed_total : (o.subtotal || 0) + (o.delivery_fee || 0); };
 function archiveAged(p) { if ((p.status === "active" || p.status === "soldout") && W.daysLeft(p) <= 0) p.status = "archived"; }
 function cacheSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
