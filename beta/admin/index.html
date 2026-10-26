@@ -658,6 +658,8 @@ function invoiceText(o){
   var pays=(S.shop.payments||[]).filter(function(p){return p.number;});
   if(pays.length){lines.push("",t("inv_pay"));pays.forEach(function(p){lines.push(p.provider+": *"+p.number+"*"+(p.name?" ("+p.name+")":""));});}
   lines.push("",t("inv_after"),"",t("inv_track"),W.shopUrl()+"#o-"+o.code);
+  /* an assistant signs the invoice so the customer knows who they are talking to */
+  if(S.me&&S.me.role==="assistant"&&S.me.name)lines.push("",t("sign_asst",{name:S.me.name}));
   return lines.join("\n");
 }
 async function openOrder(code){
@@ -824,7 +826,7 @@ document.addEventListener("click",async function(e){
     case "steps":HOW0=!W.standalone();open("steps");break;
     case "briefOrder":closeAll();S.tab="orders";render();reloadOrders();openOrder(el.dataset.code);break;
     case "briefHome":closeAll();S.tab="home";render();scrollTo(0,0);break;
-    case "howInstall":HOW0=!HOW0;draw(false);break;
+    case "howInstall":if(W.canPrompt()){var r0=await W.install();if(r0!=="manual"){draw(false);break;}}HOW0=!HOW0;draw(false);break;
     case "pickPhotos":closeAll();$("#pick").click();break;
     case "shareShop":await shareShop();break;
     case "copyLink":W.copy(W.shopUrl(),$("#shopUrl"));break;

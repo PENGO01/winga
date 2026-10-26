@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.6.4";
+W.VERSION = "2.7.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -44,7 +44,7 @@ W.STRINGS = [
  ["theme","Common","Mwonekano","Appearance"],
  ["th_light","Common","Mwanga","Light"],
  ["th_dark","Common","Giza","Dark"],
- ["tagline","Common","Ni chap na salama, mpaka mlangoni kwako","Fast and safe, to your door"],
+ ["tagline","Common","SHOP . DELIVER . SATISFY","SHOP . DELIVER . SATISFY"],
  // customer shop
  ["nav_home","Shop · Menu","Nyumbani","Home"],
  ["nav_cats","Shop · Menu","Aina","Categories"],
@@ -52,6 +52,18 @@ W.STRINGS = [
  ["nav_me","Shop · Menu","Mimi","Me"],
  ["searchPh","Shop","Tafuta bidhaa upendayo","Search products you like"],
  ["emptyShop","Shop","Kaa mkao wa kula, bidhaa mpya zinakuja","Get ready, new products are coming"],
+ ["g_wa_ok","Shop","Namba hii iko kwenye WhatsApp (ankara itakuja hapa)","This number is on WhatsApp (your invoice comes here)"],
+ ["err_wa_ok","Shop","Thibitisha kuwa namba iko kwenye WhatsApp","Confirm the number is on WhatsApp"],
+ ["o_phone","Shop","WhatsApp yako","Your WhatsApp"],
+ ["o_phone_edit","Shop","Badilisha","Change"],
+ ["o_phone_title","Shop","Badilisha namba ya WhatsApp","Change your WhatsApp number"],
+ ["o_phone_hint","Shop","Ankara na taarifa za oda hii zitakuja kwenye namba hii","The invoice and updates for this order come to this number"],
+ ["o_phone_fail","Shop","Imeshindikana kubadilisha. Mwandikie muuzaji kwenye WhatsApp","Couldn't change it. Message the seller on WhatsApp"],
+ ["served_by","Shop","Unahudumiwa na {name} · msaidizi wa duka","Served by {name} · shop assistant"],
+ ["inst_bar","Install","Weka Niagize kwenye simu","Add Niagize to your phone"],
+ ["inst_bar_s","Install","Fungua haraka kwa icon, bila kutafuta link","Open it from an icon, no link hunting"],
+ ["inst_go","Install","Weka","Add"],
+ ["new_strip","Shop","Mpya dukani","New in"],
  ["similar","Shop","Zinazofanana","Similar items"],
  ["noMatch","Shop","Pole, hatuna bidhaa hiyo! Jaribu neno tofauti","Sorry, we don't have that! Try another word"],
  ["sold_n","Shop","{n} wameagiza","{n} ordered"],
@@ -198,7 +210,7 @@ W.STRINGS = [
  ["del_acc_s","Me · Settings","Akaunti na anwani zako zitafutwa. Oda zilizopita zinabaki kwa kumbukumbu ya duka.","Your account and addresses are deleted. Past orders stay in the shop's records."],
  ["yesDelAcc","Me · Settings","Ndiyo, futa akaunti","Yes, delete account"],
  ["about_body","Me · Settings","Niagize Kariakoo ni duka la winga mmoja unayemwamini. Unachagua bidhaa, unatuma oda, tunahakiki, unalipia, tunakuletea mpaka mlangoni.","Niagize Kariakoo is one trusted winga's shop. Pick products, send the order, we confirm, you pay, we deliver to your door."],
- ["terms_body","Me · Settings","1. Huduma: Niagize Kariakoo ni duka la mtandaoni la winga (muuzaji) wa Kariakoo. Unachagua bidhaa, unatuma oda kwa WhatsApp, kisha muuzaji anathibitisha.\n\n2. Bei na mzigo: Bei na upatikanaji huthibitishwa kwenye WhatsApp kabla ya kulipa. Picha ni za kuonyesha bidhaa; rangi na saizi zinaweza kutofautiana kidogo.\n\n3. Malipo: Unalipa moja kwa moja kwa muuzaji kupitia namba zilizo kwenye ankara. Usilipe namba nyingine yoyote. Tuma namba ya muamala na jina ili tuthibitishe.\n\n4. Usafiri: Gharama ya usafiri inathibitishwa kwenye kila oda. Mzigo unaletwa kwenye anwani uliyoweka.\n\n5. Kubadilisha au kusitisha: Unaweza kusitisha oda kabla ya kulipa. Baada ya kulipa, mabadiliko au kurudisha bidhaa hukubaliwa na muuzaji kwenye WhatsApp.\n\n6. Taarifa zako: Jina, namba na anwani yako hutumika tu kuhudumia oda zako. Hatuuzi taarifa zako. Unaweza kufuta akaunti yako wakati wowote kwenye Mipangilio.\n\n7. Akaunti: Linda neno lako la siri. Usimpe mtu mwingine.\n\n8. Mabadiliko: Vigezo hivi vinaweza kubadilika; toleo jipya litaonekana hapa.","1. Service: Niagize Kariakoo is the online shop of one Kariakoo winga (seller). You pick products, send the order on WhatsApp, and the seller confirms it.\n\n2. Price and stock: Price and availability are confirmed on WhatsApp before you pay. Photos show the product; colour and size may differ slightly.\n\n3. Payment: You pay the seller directly to the numbers on the invoice. Don't pay any other number. Send the transaction ID and name so we can confirm.\n\n4. Delivery: The delivery fee is confirmed for each order. Goods are delivered to the address you give.\n\n5. Changes and cancelling: You can cancel before paying. After paying, changes or returns are agreed with the seller on WhatsApp.\n\n6. Your data: Your name, number and address are used only to serve your orders. We don't sell your data. You can delete your account any time in Settings.\n\n7. Account: Keep your password safe. Don't share it.\n\n8. Changes: These terms may change; the new version will appear here."],
+ ["terms_body","Me · Settings","1. Huduma: Niagize Kariakoo ni duka la mtandaoni la winga (muuzaji) wa Kariakoo. Unachagua bidhaa, unatuma oda kwa WhatsApp, kisha muuzaji anathibitisha.\n\n2. Bei na mzigo: Bei na upatikanaji huthibitishwa kwenye WhatsApp kabla ya kulipa. Picha ni za kuonyesha bidhaa; rangi na saizi zinaweza kutofautiana kidogo.\n\n3. Malipo: Unalipa moja kwa moja kwa muuzaji kupitia namba zilizo kwenye ankara. Usilipe namba nyingine yoyote. Tuma namba ya muamala na jina ili tuthibitishe.\n\n4. Usafiri: Gharama ya usafiri inathibitishwa kwenye kila oda. Mzigo unaletwa kwenye anwani uliyoweka.\n\n5. Kubadilisha au kusitisha: Unaweza kusitisha oda kabla ya kulipa. Baada ya kulipa, mabadiliko au kurudisha bidhaa hukubaliwa na muuzaji kwenye WhatsApp.\n\n6. Taarifa zako: Jina, namba na anwani yako hutumika tu kuhudumia oda zako. Hatuuzi taarifa zako. Unaweza kufuta akaunti yako wakati wowote kwenye Mipangilio.\n\n7. Namba ya WhatsApp: Weka namba unayotumia WhatsApp; ankara na taarifa za oda zinakuja hapo. Ukikosea au ukibadilisha namba, ibadilishe kwenye ukurasa wa oda kabla ya kulipa, au mwambie muuzaji.\n\n8. Usalama: Tunawasiliana kutoka namba ya WhatsApp ya duka tu, na link zetu ni za duka hili tu. Hatutakuomba PIN, nywila wala namba ya kadi. Ujumbe kutoka kwa msaidizi wa duka utaonyesha jina lake.\n\n9. Akaunti: Linda neno lako la siri. Usimpe mtu mwingine.\n\n10. Mabadiliko: Vigezo hivi vinaweza kubadilika; toleo jipya litaonekana hapa.","1. Service: Niagize Kariakoo is the online shop of one Kariakoo winga (seller). You pick products, send the order on WhatsApp, and the seller confirms it.\n\n2. Price and stock: Price and availability are confirmed on WhatsApp before you pay. Photos show the product; colour and size may differ slightly.\n\n3. Payment: You pay the seller directly to the numbers on the invoice. Don't pay any other number. Send the transaction ID and name so we can confirm.\n\n4. Delivery: The delivery fee is confirmed for each order. Goods are delivered to the address you give.\n\n5. Changes and cancelling: You can cancel before paying. After paying, changes or returns are agreed with the seller on WhatsApp.\n\n6. Your data: Your name, number and address are used only to serve your orders. We don't sell your data. You can delete your account any time in Settings.\n\n7. WhatsApp number: Use the number you have on WhatsApp; the invoice and order updates go there. If it's wrong or you change number, update it on the order page before paying, or tell the seller.\n\n8. Safety: We only contact you from the shop's WhatsApp number, and our links only point to this shop. We will never ask for your PIN, password or card number. Messages from a shop assistant show their name.\n\n9. Account: Keep your password safe. Don't share it.\n\n10. Changes: These terms may change; the new version will appear here."],
  ["addr_title","Me · Addresses","Anwani zangu","My addresses"],
  ["addr_add","Me · Addresses","Ongeza anwani","Add address"],
  ["addr_search","Me · Addresses","Tafuta mtaa, jengo au eneo","Search street, building or area"],
@@ -261,6 +273,7 @@ W.STRINGS = [
  ["emptyHome","Boss · Home","Ongeza picha ya bidhaa zako","Add photos of your products"],
  ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
  ["brief_open","Boss · Brief","Fungua dashboard","Open the dashboard"],
+ ["sign_asst","Boss · Order","— {name}, msaidizi wa Niagize Kariakoo","— {name}, Niagize Kariakoo assistant"],
  ["step0","Boss · Discover","Weka app kwenye simu","Save the app on your phone"],
  ["step0s","Boss · Discover","Oda na arifa zikufikie haraka, kama app nyingine","Orders and alerts reach you fast, like any app"],
  ["step0b","Boss · Discover","Jinsi","How"],
@@ -589,6 +602,12 @@ W.parseTags = function (s) { return String(s || "").split(/[\s,]+/).map(function
 W.toast = function (m) { var r = document.getElementById("toastRoot"); if (!r) return; r.innerHTML = '<div class="toast" role="status">' + W.esc(m) + "</div>"; clearTimeout(W.toast._t); W.toast._t = setTimeout(function () { r.innerHTML = ""; }, 2200); };
 W.copy = function (text, fallbackEl) { return navigator.clipboard.writeText(text).then(function(){ W.toast(W.t("copied")); }, function(){ if (fallbackEl) { var r = document.createRange(); r.selectNodeContents(fallbackEl); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } }); };
 W.uid = function () { return (crypto.randomUUID ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); })); };
+/* "Add to Home Screen": Android/Chrome hands us a prompt we can show on a tap; iPhone has none (steps instead) */
+W._bip = null;
+try { addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); W._bip = e; try { document.dispatchEvent(new Event("winga-installable")); } catch (_) {} });
+  addEventListener("appinstalled", function () { W._bip = null; try { localStorage.setItem("winga.installed", "1"); } catch (_) {} }); } catch (_) {}
+W.canPrompt = function () { return !!W._bip; };
+W.install = async function () { if (!W._bip) return "manual"; var e = W._bip; W._bip = null; try { e.prompt(); var c = await e.userChoice; return c && c.outcome; } catch (_) { return "manual"; } };
 W.standalone = function () { try { return navigator.standalone === true || matchMedia("(display-mode: standalone)").matches; } catch (e) { return false; } };
 W.sid = (function () { var k = "niagize.sid", v = ls(k); if (!v) { v = W.uid().slice(0, 18); ls(k, v); } return v; })();
 
@@ -851,6 +870,10 @@ W.db = {
   async customerReceived(code, stars, note) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || (o.status !== "paid" && o.status !== "done")) throw new Error("status"); if (o.status !== "done") o.history.push({ s: "done", at: new Date().toISOString(), by: "customer" }); o.status = "done"; o.rating = stars; o.rating_note = note || null; o.received_at = o.received_at || new Date().toISOString(); demoSave(d); return demoOrderView(o, d); }
     var r = await sb.rpc("customer_received", { c: code, stars: stars, note: note || null }); if (r.error) throw r.error; return r.data;
+  },
+  async setOrderPhone(code, phone) {
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || ["new", "progress", "invoiced"].indexOf(o.status) < 0) throw new Error("status"); o.customer_phone = phone; o.history.push({ s: "phone", at: new Date().toISOString(), by: "customer" }); demoSave(d); var v = demoOrderView(o, d); v.phone_tail = phone.slice(-3); return v; }
+    var r = await sb.rpc("set_order_phone", { c: code, phone: phone }); if (r.error) throw r.error; return r.data;
   },
   async setOrderName(code, name) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); o.customer_name = name; demoSave(d); return demoOrderView(o, d); }

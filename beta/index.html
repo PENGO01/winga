@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Niagize Kariakoo</title>
-<meta name="description" content="Ni chap na salama, mpaka mlangoni kwako. Bidhaa za Kariakoo kutoka kwa winga unayemwamini.">
+<meta name="description" content="SHOP . DELIVER . SATISFY. Bidhaa za Kariakoo kutoka kwa winga unayemwamini.">
 <meta name="theme-color" content="#121212">
 <meta property="og:title" content="Niagize Kariakoo">
-<meta property="og:description" content="Ni chap na salama, mpaka mlangoni kwako.">
+<meta property="og:description" content="SHOP . DELIVER . SATISFY">
 <meta property="og:image" content="https://pengo01.github.io/winga/docs/social-preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -69,6 +69,19 @@ main{padding:12px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 .pc{break-inside:avoid;margin:0 0 3px;background:var(--card);border:0;border-radius:0;overflow:hidden;display:block;width:100%;text-align:left;padding:0;color:inherit;position:relative}
 .pc .im{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:var(--sunk)}
 .pc.tall .im{aspect-ratio:4/5}
+.instbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 8px 10px 12px}
+.instbar .fi{flex:none}.instbar b{font-size:14px}
+.newstrip{margin:0 calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
+.newstrip .nsh{font-weight:700;font-size:14px;padding:0 var(--gr) 6px var(--gl)}
+.nsv{overflow:hidden}
+.newstrip .track{display:flex;gap:6px;width:max-content;animation:nsmove 48s linear infinite;padding-left:var(--gl)}
+.nsv:hover .track,.nsv:active .track{animation-play-state:paused}
+.newstrip button{all:unset;cursor:pointer;width:92px;display:flex;flex-direction:column;gap:3px}
+.newstrip img{width:92px;height:92px;object-fit:cover;border-radius:10px;background:var(--sunk);display:block}
+.newstrip b{font-size:12.5px;font-weight:700}
+@keyframes nsmove{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.newstrip .track{animation:none}.nsv{overflow-x:auto}}
+.served{display:flex;gap:8px;align-items:center}.served svg{width:16px;height:16px;flex:none}
 .pc .bd{padding:6px 10px 8px;display:flex;flex-direction:column;gap:2px}
 .pc .nm{font-weight:400;font-size:12.5px;line-height:1.3;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pc .ds{font-weight:400;font-size:12px;color:var(--dim);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -304,7 +317,7 @@ function forYou(n){
   /* the same chip buttons as the home filter: scroll sideways, tap to filter the products under them */
   var one=function(dup){return ['']. concat(cats).map(function(c){return '<button class="chip" data-act="fy" data-cat="'+c+'" aria-pressed="'+(pick===c)+'"'+(dup?' aria-hidden="true" tabindex="-1"':'')+'>'+(c?W.catIcon(c):IC.cats)+esc(c?W.catLabel(c):t("all"))+'</button>';}).join("");};
   var chips='<span class="belt">'+one(false)+'</span><span class="belt">'+one(true)+'</span>';
-  var list=S.products.filter(function(p){return !pick||p.category===pick;}).slice(0,n);
+  var list=S.products.filter(function(p){return !pick||p.category===pick;});   /* whole shop: a cap here made signed-in users think the shop was smaller */
   return '<hr class="sep"><div class="chips fychips" id="fyrow">'+chips+'</div><div class="mas">'+list.map(card).join("")+'</div>';
 }
 /* the category row drifts slowly by itself; a touch stops it, it starts again after a few seconds */
@@ -377,7 +390,22 @@ function vHome(){
   var list=filtered();
   if(!S.products.length)return h+'<div class="empty">'+esc(t("emptyShop"))+'</div>';
   if(!list.length)return h+'<div class="empty">'+esc(t("noMatch"))+'</div>';
+  if(S.cat==="all"&&!S.q.trim())h+=instBar()+newStrip();
   return h+'<div class="mas">'+list.map(card).join("")+'</div>';
+}
+/* a slim "Add to Home Screen" bar: Android shows the real install prompt, iPhone gets the steps; hidden for 7 days after a tap */
+function instBar(){
+  if(W.standalone()||W.ls("winga.installed")==="1")return "";
+  var last=+W.ls("winga.instbar")||0;if(Date.now()-last<7*864e5)return "";
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);if(!W.canPrompt()&&!ios)return "";
+  return '<div class="instbar"><span class="fi jua">'+IC.addHome+'</span><div class="grow"><b>'+esc(t("inst_bar"))+'</b><div class="small muted">'+esc(t("inst_bar_s"))+'</div></div><button class="btn sm primary" data-act="instGo" style="border-radius:999px">'+esc(t("inst_go"))+'</button><button class="iconbtn" data-act="instX" aria-label="'+esc(t("back"))+'">'+IC.x+'</button></div>';
+}
+/* "Mpya dukani": the newest products drift past in a loop; a touch pauses it, a tap opens the product */
+function newStrip(){
+  var n=S.products.slice().sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);}).slice(0,12);
+  if(n.length<4)return "";
+  var one=function(dup){return n.map(function(p){return '<button data-act="open" data-id="'+p.id+'"'+(dup?' aria-hidden="true" tabindex="-1"':'')+'><img src="'+esc(p.thumbUrl)+'" alt="'+(dup?"":esc(p.name))+'" width="400" height="400" loading="lazy" decoding="async"><b class="num">'+(p.price!=null?W.money(p.price):"")+'</b></button>';}).join("");};
+  return '<div class="newstrip"><div class="nsh">'+esc(t("new_strip"))+'</div><div class="nsv"><div class="track">'+one(false)+one(true)+'</div></div></div>';
 }
 function vCats(){
   var c=S.railCat;
@@ -413,6 +441,7 @@ function guestBlock(){
   var g=S.guest||(S.guest=load("niagize.guest",{wa:"",name:""}));
   return '<div class="stack" style="gap:8px"><div class="eyebrow">'+esc(t("g_wa"))+'</div>'+
    W.phoneField("g_wa",g.wa,IC.wa.replace('<svg','<svg style="color:#128C4A"'))+
+   '<label class="check" id="w_g_ok"><input type="checkbox" id="g_ok"'+(g.ok?" checked":"")+'><span>'+esc(t("g_wa_ok"))+'</span></label>'+
    field("g_name",IC.me,t("g_name"),g.name,' autocomplete="name" maxlength="60" data-guest="name"')+
    '<div class="hint" style="margin-top:-2px">'+esc(t("g_hint"))+'</div><div class="ferr" id="g_err" role="alert"></div></div>';
 }
@@ -436,7 +465,7 @@ function vMe(){
 }
 
 /* ---------------- pages and sheets ---------------- */
-var POP={qty:1,how:1,confirm:1,rate:1,install:1,tips:1};
+var POP={qty:1,how:1,confirm:1,rate:1,install:1,tips:1,ophone:1};
 function claimView(o,ok){return '<div class="claimok'+(ok?'':' wait')+'">'+(ok?IC.check:IC.clock)+'<div><b>'+esc(t(ok?"claim_ok":"claim_sent"))+'</b><div class="small">'+esc([o.claim_channel,o.claim_ref,o.claim_name].filter(Boolean).join(" · "))+'</div></div></div>';}
 function open(name,ctx){stack.push({n:name,c:ctx||{}});draw(true);}
 function back(){stack.pop();if(!stack.length)try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}draw(false);}
@@ -482,6 +511,10 @@ var PAGES={
    '<hr class="sep">'+deliveryBlock()+addrBlock()+'<hr class="sep">'+totalLine(sum(items))+'</div>'+
    '<div class="ft"><button class="btn green block" data-act="sendNow" style="border-radius:999px;min-height:52px"'+(W.waPhone(S.shop.whatsapp)?'':' disabled')+'>'+IC.wa+esc(t("cart_send"))+'</button></div>';
  },
+ ophone:function(c){
+  return hd(t("o_phone_title"))+'<div class="bd">'+W.phoneField("op_wa",c.wa||"",IC.wa.replace('<svg','<svg style="color:#128C4A"'))+'<div class="hint">'+esc(t("o_phone_hint"))+'</div><div class="ferr" id="op_err" role="alert"></div></div>'+
+   '<div class="ft"><button class="btn primary block" data-act="savePhoneO" style="border-radius:999px">'+IC.check+esc(t("save"))+'</button></div>';
+ },
  order:function(c){
   var o=c.o;
   if(!o)return hd("")+'<div class="bd">'+(c.loading?loader():'<div class="empty">'+esc(t("o_notfound"))+'</div>')+'</div>';
@@ -505,7 +538,11 @@ var PAGES={
        field("cl_name",IC.me,t("claim_name"),cl.name,' autocomplete="name" maxlength="60"')+
        '<div class="ferr" id="cl_err" role="alert"></div><button class="btn primary block" data-act="claimSend" style="border-radius:999px">'+IC.wa+esc(t("claim_send"))+'</button></div>';}
   }
+  var canPhone=cur==="new"||cur==="progress"||cur==="invoiced",gq=S.guest||load("niagize.guest",{});
+  var myNum=o.customer_phone||(o.phone_tail&&gq.wa&&gq.wa.slice(-3)===o.phone_tail?gq.wa:"")||"";
+  var phoneRow=canPhone?'<button class="mrow" data-act="editPhone"><span class="fi">'+IC.wa+'</span><span class="tt">'+esc(t("o_phone"))+'<br><span class="small muted num">'+(myNum?"+"+esc(myNum):(o.phone_tail?"•••• "+esc(o.phone_tail):"—"))+'</span></span><span class="small" style="font-weight:600">'+esc(t("o_phone_edit"))+'</span></button>':'';
   var h=hd(t("o_title",{code:o.code}),'<span class="ost '+cur+'">'+esc(t("st_"+cur))+'</span>')+'<div class="bd">'+
+   (o.served_by?'<div class="hint served">'+IC.me+esc(t("served_by",{name:o.served_by}))+'</div>':'')+
    (c.fresh?'<div class="big-ok"><span class="fi">'+IC.check+'</span><h2>'+esc(t("order_sent"))+'</h2><p class="muted" style="margin:0">'+esc(t("order_sent_s"))+'</p></div>':'')+
    (cur==="invoiced"?pay:tl)+'<div class="eyebrow">'+esc(t("o_items"))+'</div><div class="card">'+o.items.map(function(i){return '<div class="ci"><img src="'+esc(W.img(i.thumb))+'" alt=""><div><div class="n">'+esc(i.name)+'</div><div class="p">'+i.qty+' × '+(i.price!=null?"TSh "+W.money(i.price):esc(t("noPrice")))+'</div>'+noteHtml(i.note)+'</div><span></span></div>';}).join("")+'</div>'+
    '<div class="card stack" style="gap:6px"><div class="row between"><span class="muted">'+esc(t("delivery"))+' · '+esc(t("del_"+o.delivery))+'</span><span class="num">'+(fee!=null?'TSh '+W.money(fee):esc(t("fee_tbd")))+'</span></div>'+
@@ -513,6 +550,7 @@ var PAGES={
    '<div class="sumline"><span>'+esc(t("cart_total"))+'</span><b>TSh '+W.money(W.total(o))+'</b></div></div>';
   if(cur==="new"||cur==="progress"){h+='<div class="hint">'+esc(t("o_pay_wait"))+'</div>';}
   else if(o.claim_ref&&(cur==="paid"||cur==="done"))h+=claimView(o,true);
+  h+=phoneRow;
   if(cur==="invoiced")h+='<div class="eyebrow" style="margin-top:6px">'+esc(t("o_title",{code:o.code}))+'</div>'+tl;
   if(cur==="done"&&o.rating)h+='<div class="hint" style="text-align:center"><span style="color:var(--jua);letter-spacing:2px">'+"★★★★★".slice(0,o.rating)+'</span> '+esc(t("rate_your",{n:o.rating}))+'</div>';
   h+=(!S.me?'<button class="mrow" data-act="signup"><span class="fi">'+IC.me+'</span><span class="tt">'+esc(t("guest_hint"))+'</span>'+chev()+'</button>':'')+'</div>';
@@ -647,7 +685,8 @@ function addToCart(id,q,note){
 }
 async function placeOrder(items){
   var guest=isGuest(),g=S.guest||load("niagize.guest",{wa:"",name:""});
-  if(guest){if($("#g_wa"))g.wa=W.phoneVal("g_wa");if(!W.phoneOk(g.wa)){bad("g_err","w_g_wa",$("#g_wa")?W.phoneErr("g_wa"):t("err_wa",{n:9,cc:"255"}));return false;}S.guest=g;save("niagize.guest",g);}
+  if(guest){if($("#g_wa"))g.wa=W.phoneVal("g_wa");if(!W.phoneOk(g.wa)){bad("g_err","w_g_wa",$("#g_wa")?W.phoneErr("g_wa"):t("err_wa",{n:9,cc:"255"}));return false;}
+    if($("#g_ok")){g.ok=$("#g_ok").checked;if(!g.ok){bad("g_err","w_g_ok",t("err_wa_ok"));return false;}}S.guest=g;save("niagize.guest",g);}
   try{
     var addr=!guest&&S.addrs.length?S.addrId:null;
     var r=await W.db.createOrder(items,S.delivery,addr,guest?(String(g.name||"").trim()||null):null,guest?g.wa:null);
@@ -743,6 +782,13 @@ document.addEventListener("click",async function(e){
     case "openOrder":openOrder(el.dataset.code);break;
     case "reorder":var hl=cur.c.list.find(function(o){return o.code===el.dataset.code;});hl.items.forEach(function(i){if(i.product_id&&buyable(byId(i.product_id)))addToCart(i.product_id,i.qty,i.note);});S.tab="cart";closeAll();break;
     case "copyTxt":W.copy(el.dataset.v);break;
+    case "editPhone":var oc=top().c,gq2=S.guest||load("niagize.guest",{});open("ophone",{code:oc.o.code,wa:oc.o.customer_phone||gq2.wa||""});break;
+    case "savePhoneO":var nw=W.phoneVal("op_wa");if(!W.phoneOk(nw))return bad("op_err","w_op_wa",W.phoneErr("op_wa"));
+      try{var oo=await W.db.setOrderPhone(top().c.code,nw);back();var oc2=top();if(oc2&&oc2.n==="order"){oc2.c.o=Object.assign(oc2.c.o,oo||{});if(!oc2.c.o.customer_phone&&isGuest())oc2.c.o.phone_tail=nw.slice(-3);}
+        if(isGuest()){var gg=S.guest||load("niagize.guest",{});gg.wa=nw;S.guest=gg;save("niagize.guest",gg);}draw(false);W.toast(t("saved"));}
+      catch(x){console.error(x);bad("op_err",null,t("o_phone_fail"));}break;
+    case "instGo":var how=await W.install();W.ls("winga.instbar",String(Date.now()));if(how==="manual")open("tips",{panel:1});else render();break;
+    case "instX":W.ls("winga.instbar",String(Date.now()));render();break;
     case "addrs":open("addrs");break;
     case "addrNew":open("addrForm",{a:{accepted_terms:false}});break;
     case "addrEdit":open("addrForm",{a:JSON.parse(JSON.stringify(S.addrs.find(function(x){return x.id===id;})))});break;
@@ -827,6 +873,7 @@ document.addEventListener("submit",async function(e){
     else bad("a_err",null,t("error"));}
 });
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&stack.length)back();});
+document.addEventListener("winga-installable",function(){if(S.loaded&&S.tab==="home"&&!stack.length)render();});
 /* finger down on a product: start fetching its big photo before the tap even finishes */
 document.addEventListener("pointerdown",function(e){var b=e.target.closest&&e.target.closest(".pcopen");if(!b)return;var p=byId(b.dataset.id);if(p&&p.imageUrls&&p.imageUrls[0]){var im=new Image();im.src=p.imageUrls[0];}},{passive:true});
 
