@@ -1,5 +1,5 @@
 /* Winga service worker: app shell offline (network first, cache fallback). Data and photos come from Supabase. */
-const SHELL = "winga-beta-v23";
+const SHELL = "winga-beta-v24";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./shared/style.css", "./shared/core.js", "./shared/config.js",
   "./admin/", "./admin/index.html", "./admin/manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-boss-192.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
@@ -9,7 +9,8 @@ const IMG = "wimg-v1", IMG_MAX = 400;
 function trimImg() { caches.open(IMG).then(c => c.keys().then(k => { if (k.length > IMG_MAX) return Promise.all(k.slice(0, k.length - IMG_MAX).map(r => c.delete(r))); })); }
 self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
-  if (e.request.method === "GET" && u.pathname.includes("/storage/v1/object/public/products/")) {
+  /* product photos + the app's own pictures (category icons, how-to slides): keep on the phone, instant next time */
+  if (e.request.method === "GET" && (u.pathname.includes("/storage/v1/object/public/products/") || (u.origin === location.origin && /\/(cat|how)\/[^/]+\.webp$/.test(u.pathname)))) {
     e.respondWith(caches.open(IMG).then(c => c.match(e.request).then(hit => hit || fetch(e.request).then(r => { if (r.ok || r.type === "opaque") { c.put(e.request, r.clone()); trimImg(); } return r; }))));
     return;
   }

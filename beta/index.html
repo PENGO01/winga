@@ -47,14 +47,14 @@ main{padding:12px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 .fychips{margin-top:-4px;flex-wrap:nowrap}
 .fychips .belt{display:flex;gap:6px;flex:none;padding-right:6px}
 .fychips .chip svg{width:15px;height:15px;flex:none}
-.thero{display:flex;gap:12px;align-items:flex-start;padding:18px 18px 6px}
-.thero .tsun{width:44px;height:44px;border-radius:14px;background:var(--navy);display:grid;place-items:center;flex:none}
-.thero .tsun svg{width:28px;height:28px}
-.thero h2{font-size:19px;margin:2px 0 2px;text-wrap:balance}
+.thero{display:flex;gap:10px;align-items:center;padding:12px 14px 2px}
+.thero .tsun{width:36px;height:36px;border-radius:14px;background:var(--navy);display:grid;place-items:center;flex:none}
+.thero .tsun svg{width:24px;height:24px}
+.thero h2{font-size:17px;margin:0;text-wrap:balance}
 .thero p{margin:0;font-size:13.5px;color:var(--dim)}
-.tips{display:flex;flex-direction:column;gap:14px;min-height:0}
+.tips{display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden}
 .ttabs{display:grid;grid-template-columns:1fr 1fr;background:var(--sunk);border-radius:14px;padding:4px;gap:4px}
-.ttabs button{border:0;background:none;border-radius:11px;padding:9px 6px;font-weight:600;font-size:13px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:6px;line-height:1.2}
+.ttabs button{border:0;background:none;border-radius:11px;padding:7px 6px;font-weight:600;font-size:13px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:6px;line-height:1.2}
 .ttabs button svg{width:16px;height:16px;flex:none}
 .ttabs button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .tsteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
@@ -68,10 +68,13 @@ main{padding:12px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 .pc{break-inside:avoid;margin:0 0 3px;background:var(--card);border:0;border-radius:0;overflow:hidden;display:block;width:100%;text-align:left;padding:0;color:inherit;position:relative}
 .pc .im{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:var(--sunk)}
 .pc.tall .im{aspect-ratio:4/5}
-.slide{display:flex;flex-direction:column;align-items:center;gap:12px}
-.slide .shot{height:min(52vh,430px);aspect-ratio:210/420;border-radius:22px;overflow:hidden;background:#121212;box-shadow:0 6px 24px rgba(0,0,0,.18);display:grid;place-items:center}
-.slide .shot img,.slide .shot svg{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-.slide .scap{display:flex;gap:10px;align-items:center;font-weight:600;font-size:16px;line-height:1.3;max-width:34ch}
+.slide{display:flex;flex-direction:column;align-items:center;gap:10px}
+/* the whole screen picture, never cropped, sized so title + action + picture + buttons fit with no scrolling */
+.slide .shot{height:clamp(200px,calc(100dvh - 380px),460px);aspect-ratio:420/908;border-radius:18px;overflow:hidden;background:#121212;box-shadow:0 6px 24px rgba(0,0,0,.18);display:grid;place-items:center}
+.slide .shot img,.slide .shot svg{width:100%;height:100%;object-fit:contain;display:block}
+.slide .scap{display:flex;gap:10px;align-items:center;font-weight:700;font-size:15.5px;line-height:1.3;max-width:36ch;min-height:42px;align-self:stretch}
+.tnav{display:flex;gap:8px;align-items:center}.tnav .btn{border-radius:999px;min-height:50px}.tnav .btn.primary{flex:1;font-size:16px}
+.tnav .tback{width:50px;flex:none;padding:0}.tnav .tback[disabled]{visibility:hidden}
 .slide .scap .tn{flex:none;width:28px;height:28px;border-radius:50%;background:var(--jua);color:#121212;display:grid;place-items:center;font-size:14px}
 .sdots{display:flex;gap:6px}.sdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.sdots i.on{background:var(--ink);width:18px;border-radius:4px}
 .instbar{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 8px 10px 12px}
@@ -130,7 +133,8 @@ nav.tabs .bdg{position:absolute;top:6px;left:calc(50% + 6px);min-width:17px;heig
 .sc .c svg{width:28px;height:28px}
 .sc .c{overflow:hidden}
 .sc .c img{width:100%;height:100%;object-fit:cover;transform:scale(1.35);transform-origin:center}
-.sc .c{width:68px;height:68px}
+.sc .c{width:68px;height:68px;background:linear-gradient(160deg,#FFF8E6,#FFEFC7);border-color:transparent}
+.sc .c img.c3d{width:68%;height:68%;object-fit:contain;transform:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.12))}
 .sc:first-of-type .c{background:var(--jua);border-color:var(--jua);color:#121212}
 /* product page */
 .gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;background:var(--sunk);scrollbar-width:none;margin:0 calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
@@ -448,7 +452,7 @@ function vCats(){
   var c=S.railCat;
   var rail='<div class="rail">'+W.CATS.map(function(k){return '<button data-act="rail" data-cat="'+k+'" aria-pressed="'+(c===k)+'">'+esc(W.catLabel(k))+'</button>';}).join("")+'</div>';
   function n(sub){return S.products.filter(function(x){return x.category===c&&(!sub||x.subcategory===sub);}).length;}
-  function pic(sub){var p=S.products.find(function(x){return x.category===c&&(!sub||x.subcategory===sub)&&x.thumbUrl;});return p?'<img src="'+esc(p.thumbUrl)+'" alt="" loading="lazy">':W.catIcon(c,sub||undefined);}
+  function pic(sub){var p=S.products.find(function(x){return x.category===c&&(!sub||x.subcategory===sub)&&x.thumbUrl;});return W.catPic(c,sub||undefined);}
   var all=n("");
   var subs=W.subs(c).map(function(s){var k=n(s);
     return '<button class="sc" data-act="goSub" data-cat="'+c+'" data-sub="'+s+'"><span class="c">'+pic(s)+'</span>'+esc(W.catLabel(c,s))+(k?' <span class="muted small num">'+k+'</span>':'')+'</button>';}).join("");
@@ -627,13 +631,15 @@ var PAGES={
     :[1,2,3,4].map(function(n){return ['<img src="how/b'+n+'.webp" alt="" width="420" height="908" decoding="async">',t("sl_b"+n)];});
   if(i>=slides.length)i=slides.length-1;
   var sl=slides[i],last=i===slides.length-1;
-  return '<div class="thero"><span class="tsun">'+W.sunSvg(false)+'</span><div class="grow"><h2>'+esc(t("tips_title"))+'</h2><p>'+esc(t("tips_sub"))+'</p></div><button class="iconbtn" data-act="back" aria-label="'+esc(t("back"))+'">'+IC.x+'</button></div>'+
+  if(!W._tipsPre){W._tipsPre=1;[1,2,3,4].forEach(function(n){var im=new Image();im.decoding="async";im.src="how/b"+n+".webp";});}   /* all 4 pictures load at once: no wait on Endelea */
+  return '<div class="thero"><span class="tsun">'+W.sunSvg(false)+'</span><div class="grow"><h2>'+esc(t(p?"tips_title_s":"tips_title"))+'</h2></div><button class="iconbtn" data-act="back" aria-label="'+esc(t("back"))+'">'+IC.x+'</button></div>'+
    '<div class="bd tips"><div class="ttabs" role="tablist">'+[[t("tips_buy"),IC.cart],[t("tips_save"),IC.addHome]].map(function(x,k){return '<button role="tab" data-act="tab" data-i="'+k+'" aria-pressed="'+(p===k)+'">'+x[1]+esc(x[0])+'</button>';}).join("")+'</div>'+
-   '<div class="slide"><div class="shot">'+sl[0]+'</div><div class="scap"><span class="tn">'+(i+1)+'</span><span>'+esc(sl[1])+'</span></div>'+
+   '<div class="slide"><div class="scap"><span class="tn">'+(i+1)+'</span><span>'+esc(sl[1])+'</span></div><div class="shot">'+sl[0]+'</div>'+
    '<div class="sdots">'+slides.map(function(_,k){return '<i class="'+(k===i?"on":"")+'"></i>';}).join("")+'</div></div></div>'+
-   '<div class="ft"><div class="ft2">'+(i>0?'<button class="btn ghost" data-act="slide" data-d="-1" style="border-radius:999px">'+IC.back+'</button>':'')+
-   (last?(p&&W.canPrompt()?'<button class="btn primary" data-act="instGo" style="border-radius:999px">'+IC.addHome+esc(t("sl_now"))+'</button>':'<button class="btn primary" data-act="back" style="border-radius:999px">'+IC.check+esc(t("inst_close"))+'</button>'):
-    '<button class="btn primary" data-act="slide" data-d="1" style="border-radius:999px">'+esc(t("sl_next"))+IC.chev+'</button>')+'</div></div>';
+   '<div class="ft"><div class="tnav">'+
+   (last?(p&&W.canPrompt()?'<button class="btn primary" data-act="instGo">'+IC.addHome+esc(t("sl_now"))+'</button>':'<button class="btn primary" data-act="back">'+IC.check+esc(t("inst_close"))+'</button>'):
+    '<button class="btn primary" data-act="slide" data-d="1">'+esc(t("sl_next"))+IC.chev+'</button>')+
+   '<button class="btn ghost tback" data-act="slide" data-d="-1" aria-label="'+esc(t("back"))+'"'+(i>0?'':' disabled')+'>'+IC.back+'</button></div></div>';
  },
  how:function(){
   return hd(t("how_title"))+'<div class="bd"><ol class="howlist">'+[1,2,3,4].map(function(n){return '<li><b>'+n+'</b>'+esc(t("how"+n))+'</li>';}).join("")+'</ol></div><div class="ft"><button class="btn primary block" data-act="back" style="border-radius:999px">'+esc(t("ok"))+'</button></div>';

@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.10.0";
+W.VERSION = "2.11.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -47,7 +47,7 @@ W.STRINGS = [
  ["tagline","Common","SHOP . DELIVER . SATISFY","SHOP . DELIVER . SATISFY"],
  // customer shop
  ["nav_home","Shop · Menu","Nyumbani","Home"],
- ["nav_cats","Shop · Menu","Aina","Categories"],
+ ["nav_cats","Shop · Menu","Category","Category"],
  ["nav_cart","Shop · Menu","Kapu","Basket"],
  ["nav_me","Shop · Menu","Mimi","Me"],
  ["searchPh","Shop","Search our products","Search our products"],
@@ -155,34 +155,39 @@ W.STRINGS = [
  ["fab_msg","Shop","Habari! Nina swali kuhusu bidhaa za Niagize Kariakoo","Hello! I have a question about Niagize Kariakoo products"],
  ["fab_l","Shop","Ongea nasi WhatsApp","Chat with us on WhatsApp"],
  ["wait","Common","Subiri kidogo…","One moment…"],
- ["tax_title","Boss · Categories","Aina za bidhaa","Product categories"],
- ["tax_edit","Boss · Categories","Hariri aina za bidhaa","Edit product categories"],
+ ["tax_title","Boss · Categories","Product Categories","Product Categories"],
+ ["tax_sub","Boss · Categories","Add or delete sub categories","Add or delete sub categories"],
+ ["tax_edit","Boss · Categories","Product Categories · edit","Product Categories · edit"],
  ["gj","Boss · Ganji","Ganji","Ganji"],
  ["gj_s","Boss · Ganji","faida yako · wingas tu 🔒","your gain · team only 🔒"],
  ["gj_ph","Boss · Ganji","Weka ganji ya oda hii","Enter this order's ganji"],
  ["gj_saved","Boss · Ganji","Ganji imehifadhiwa ✓","Ganji saved ✓"],
  ["gj_off","Boss · Ganji","Ganji itahifadhiwa baada ya DB update v2.10","Ganji saves after the v2.10 DB update"],
+ ["pg_ph","Boss · Ganji","Ganji yako kwa kila moja","Your ganji on each one"],
+ ["pg_s","Boss · Ganji","Siri yako. Mteja haioni kamwe. Inajaza Ganji ya oda yenyewe.","Your secret. Customers never see it. It fills the order's Ganji by itself."],
+ ["gj_auto","Boss · Ganji","Imejazwa kutoka bidhaa. Badilisha kama mmekubaliana tofauti, kisha ✓","Filled from the products. Change it if you agreed otherwise, then ✓"],
  ["d_ganji","Boss · Ganji","Ganji (faida)","Ganji (profit)"],
  ["d_ganji_s","Boss · Ganji","oda {n} · wingas tu 🔒","{n} orders · team only 🔒"],
- ["tax_s","Boss · Categories","Makundi 5 makuu ni ya kudumu. Ongeza au ondoa aina ndogo chini ya kila kundi.","The 5 main groups are fixed. Add or remove sub-groups under each one."],
- ["tax_ph","Boss · Categories","Aina ndogo mpya (mf. Raba za watoto)","New sub-group (e.g. Kids' sneakers)"],
+ ["tax_s","Boss · Categories","Category 5 kuu ni za kudumu. Ongeza au futa Sub-Category chini ya kila moja.","The 5 main groups are fixed. Add or remove sub-groups under each one."],
+ ["tax_ph","Boss · Categories","Sub-Category mpya (mf. Raba za watoto)","New Sub-Category (e.g. Kids' sneakers)"],
  ["tax_has","Boss · Categories","Ina bidhaa {n}: zihamishe kwanza","Has {n} products: move them first"],
  ["tax_fail","Boss · Categories","Haikuhifadhiwa. Database ya v2.9 bado haijawekwa","Not saved. The v2.9 database update isn't in yet"],
  ["po_tag","Boss · Orders","Picha ya mteja","Customer's photo"],
  ["po_toshop","Boss · Orders","Weka dukani","Add to shop"],
- ["sl_b1","Tips","Gusa bidhaa upendayo","Tap the product you like"],
- ["sl_b2","Tips","Gusa Kapuni (au Agiza sasa)","Tap Kapuni (or Agiza sasa)"],
- ["sl_b3","Tips","Weka namba ya WhatsApp, gusa Tuma oda","Enter your WhatsApp number, tap Tuma oda"],
- ["sl_b4","Tips","Tutakutumia invoice. Lipia, tukuletee mlangoni","We send the invoice. Pay, we deliver to your door"],
- ["sl_s1","Tips","Fungua Niagize kwenye Chrome (Android) au Safari (iPhone)","Open Niagize in Chrome (Android) or Safari (iPhone)"],
- ["sl_s2a","Tips","Gusa dot tatu ⋮ juu kulia","Tap the three dots ⋮ top right"],
+ ["sl_b1","Tips","Chagua bidhaa: gusa picha yake","Pick a product: tap its photo"],
+ ["sl_b2","Tips","Gusa Kapuni, au Agiza sasa kwenda moja kwa moja","Tap Kapuni, or Agiza sasa to go straight on"],
+ ["sl_b3","Tips","Weka WhatsApp na mahali pa delivery, gusa Tuma oda","Add your WhatsApp and delivery place, tap Tuma oda"],
+ ["sl_b4","Tips","Pokea invoice WhatsApp, lipia, tunakuletea","Get the invoice on WhatsApp, pay, we deliver"],
+ ["sl_s1","Tips","Fungua Niagize kwenye Chrome au Safari","Open Niagize in Chrome or Safari"],
+ ["sl_s2a","Tips","Gusa ⋮ juu kulia","Tap ⋮ top right"],
  ["sl_s2i","Tips","Gusa Share □↑ chini","Tap Share □↑ at the bottom"],
- ["sl_s3a","Tips","Chagua \"Install app\" au \"Add to Home screen\"","Choose \"Install app\" or \"Add to Home screen\""],
- ["sl_s3i","Tips","Shuka chini, chagua \"Add to Home Screen\"","Scroll down, choose \"Add to Home Screen\""],
- ["sl_s4","Tips","Gusa Add. Fungua Niagize kwa icon yetu","Tap Add. Open Niagize from our icon"],
+ ["sl_s3a","Tips","Gusa \"Install app\" au \"Add to Home screen\"","Tap \"Install app\" or \"Add to Home screen\""],
+ ["sl_s3i","Tips","Shuka chini, gusa \"Add to Home Screen\"","Scroll down, tap \"Add to Home Screen\""],
+ ["sl_s4","Tips","Gusa Add, kisha fungua Niagize kwa icon","Tap Add, then open Niagize from the icon"],
  ["sl_next","Tips","Endelea","Next"],
  ["sl_now","Tips","Weka sasa","Add now"],
- ["tips_title","Tips","Karibu tuanze pamoja","Welcome, let's start together"],
+ ["tips_title","Tips","Agiza kwa hatua 4","Order in 4 steps"],
+ ["tips_title_s","Tips","Weka app kwa hatua 4","Save the app in 4 steps"],
  ["tips_sub","Tips","Hatua chache tu, uagize kwa urahisi","A few steps and you're ordering"],
  ["tips_buy","Tips","Jinsi ya kununua","How to buy"],
  ["tips_save","Tips","Weka app kwenye simu","Save the app"],
@@ -313,7 +318,7 @@ W.STRINGS = [
  ["share_link","Boss · Share","Link yangu","My link"],
  ["shareText","Boss · Share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
  ["emptyHome","Boss · Home","Ongeza picha ya bidhaa zako","Add photos of your products"],
- ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
+ ["steps_title","Boss · Discover","Anza hapa: hatua 3","Start here: 3 steps"],
  ["brief_open","Boss · Brief","Fungua dashboard","Open the dashboard"],
  ["sign_asst","Boss · Order","— {name}, msaidizi wa Niagize Kariakoo","— {name}, Niagize Kariakoo assistant"],
  ["card_inv","Card","INVOICE","INVOICE"],
@@ -335,19 +340,19 @@ W.STRINGS = [
  ["card_thx_btn","Card","Kadi ya asante","Thank-you card"],
  ["card_saved","Card","Picha imehifadhiwa","Image saved"],
  ["step0","Boss · Discover","Weka app kwenye simu","Save the app on your phone"],
- ["step0s","Boss · Discover","Oda na arifa zikufikie haraka, kama app nyingine","Orders and alerts reach you fast, like any app"],
- ["step0b","Boss · Discover","Jinsi","How"],
+ ["step0s","Boss · Discover","Pata oda na arifa papo hapo","Get orders and alerts instantly"],
+ ["step0b","Boss · Discover","Nionyeshe","Show me"],
  ["binst_1","Boss · Discover","Fungua Boss app kwenye Safari (iPhone) au Chrome (Android)","Open the Boss app in Safari (iPhone) or Chrome (Android)"],
  ["binst_2","Boss · Discover","iPhone: bonyeza Share (□↑) chini. Android: bonyeza dot tatu (⋮) juu kulia","iPhone: tap Share (□↑) at the bottom. Android: tap the three dots (⋮) top right"],
  ["binst_3","Boss · Discover","Shuka chini, chagua \"Add to Home Screen\"","Scroll down, choose \"Add to Home Screen\""],
  ["binst_4","Boss · Discover","Jina: Niagize, bonyeza Add","Name: Niagize, tap Add"],
  ["binst_5","Boss · Discover","Fungua kwa icon mpya, kisha washa Arifa","Open it from the new icon, then switch on Alerts"],
- ["step1","Boss · Discover","Namba ya WhatsApp","WhatsApp number"],
- ["step1s","Boss · Discover","Oda zitakufikia hapa","Orders reach you here"],
+ ["step1","Boss · Discover","Weka namba ya WhatsApp","Add your WhatsApp number"],
+ ["step1s","Boss · Discover","Oda za wateja zinakuja hapa","Customer orders arrive here"],
  ["step2","Boss · Discover","Weka bidhaa 3","Add 3 products"],
- ["step2s","Boss · Discover","Ongeza picha ya bidhaa zako","Add photos of your products"],
- ["step3","Boss · Discover","Share link ya duka kwa wateja","Share the shop link with customers"],
- ["step3s","Boss · Discover","Au share link kwenye status na kurasa zako mtandaoni","Or on your status and social pages"],
+ ["step2s","Boss · Discover","Piga picha, weka bei, hifadhi","Snap, price, save"],
+ ["step3","Boss · Discover","Share link ya duka","Share your shop link"],
+ ["step3s","Boss · Discover","Weka kwenye status na kurasa zako","Post it on your status and pages"],
  ["stepsDone","Boss · Discover","Duka liko tayari","The shop is ready"],
  ["go","Boss · Discover","Anza","Start"],
  // boss: orders
@@ -381,7 +386,10 @@ W.STRINGS = [
  ["fee_set","Boss · Orders","Gharama ya delivery (TSh)","Delivery fee (TSh)"],
  ["fee_name","Boss · Orders","Gharama ya delivery","Delivery fee"],
  ["total_edit","Boss · Orders","Badili jumla","Edit total"],
- ["total_new","Boss · Orders","Jumla mpya baada ya maelewano (TSh)","New agreed total (TSh)"],
+ ["total_new","Boss · Orders","Jumla mpya baada ya maelewano","New agreed total"],
+ ["total_new_ph","Boss · Orders","mf. 120,000","e.g. 120,000"],
+ ["urg_leo","Boss · Orders","Mteja anataka leo: panga mzigo mapema","Customer wants it today: plan the parcel early"],
+ ["urg_fasta","Boss · Orders","Haraka sana: anza na oda hii","Very urgent: start with this order"],
  ["total_orig","Boss · Orders","Bei ya awali","Original price"],
  ["total_reset","Boss · Orders","Rudisha bei ya awali","Back to original price"],
  ["pay_ref","Boss · Orders","Namba ya muamala (si lazima)","Transaction ID (optional)"],
@@ -405,7 +413,7 @@ W.STRINGS = [
  ["f_photo","Boss · Add product","picha","a photo"],
  ["name_ph","Boss · Add product","Jina la bidhaa","Product name"],
  ["price_ph","Boss · Add product","Bei","Price"],
- ["cat_ph","Boss · Add product","aina","a category"],
+ ["cat_ph","Boss · Add product","Category","a Category"],
  ["desc_ph","Boss · Add product","Maelezo ya ziada (size, rangi, material)","More details (size, colour, material)"],
  ["quality","Boss · Add product","Ubora","Quality"],
  ["add_more","Boss · Add product","Bidhaa nyingine","Another product"],
@@ -492,7 +500,7 @@ W.TAX0 = [
  ["electronics","Electronics & Simu","Electronics & Mobile","phone",[["phones","Simu","Smartphones","phone"],["tablets","Tablets","Tablets","tablet"],["tv","TV & Home theater","Smart TVs & home theater","tv"],["audio","Spika & Sauti","Speakers & audio","headphones"],["gadgets","Chaja, power bank & vifaa","Chargers, power banks & accessories","plug"]]],
  ["fashion","Mavazi & Viatu","Fashion & Footwear","shirt",[["women","Wanawake","Women","dress"],["men","Wanaume","Men","shirt"],["kids","Watoto","Children","onesie"],["shoes","Viatu & Raba","Sneakers & shoes","sneaker"],["bags","Mabegi & Masanduku","Bags & suitcases","bag"],["accessories","Saa, vito & miwani","Watches, jewelry & eyewear","watch"]]],
  ["home","Nyumbani & Vifaa","Home & Appliances","house",[["kitchen","Jikoni","Cookware & kitchen","pot"],["bedding","Mashuka, blanketi & mapazia","Bedding & curtains","bed"],["lighting","Taa & flask","Lighting & flasks","lamp"]]],
- ["beauty","Urembo & Vipodozi","Cosmetics & Beauty","sparkle",[["hair","Wigi & nywele","Wigs, weaves & braids","comb"],["skin","Lotion & mafuta","Lotions & oils","bottle"],["soap","Sabuni","Soaps","box"],["perfume","Marashi","Fragrances","bottle"]]],
+ ["beauty","Urembo & Vipodozi","Cosmetics & Beauty","sparkle",[["hair","Wigi & nywele","Wigs, weaves & braids","comb"],["skin","Lotion & mafuta","Lotions & oils","bottle"],["soap","Sabuni","Soaps","soap"],["perfume","Marashi","Fragrances","perfume"]]],
  ["general","Bidhaa Mchanganyiko","General Merchandise","box",[["hardware","Vifaa vya fundi","Tools, padlocks & cords","tools"],["storage","Ndoo, beseni & vyombo","Drums, basins & containers","bucket"],["stationery","Stationery","Stationery","pen"]]]
 ];
 W.TAX = JSON.parse(JSON.stringify(W.TAX0));
@@ -546,7 +554,16 @@ W.catIcon = function (cat, sub) {
   var c = taxOf(cat), k = "box";
   if (c) { k = c[3]; if (sub) { var s = c[4].find(function (x) { return x[0] === sub; }); if (s) k = s[3]; } }
   if (cat === "all") k = "grid";
-  return LI + W.CATICONS[k] + "</svg>";
+  return LI + (W.CATICONS[k] || W.CATICONS.box) + "</svg>";
+};
+/* v2.11 realistic 3D icons for categories (Fluent Emoji 3D, MIT, in /cat/); the line icons above stay for small chips */
+W.CAT3D = ["phone","tablet","tv","headphones","plug","dress","shirt","onesie","sneaker","kidshoe","heel","bag","watch","ring","glasses","heart","house","pot","bed","lamp","sparkle","comb","bottle","soap","perfume","box","tools","bucket","pen","grid"];
+W.catPic = function (cat, sub) {
+  var c = taxOf(cat), k = "box";
+  if (c) { k = c[3]; if (sub) { var s = c[4].find(function (x) { return x[0] === sub; }); if (s) k = s[3]; } }
+  if (cat === "all") k = "grid";
+  if (W.CAT3D.indexOf(k) < 0) k = c ? c[3] : "box";
+  return '<img class="c3d" src="' + (W.APP === "boss" ? "../" : "") + 'cat/' + k + '.webp" alt="" width="128" height="128" decoding="async">';
 };
 W.PROVIDERS = ["M-PESA","AIRTEL MONEY","HALOPESA","MIXX BY YAS","CRDB","NMB","SELCOM"];
 function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
@@ -837,7 +854,7 @@ W.normalize = normalize;
     head(c, shop && shop.name, W.t("card_inv"));
     c.fillStyle = INK; font(c, 800, 64); c.fillText("Oda " + o.code, 64, 300);
     c.fillStyle = DIM; font(c, 600, 24); c.fillText(W.t("card_to"), 64, 370); c.textAlign = "right"; c.fillText(day(o.created_at), Wd - 64, 370); c.textAlign = "left";
-    c.fillStyle = INK; font(c, 600, 38); c.fillText(fit(c, o.customer_name || "Mteja", 760), 64, 418);
+    c.fillStyle = INK; font(c, 600, 38); c.fillText(fit(c, o.customer_name || (W.waPhone(o.customer_phone) ? "+" + W.waPhone(o.customer_phone) : "Mteja"), 760), 64, 418);
     c.fillStyle = LINE; c.fillRect(64, 456, Wd - 128, 2);
     c.fillStyle = DIM; font(c, 600, 22); c.fillText(W.t("card_item"), 64, 506); c.textAlign = "right"; c.fillText(W.t("card_qty"), 700, 506); c.fillText(W.t("card_amt"), Wd - 64, 506); c.textAlign = "left";
     y = 570;
@@ -958,6 +975,7 @@ W.db = {
     if (!live) {
       var all = demoGet().products.map(function (p) { return decorate(Object.assign({}, p)); });
       all.forEach(archiveAged);
+      if (!admin) all.forEach(function (p) { delete p.ganji; });
       return admin ? all : all.filter(function (p) { return p.status === "active" || p.status === "soldout"; });
     }
     var r = await sb.from("products").select(PCOLS).order("refreshed_at", { ascending: false }).limit(1000);
@@ -1066,6 +1084,17 @@ W.db = {
     var r = rr[0], g = {}; if (r.error) throw r.error;
     W.ganjiOff = !!rr[1].error; (rr[1].data || []).forEach(function (x) { g[x.order_id] = x.ganji; });   // owners only (RLS); assistants get none
     return r.data.map(function (o) { o.items = o.order_items; delete o.order_items; if (g[o.id] != null) o.ganji = g[o.id]; return o; });
+  },
+  /* v2.11 Ganji per product (owners only, product_private.ganji) */
+  async productGanji() {
+    if (!live) { var m = {}; demoGet().products.forEach(function (p) { if (p.ganji != null) m[p.id] = p.ganji; }); return m; }
+    var r = await sb.from("product_private").select("product_id,ganji").limit(2000); if (r.error) { W.pganjiOff = true; return {}; }
+    var o = {}; r.data.forEach(function (x) { if (x.ganji != null) o[x.product_id] = x.ganji; }); return o;
+  },
+  async setProductGanji(id, amount) {
+    amount = amount == null ? null : Math.max(0, Math.round(+amount || 0));
+    if (!live) { var d = demoGet(), p = d.products.find(function (x) { return x.id === id; }); if (p) { p.ganji = amount; demoSave(d); } return amount; }
+    var r = await sb.from("product_private").upsert({ product_id: id, ganji: amount }); if (r.error) throw r.error; return amount;
   },
   /* v2.10 Ganji: the winga's hidden top-up / service amount on an order (owners only) */
   async setGanji(code, amount) {
