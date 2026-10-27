@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.8.0";
+W.VERSION = "2.9.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -50,14 +50,14 @@ W.STRINGS = [
  ["nav_cats","Shop · Menu","Aina","Categories"],
  ["nav_cart","Shop · Menu","Kapu","Basket"],
  ["nav_me","Shop · Menu","Mimi","Me"],
- ["searchPh","Shop","Tafuta bidhaa upendayo","Search products you like"],
+ ["searchPh","Shop","Search our products","Search our products"],
  ["emptyShop","Shop","Kaa mkao wa kula, bidhaa mpya zinakuja","Get ready, new products are coming"],
- ["g_wa_ok","Shop","Namba hii iko kwenye WhatsApp (ankara itakuja hapa)","This number is on WhatsApp (your invoice comes here)"],
+ ["g_wa_ok","Shop","Namba hii iko WhatsApp (Tutaitumia kuwasiliana na wewe)","This number is on WhatsApp (we'll use it to reach you)"],
  ["err_wa_ok","Shop","Thibitisha kuwa namba iko kwenye WhatsApp","Confirm the number is on WhatsApp"],
  ["o_phone","Shop","WhatsApp yako","Your WhatsApp"],
  ["o_phone_edit","Shop","Badilisha","Change"],
  ["o_phone_title","Shop","Badilisha namba ya WhatsApp","Change your WhatsApp number"],
- ["o_phone_hint","Shop","Ankara na taarifa za oda hii zitakuja kwenye namba hii","The invoice and updates for this order come to this number"],
+ ["o_phone_hint","Shop","Invoice na taarifa za oda hii zitakuja kwenye namba hii","The invoice and updates for this order come to this number"],
  ["o_phone_fail","Shop","Imeshindikana kubadilisha. Mwandikie muuzaji kwenye WhatsApp","Couldn't change it. Message the seller on WhatsApp"],
  ["served_by","Shop","Unahudumiwa na {name} · msaidizi wa duka","Served by {name} · shop assistant"],
  ["inst_bar","Install","Weka Niagize kwenye simu","Add Niagize to your phone"],
@@ -90,10 +90,10 @@ W.STRINGS = [
  ["cart_total","Basket","Jumla","Total"],
  ["cart_empty","Basket","Kapu lako ni tupu","Your basket is empty"],
  ["cart_clear","Basket","Futa kapu","Empty basket"],
- ["delivery","Basket","Usafiri","Delivery"],
+ ["delivery","Basket","Delivery","Delivery"],
  ["del_fasta","Basket","Inaharaka","Urgent"],
  ["del_leo","Basket","Utumwe Leo","Send today"],
- ["fee_tbd","Basket","Bei itathibitishwa","Confirmed in chat"],
+ ["fee_tbd","Basket","Tutakutaarifu kuhusu gharama za delivery","We'll tell you the delivery cost"],
  ["deliver_to","Basket","Anwani ya kupokea","Delivery address"],
  ["add_addr","Basket","Ongeza anwani","Add address"],
  ["wa_hello","Basket (WhatsApp)","Habari! Napata mzigo huu?","Hello! Can I get these?"],
@@ -101,7 +101,7 @@ W.STRINGS = [
  ["wa_ask","Product (WhatsApp)","Habari! Naulizia hii:","Hello! I'm asking about this:"],
  ["wa_one","Product share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
  ["wa_total","Basket (WhatsApp)","Jumla: TSh {x}","Total: TSh {x}"],
- ["wa_del","Basket (WhatsApp)","Usafiri: {d} · {fee}","Delivery: {d} · {fee}"],
+ ["wa_del","Basket (WhatsApp)","Delivery: {d} · {fee}","Delivery: {d} · {fee}"],
  ["order_sent","Order","Oda imetumwa","Order sent"],
  ["order_sent_s","Order","Unaweza kufuatilia hapa, status ya oda yako","You can follow your order status here"],
  ["guest_hint","Order","Jisajili uone historia na kuagiza tena","Sign up to see your history and reorder"],
@@ -114,12 +114,12 @@ W.STRINGS = [
  ["o_closed","Order","Oda hii imefungwa. Hakuna malipo yanayohitajika.","This order is closed. No payment is needed."],
  ["st_new","Order","Imepokelewa","Received"],
  ["st_progress","Order","Nakurudia","In progress"],
- ["st_invoiced","Order","Ankara imetumwa","Invoice sent"],
+ ["st_invoiced","Order","Invoice imetumwa","Invoice sent"],
  ["st_paid","Order","Imelipwa","Paid"],
  ["st_done","Order","Imekamilika","Completed"],
  ["st_cancelled","Order","Imesitishwa","Cancelled"],
  ["st_pack","Order","Tunafunga mzigo na kukutumia","Packing and sending"],
- ["o_pay_wait","Order","Njia za malipo zitaonekana ukishapokea ankara","Payment options show once you get the invoice"],
+ ["o_pay_wait","Order","Njia za malipo zitaonekana ukishapokea invoice","Payment options show once you get the invoice"],
  ["claim_title","Order","Umeshalipa? Tuma taarifa za malipo","Paid? Send the payment details"],
  ["claim_channel","Order","Njia ya malipo","Payment channel"],
  ["claim_ref","Order","Namba ya muamala / risiti","Transaction ID / receipt"],
@@ -138,12 +138,34 @@ W.STRINGS = [
  ["chat_status","Order","Habari! Naulizia status ya oda yangu: {code}\n{link}","Hello! I'm asking about the status of my order: {code}\n{link}"],
  ["g_wa","Basket","Namba yako ya WhatsApp","Your WhatsApp number"],
  ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
- ["g_hint","Basket","Ankara na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
+ ["g_hint","Basket","Invoice na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
  ["inst_title","Install","Weka Niagize kwenye simu yako","Put Niagize on your phone"],
+ ["g_addr","Basket","Mahali pa delivery (mf. Sinza Mori, karibu na sheli)","Delivery address (e.g. Sinza Mori, near the petrol station)"],
+ ["g_addr_l","Basket","Tukuletee wapi?","Where do we deliver?"],
+ ["g_addr_saved","Basket","Tutaleta hapa","We'll deliver here"],
+ ["err_addr","Basket","Weka mahali pa delivery","Add a delivery address"],
+ ["po_btn","Shop","Agiza kwa picha","Order by photo"],
+ ["po_title","Shop","Agiza kwa picha","Order by photo"],
+ ["po_s","Shop","Una picha ya bidhaa unayotaka? Tutumie, tutakutafutia Kariakoo na kukutumia bei.","Have a photo of what you want? Send it, we'll find it in Kariakoo and send you the price."],
+ ["po_pick","Shop","Chagua au piga picha","Pick or take a photo"],
+ ["po_change","Shop","Badilisha picha","Change photo"],
+ ["po_note","Shop","Eleza: saizi, rangi, idadi…","Describe: size, colour, how many…"],
+ ["po_need","Shop","Weka picha kwanza","Add a photo first"],
+ ["po_soon","Shop","Agiza kwa picha itaanza hivi karibuni. Mwandikie muuzaji kwenye WhatsApp","Ordering by photo starts soon. Message the seller on WhatsApp"],
+ ["fab_msg","Shop","Habari! Nina swali kuhusu bidhaa za Niagize Kariakoo","Hello! I have a question about Niagize Kariakoo products"],
+ ["fab_l","Shop","Ongea nasi WhatsApp","Chat with us on WhatsApp"],
+ ["wait","Common","Subiri kidogo…","One moment…"],
+ ["tax_title","Boss · Categories","Aina za bidhaa","Product categories"],
+ ["tax_s","Boss · Categories","Makundi 5 makuu ni ya kudumu. Ongeza au ondoa aina ndogo chini ya kila kundi.","The 5 main groups are fixed. Add or remove sub-groups under each one."],
+ ["tax_ph","Boss · Categories","Aina ndogo mpya (mf. Raba za watoto)","New sub-group (e.g. Kids' sneakers)"],
+ ["tax_has","Boss · Categories","Ina bidhaa {n}: zihamishe kwanza","Has {n} products: move them first"],
+ ["tax_fail","Boss · Categories","Haikuhifadhiwa. Database ya v2.9 bado haijawekwa","Not saved. The v2.9 database update isn't in yet"],
+ ["po_tag","Boss · Orders","Picha ya mteja","Customer's photo"],
+ ["po_toshop","Boss · Orders","Weka dukani","Add to shop"],
  ["sl_b1","Tips","Gusa bidhaa upendayo","Tap the product you like"],
  ["sl_b2","Tips","Gusa Kapuni (au Agiza sasa)","Tap Kapuni (or Agiza sasa)"],
  ["sl_b3","Tips","Weka namba ya WhatsApp, gusa Tuma oda","Enter your WhatsApp number, tap Tuma oda"],
- ["sl_b4","Tips","Tutakutumia ankara. Lipia, tukuletee mlangoni","We send the invoice. Pay, we deliver to your door"],
+ ["sl_b4","Tips","Tutakutumia invoice. Lipia, tukuletee mlangoni","We send the invoice. Pay, we deliver to your door"],
  ["sl_s1","Tips","Fungua Niagize kwenye Chrome (Android) au Safari (iPhone)","Open Niagize in Chrome (Android) or Safari (iPhone)"],
  ["sl_s2a","Tips","Gusa dot tatu ⋮ juu kulia","Tap the three dots ⋮ top right"],
  ["sl_s2i","Tips","Gusa Share □↑ chini","Tap Share □↑ at the bottom"],
@@ -222,7 +244,7 @@ W.STRINGS = [
  ["del_acc_s","Me · Settings","Akaunti na anwani zako zitafutwa. Oda zilizopita zinabaki kwa kumbukumbu ya duka.","Your account and addresses are deleted. Past orders stay in the shop's records."],
  ["yesDelAcc","Me · Settings","Ndiyo, futa akaunti","Yes, delete account"],
  ["about_body","Me · Settings","Niagize Kariakoo ni duka la winga mmoja unayemwamini. Unachagua bidhaa, unatuma oda, tunahakiki, unalipia, tunakuletea mpaka mlangoni.","Niagize Kariakoo is one trusted winga's shop. Pick products, send the order, we confirm, you pay, we deliver to your door."],
- ["terms_body","Me · Settings","1. Huduma: Niagize Kariakoo ni duka la mtandaoni la winga (muuzaji) wa Kariakoo. Unachagua bidhaa, unatuma oda kwa WhatsApp, kisha muuzaji anathibitisha.\n\n2. Bei na mzigo: Bei na upatikanaji huthibitishwa kwenye WhatsApp kabla ya kulipa. Picha ni za kuonyesha bidhaa; rangi na saizi zinaweza kutofautiana kidogo.\n\n3. Malipo: Unalipa moja kwa moja kwa muuzaji kupitia namba zilizo kwenye ankara. Usilipe namba nyingine yoyote. Tuma namba ya muamala na jina ili tuthibitishe.\n\n4. Usafiri: Gharama ya usafiri inathibitishwa kwenye kila oda. Mzigo unaletwa kwenye anwani uliyoweka.\n\n5. Kubadilisha au kusitisha: Unaweza kusitisha oda kabla ya kulipa. Baada ya kulipa, mabadiliko au kurudisha bidhaa hukubaliwa na muuzaji kwenye WhatsApp.\n\n6. Taarifa zako: Jina, namba na anwani yako hutumika tu kuhudumia oda zako. Hatuuzi taarifa zako. Unaweza kufuta akaunti yako wakati wowote kwenye Mipangilio.\n\n7. Namba ya WhatsApp: Weka namba unayotumia WhatsApp; ankara na taarifa za oda zinakuja hapo. Ukikosea au ukibadilisha namba, ibadilishe kwenye ukurasa wa oda kabla ya kulipa, au mwambie muuzaji.\n\n8. Usalama: Tunawasiliana kutoka namba ya WhatsApp ya duka tu, na link zetu ni za duka hili tu. Hatutakuomba PIN, nywila wala namba ya kadi. Ujumbe kutoka kwa msaidizi wa duka utaonyesha jina lake.\n\n9. Akaunti: Linda neno lako la siri. Usimpe mtu mwingine.\n\n10. Mabadiliko: Vigezo hivi vinaweza kubadilika; toleo jipya litaonekana hapa.","1. Service: Niagize Kariakoo is the online shop of one Kariakoo winga (seller). You pick products, send the order on WhatsApp, and the seller confirms it.\n\n2. Price and stock: Price and availability are confirmed on WhatsApp before you pay. Photos show the product; colour and size may differ slightly.\n\n3. Payment: You pay the seller directly to the numbers on the invoice. Don't pay any other number. Send the transaction ID and name so we can confirm.\n\n4. Delivery: The delivery fee is confirmed for each order. Goods are delivered to the address you give.\n\n5. Changes and cancelling: You can cancel before paying. After paying, changes or returns are agreed with the seller on WhatsApp.\n\n6. Your data: Your name, number and address are used only to serve your orders. We don't sell your data. You can delete your account any time in Settings.\n\n7. WhatsApp number: Use the number you have on WhatsApp; the invoice and order updates go there. If it's wrong or you change number, update it on the order page before paying, or tell the seller.\n\n8. Safety: We only contact you from the shop's WhatsApp number, and our links only point to this shop. We will never ask for your PIN, password or card number. Messages from a shop assistant show their name.\n\n9. Account: Keep your password safe. Don't share it.\n\n10. Changes: These terms may change; the new version will appear here."],
+ ["terms_body","Me · Settings","1. Huduma: Niagize Kariakoo ni duka la mtandaoni la winga (muuzaji) wa Kariakoo. Unachagua bidhaa, unatuma oda kwa WhatsApp, kisha muuzaji anathibitisha.\n\n2. Bei na mzigo: Bei na upatikanaji huthibitishwa kwenye WhatsApp kabla ya kulipa. Picha ni za kuonyesha bidhaa; rangi na saizi zinaweza kutofautiana kidogo.\n\n3. Malipo: Unalipa moja kwa moja kwa muuzaji kupitia namba zilizo kwenye invoice. Usilipe namba nyingine yoyote. Tuma namba ya muamala na jina ili tuthibitishe.\n\n4. Usafiri: Gharama ya usafiri inathibitishwa kwenye kila oda. Mzigo unaletwa kwenye anwani uliyoweka.\n\n5. Kubadilisha au kusitisha: Unaweza kusitisha oda kabla ya kulipa. Baada ya kulipa, mabadiliko au kurudisha bidhaa hukubaliwa na muuzaji kwenye WhatsApp.\n\n6. Taarifa zako: Jina, namba na anwani yako hutumika tu kuhudumia oda zako. Hatuuzi taarifa zako. Unaweza kufuta akaunti yako wakati wowote kwenye Mipangilio.\n\n7. Namba ya WhatsApp: Weka namba unayotumia WhatsApp; invoice na taarifa za oda zinakuja hapo. Ukikosea au ukibadilisha namba, ibadilishe kwenye ukurasa wa oda kabla ya kulipa, au mwambie muuzaji.\n\n8. Usalama: Tunawasiliana kutoka namba ya WhatsApp ya duka tu, na link zetu ni za duka hili tu. Hatutakuomba PIN, nywila wala namba ya kadi. Ujumbe kutoka kwa msaidizi wa duka utaonyesha jina lake.\n\n9. Akaunti: Linda neno lako la siri. Usimpe mtu mwingine.\n\n10. Mabadiliko: Vigezo hivi vinaweza kubadilika; toleo jipya litaonekana hapa.","1. Service: Niagize Kariakoo is the online shop of one Kariakoo winga (seller). You pick products, send the order on WhatsApp, and the seller confirms it.\n\n2. Price and stock: Price and availability are confirmed on WhatsApp before you pay. Photos show the product; colour and size may differ slightly.\n\n3. Payment: You pay the seller directly to the numbers on the invoice. Don't pay any other number. Send the transaction ID and name so we can confirm.\n\n4. Delivery: The delivery fee is confirmed for each order. Goods are delivered to the address you give.\n\n5. Changes and cancelling: You can cancel before paying. After paying, changes or returns are agreed with the seller on WhatsApp.\n\n6. Your data: Your name, number and address are used only to serve your orders. We don't sell your data. You can delete your account any time in Settings.\n\n7. WhatsApp number: Use the number you have on WhatsApp; the invoice and order updates go there. If it's wrong or you change number, update it on the order page before paying, or tell the seller.\n\n8. Safety: We only contact you from the shop's WhatsApp number, and our links only point to this shop. We will never ask for your PIN, password or card number. Messages from a shop assistant show their name.\n\n9. Account: Keep your password safe. Don't share it.\n\n10. Changes: These terms may change; the new version will appear here."],
  ["addr_title","Me · Addresses","Anwani zangu","My addresses"],
  ["addr_add","Me · Addresses","Ongeza anwani","Add address"],
  ["addr_search","Me · Addresses","Tafuta mtaa, jengo au eneo","Search street, building or area"],
@@ -286,12 +308,12 @@ W.STRINGS = [
  ["steps_title","Boss · Discover","Hatua 3 tu… anza hapa","Just 3 steps… start here"],
  ["brief_open","Boss · Brief","Fungua dashboard","Open the dashboard"],
  ["sign_asst","Boss · Order","— {name}, msaidizi wa Niagize Kariakoo","— {name}, Niagize Kariakoo assistant"],
- ["card_inv","Card","ANKARA","INVOICE"],
+ ["card_inv","Card","INVOICE","INVOICE"],
  ["card_to","Card","KWA","BILLED TO"],
  ["card_item","Card","BIDHAA","ITEM"],
  ["card_qty","Card","IDADI","QTY"],
  ["card_amt","Card","KIASI","AMOUNT"],
- ["card_del","Card","Usafiri","Delivery"],
+ ["card_del","Card","Delivery","Delivery"],
  ["card_total","Card","Jumla","Total"],
  ["card_pay","Card","LIPA KWA","PAY TO"],
  ["card_after","Card","Ukishalipa, tuma namba ya muamala kwenye link ya oda yako.","After paying, send the transaction ID on your order link."],
@@ -301,7 +323,7 @@ W.STRINGS = [
  ["card_thx_p1","Card","Oda yako {code} imekamilika. Tunashukuru kwa kununua Kariakoo kupitia kwetu.","Your order {code} is complete. Thank you for shopping Kariakoo with us."],
  ["card_thx_p2","Card","Ukihitaji chochote, tuko ujumbe mmoja tu.","If you ever need anything, we are one message away."],
  ["card_recv","Card","IMEPOKELEWA {date}","RECEIVED {date}"],
- ["card_inv_btn","Card","Ankara (picha)","Invoice image"],
+ ["card_inv_btn","Card","Invoice (picha)","Invoice image"],
  ["card_thx_btn","Card","Kadi ya asante","Thank-you card"],
  ["card_saved","Card","Picha imehifadhiwa","Image saved"],
  ["step0","Boss · Discover","Weka app kwenye simu","Save the app on your phone"],
@@ -341,15 +363,15 @@ W.STRINGS = [
  ["by_customer","Boss · Orders","Mteja amethibitisha kupokea","Customer confirmed receipt"],
  ["auto_hint","Boss · Orders","Itahamia \"Inafanyiwa kazi\" baada ya dakika 2","Moves to In progress after 2 minutes"],
  ["a_progress","Boss · Orders","Nakurudia","Working on it"],
- ["a_invoice","Boss · Orders","Tuma ankara","Send invoice"],
+ ["a_invoice","Boss · Orders","Tuma invoice","Send invoice"],
  ["a_paid","Boss · Orders","Imelipwa","Paid"],
  ["a_done","Boss · Orders","Imekamilika","Completed"],
  ["a_cancel","Boss · Orders","Sitisha oda","Cancel order"],
  ["a_call","Boss · Orders","Piga simu","Call"],
  ["cust","Boss · Orders","Mteja","Customer"],
  ["cust_phone","Boss · Orders","Namba ya mteja","Customer number"],
- ["fee_set","Boss · Orders","Gharama ya usafiri (TSh)","Delivery fee (TSh)"],
- ["fee_name","Boss · Orders","Gharama ya usafiri","Delivery fee"],
+ ["fee_set","Boss · Orders","Gharama ya delivery (TSh)","Delivery fee (TSh)"],
+ ["fee_name","Boss · Orders","Gharama ya delivery","Delivery fee"],
  ["total_edit","Boss · Orders","Badili jumla","Edit total"],
  ["total_new","Boss · Orders","Jumla mpya baada ya maelewano (TSh)","New agreed total (TSh)"],
  ["total_orig","Boss · Orders","Bei ya awali","Original price"],
@@ -456,20 +478,28 @@ W.STRINGS = [
  ["ho_track","Handoff","Mteja? Fuatilia oda yako","Customer? Track your order"],
  ["ho_opening","Handoff","Inafungua…","Opening…"]
 ];
-/* categories: 6 groups + sub-groups, in shop order.
-   [key, Kiswahili, English, icon, [[subKey, sw, en, icon], …]]. Keys never change; labels can. */
-W.TAX = [
- ["fashion","Nguo & Fashion","Clothing & Fashion","shirt",[["women","Wanawake","Women","dress"],["men","Wanaume","Men","shirt"]]],
- ["shoes","Viatu","Shoes","sneaker",[["men","Wanaume","Men","sneaker"],["women","Wanawake","Women","heel"],["kids","Watoto","Kids","kidshoe"]]],
- ["electronics","Electronics","Electronics","phone",[["phones","Simu","Phones","phone"],["gadgets","Vifaa","Gadgets","headphones"]]],
- ["accessories","Urembo","Beauty & Accessories","ring",[["jewelry","Jewelry","Jewelry","ring"],["watches","Saa","Watches","watch"],["eyewear","Miwani","Eyewear","glasses"],["bags","Mabegi","Bags","bag"]]],
- ["kids","Mama & Watoto","Mother & Kids","bottle",[["baby","Mtoto mchanga","Baby","bottle"],["kidswear","Nguo za watoto","Kids' clothes","onesie"],["mother","Mzazi","Parent","heart"]]],
- ["other","Nyingine","Other","box",[]]
+/* categories: the 5 master groups (partner review, 27 Oct 2026), in shop order. Masters are fixed; the winga can add or
+   remove sub-groups in Boss → Mipangilio → Aina za bidhaa (stored in shop.taxonomy). [key, sw, en, icon, [[subKey, sw, en, icon], …]] */
+W.TAX0 = [
+ ["electronics","Electronics & Simu","Electronics & Mobile","phone",[["phones","Simu","Smartphones","phone"],["tablets","Tablets","Tablets","tablet"],["tv","TV & Home theater","Smart TVs & home theater","tv"],["audio","Spika & Sauti","Speakers & audio","headphones"],["gadgets","Chaja, power bank & vifaa","Chargers, power banks & accessories","plug"]]],
+ ["fashion","Mavazi & Viatu","Fashion & Footwear","shirt",[["women","Wanawake","Women","dress"],["men","Wanaume","Men","shirt"],["kids","Watoto","Children","onesie"],["shoes","Viatu & Raba","Sneakers & shoes","sneaker"],["bags","Mabegi & Masanduku","Bags & suitcases","bag"],["accessories","Saa, vito & miwani","Watches, jewelry & eyewear","watch"]]],
+ ["home","Nyumbani & Vifaa","Home & Appliances","house",[["kitchen","Jikoni","Cookware & kitchen","pot"],["bedding","Mashuka, blanketi & mapazia","Bedding & curtains","bed"],["lighting","Taa & flask","Lighting & flasks","lamp"]]],
+ ["beauty","Urembo & Vipodozi","Cosmetics & Beauty","sparkle",[["hair","Wigi & nywele","Wigs, weaves & braids","comb"],["skin","Lotion & mafuta","Lotions & oils","bottle"],["soap","Sabuni","Soaps","box"],["perfume","Marashi","Fragrances","bottle"]]],
+ ["general","Bidhaa Mchanganyiko","General Merchandise","box",[["hardware","Vifaa vya fundi","Tools, padlocks & cords","tools"],["storage","Ndoo, beseni & vyombo","Drums, basins & containers","bucket"],["stationery","Stationery","Stationery","pen"]]]
 ];
+W.TAX = JSON.parse(JSON.stringify(W.TAX0));
 W.CATS = W.TAX.map(function (c) { return c[0]; });
 var STR = { sw: {}, en: {} };
 W.STRINGS.forEach(function (r) { STR.sw[r[0]] = r[2]; STR.en[r[0]] = r[3]; });
-W.TAX.forEach(function (c) { STR.sw["cat_" + c[0]] = c[1]; STR.en["cat_" + c[0]] = c[2]; c[4].forEach(function (s) { STR.sw["sub_" + c[0] + "_" + s[0]] = s[1]; STR.en["sub_" + c[0] + "_" + s[0]] = s[2]; }); });
+function taxWords() { W.TAX.forEach(function (c) { STR.sw["cat_" + c[0]] = c[1]; STR.en["cat_" + c[0]] = c[2]; c[4].forEach(function (s) { STR.sw["sub_" + c[0] + "_" + s[0]] = s[1]; STR.en["sub_" + c[0] + "_" + s[0]] = s[2] || s[1]; }); }); }
+taxWords();
+/* the winga's own sub-groups: { subs: { masterKey: [[key, sw, en, icon], …] } } replaces that master's list */
+W.setTax = function (custom) {
+  W.TAX = JSON.parse(JSON.stringify(W.TAX0));
+  if (custom && custom.subs) W.TAX.forEach(function (c) { var l = custom.subs[c[0]]; if (Array.isArray(l)) c[4] = l.filter(function (x) { return x && x[0] && x[1]; }).map(function (x) { return [String(x[0]), String(x[1]), String(x[2] || x[1]), x[3] || c[3]]; }); });
+  taxWords();
+};
+W.subKey = function (name) { return String(name || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30) || ("s" + Date.now().toString(36)); };
 function taxOf(cat) { return W.TAX.find(function (x) { return x[0] === cat; }); }
 W.subs = function (cat) { var c = taxOf(cat); return c ? c[4].map(function (s) { return s[0]; }) : []; };
 /* category and sub-category icons (24px line icons) */
@@ -490,6 +520,18 @@ W.CATICONS = {
   onesie: '<path d="M8 3L4 6l2 3.5 2-1V12l-2 9h4l2-4 2 4h4l-2-9V8.5l2 1L20 6l-4-3c0 2-1.8 3-4 3S8 5 8 3z"/>',
   heart: '<path d="M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z"/>',
   box: '<path d="M3 7l9-4 9 4-9 4z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/>',
+  tablet: '<rect x="4.5" y="2.5" width="15" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+  tv: '<rect x="2.5" y="5" width="19" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  plug: '<path d="M9 2.5v5M15 2.5v5M6.5 7.5h11v3a5.5 5.5 0 0 1-11 0z"/><path d="M12 16v5.5"/>',
+  house: '<path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5M10 20v-5h4v5"/>',
+  pot: '<path d="M4 10h16v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M2 10h20M9 6.5h6"/>',
+  bed: '<path d="M3 18V7M3 13h18v5M21 18v-3"/><rect x="5" y="9" width="5" height="4" rx="1"/>',
+  lamp: '<path d="M8 3h8l3 8H5z"/><path d="M12 11v8M8 21h8"/>',
+  sparkle: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+  comb: '<path d="M4 9h16v3H4z"/><path d="M6 12v6M9 12v6M12 12v6M15 12v6M18 12v6"/>',
+  tools: '<path d="M14.5 5.5a4 4 0 0 0 4.9 4.9L21 12l-9 9-3-3 9-9-1.6-1.6a4 4 0 0 0-4.9-4.9"/><path d="M3 21l6-6"/>',
+  bucket: '<path d="M4 7h16l-2 14H6z"/><path d="M4 7a8 3 0 0 0 16 0"/>',
+  pen: '<path d="M4 20l4-1L19.5 7.5a2.1 2.1 0 0 0-3-3L5 16z"/><path d="M14.5 6.5l3 3"/>',
   grid: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/>'
 };
 W.catIcon = function (cat, sub) {
@@ -642,6 +684,15 @@ try { addEventListener("beforeinstallprompt", function (e) { e.preventDefault();
   addEventListener("appinstalled", function () { W._bip = null; try { localStorage.setItem("winga.installed", "1"); } catch (_) {} }); } catch (_) {}
 W.canPrompt = function () { return !!W._bip; };
 W.install = async function () { if (!W._bip) return "manual"; var e = W._bip; W._bip = null; try { e.prompt(); var c = await e.userChoice; return c && c.outcome; } catch (_) { return "manual"; } };
+/* "something is happening": a calm sun loader over the screen while we wait on the network (shown after 250 ms, so quick calls don't flash) */
+W.wait = function (on, msg) {
+  var el = document.getElementById("wwait");
+  if (!el) { el = document.createElement("div"); el.id = "wwait"; el.setAttribute("role", "status"); el.setAttribute("aria-live", "polite"); document.body.appendChild(el); }
+  clearTimeout(W._waitT);
+  if (on) { el.innerHTML = '<div class="wbox">' + W.SUN + '<div>' + W.esc(msg || W.t("wait")) + '</div></div>'; W._waitT = setTimeout(function () { el.className = "on"; }, 250); }
+  else el.className = "";
+};
+W.during = async function (p, msg) { W.wait(true, msg); try { return await p; } finally { W.wait(false); } };
 W.standalone = function () { try { return navigator.standalone === true || matchMedia("(display-mode: standalone)").matches; } catch (e) { return false; } };
 W.sid = (function () { var k = "niagize.sid", v = ls(k); if (!v) { v = W.uid().slice(0, 18); ls(k, v); } return v; })();
 
@@ -739,12 +790,15 @@ function decorate(p) {
 /* v2.1 category map: old keys still in the database are shown under the new groups (see supabase/v2_1_data.sql) */
 function normalize(p) {
   if (p.status === "hidden" || p.status === "soldout") p.status = "archived";
-  if (p.category === "electronics" && p.subcategory !== "phones") p.subcategory = "gadgets";
-  if (p.category === "other") p.subcategory = null;
-  var fix = { shoes: { sport: "men" }, kids: { toys: "kidswear" }, fashion: { kitenge: "women" } };
+  /* v2.9: the 6 old groups shown under the 5 new masters (database rows keep their keys until they are next saved) */
+  if (p.category === "shoes") { p.category = "fashion"; p.subcategory = "shoes"; }
+  else if (p.category === "kids") { p.category = "fashion"; p.subcategory = "kids"; }
+  else if (p.category === "accessories") { p.category = p.subcategory === "bags" ? "fashion" : "fashion"; p.subcategory = p.subcategory === "bags" ? "bags" : "accessories"; }
+  else if (p.category === "other") { p.category = "general"; p.subcategory = null; }
+  var fix = { fashion: { kitenge: "women" } };
   if (fix[p.category] && fix[p.category][p.subcategory]) p.subcategory = fix[p.category][p.subcategory];
   if (p.subcategory && W.subs(p.category).indexOf(p.subcategory) < 0) p.subcategory = null;
-  if (W.CATS.indexOf(p.category) < 0) p.category = "other";
+  if (W.CATS.indexOf(p.category) < 0) p.category = "general";
   return p;
 }
 W.normalize = normalize;
@@ -826,31 +880,31 @@ function demoSave(d) { try { localStorage.setItem(DEMO_KEY, JSON.stringify(d)); 
 function demoGet() { return W._demoMem || demoLoad(); }
 /* demo / preview shop: real Kariakoo photos (square), kept in /demo/ next to the app */
 var DEMO_BASE = (function () { try { var sc = document.currentScript && document.currentScript.src; return sc ? new URL("../demo/", sc).href : "demo/"; } catch (_) { return "demo/"; } })();
-var DEMO_SEED = 3;
+var DEMO_SEED = 4;
 function demoSeed() {
   var now = Date.now(), D = W.DAY, H = 36e5;
   /* [name, category, sub, price, description, age, photo, stars, ordered, tags] */
   var defs = [
-    ["Raba brown za suede", "shoes", "men", 35000, "Suede laini, soli nyeupe nyepesi. Saizi 40–45.", 2*H, "loafers", 3, 14, ["loafers","raba"]],
-    ["Clogs za camo, blue", "shoes", "men", 25000, "Nyepesi, zinavutika. Zina pini za mapambo. Saizi 39–45.", 5*H, "clogblue", 2, 9, ["clogs","camo"]],
-    ["Clogs za camo, rangi 6", "shoes", "women", 25000, "Nyekundu, kijani, nyeusi, blue, brown, kijivu. Saizi 36–44.", D, "clog6", 3, 17, ["clogs"]],
-    ["Raba nyeupe & blue", "shoes", "men", 85000, "Ngozi + denim. Saizi 40–45. Boksi lake lipo.", 3*H, "sneaker", 3, 6, ["raba","sneakers"]],
-    ["Mkoba pink wa nyota", "accessories", "bags", 38000, "Mnyororo wa silver na lulu. Unabeba laptop ndogo.", 2*D, "pinkbag", 2, 4, ["mkoba"]],
-    ["Mkoba wa wingu, rangi 4", "accessories", "bags", 32000, "Pink, blue, nyeusi, cream. Unakuja na kidoli cha wingu.", 6*H, "cloudbag", 3, 11, ["mkoba"]],
-    ["Seti ya saa na vito", "accessories", "jewelry", 45000, "Saa, bangili 2, mkufu, hereni na pete. Kwenye boksi la zawadi.", D, "jewel", 3, 8, ["zawadi","vito"]],
-    ["Saa ya chuma, analog + digital", "accessories", "watches", 55000, "Chuma kizito, haiingii maji (50m). Betri miaka 10.", 3*D, "watch", 2, 5, ["saa"]],
+    ["Raba brown za suede", "fashion", "shoes", 35000, "Suede laini, soli nyeupe nyepesi. Saizi 40–45.", 2*H, "loafers", 3, 14, ["loafers","raba"]],
+    ["Clogs za camo, blue", "fashion", "shoes", 25000, "Nyepesi, zinavutika. Zina pini za mapambo. Saizi 39–45.", 5*H, "clogblue", 2, 9, ["clogs","camo"]],
+    ["Clogs za camo, rangi 6", "fashion", "shoes", 25000, "Nyekundu, kijani, nyeusi, blue, brown, kijivu. Saizi 36–44.", D, "clog6", 3, 17, ["clogs"]],
+    ["Raba nyeupe & blue", "fashion", "shoes", 85000, "Ngozi + denim. Saizi 40–45. Boksi lake lipo.", 3*H, "sneaker", 3, 6, ["raba","sneakers"]],
+    ["Mkoba pink wa nyota", "fashion", "bags", 38000, "Mnyororo wa silver na lulu. Unabeba laptop ndogo.", 2*D, "pinkbag", 2, 4, ["mkoba"]],
+    ["Mkoba wa wingu, rangi 4", "fashion", "bags", 32000, "Pink, blue, nyeusi, cream. Unakuja na kidoli cha wingu.", 6*H, "cloudbag", 3, 11, ["mkoba"]],
+    ["Seti ya saa na vito", "fashion", "accessories", 45000, "Saa, bangili 2, mkufu, hereni na pete. Kwenye boksi la zawadi.", D, "jewel", 3, 8, ["zawadi","vito"]],
+    ["Saa ya chuma, analog + digital", "fashion", "accessories", 55000, "Chuma kizito, haiingii maji (50m). Betri miaka 10.", 3*D, "watch", 2, 5, ["saa"]],
     ["Sweta ya patches", "fashion", "men", 30000, "Kijani, cream na brown. M, L, XL.", 9*D, "sweater", 2, 0, ["sweta"]],
     ["Jacket ya corduroy", "fashion", "men", 65000, "Brown, zipu ya silver, mifuko 2. M–XXL.", 4*H, "jacket", 3, 7, ["jacket"]],
     ["Suti ya kike, M–4XL", "fashion", "women", 75000, "Blazer + suruali pana. Kijivu. Saizi M hadi 4XL.", D, "suit", 3, 10, ["suti","ofisini"]],
     ["Shati jekundu + kaptula", "fashion", "men", 40000, "Linen, kola ya kisasa. Kaptula nyeupe. M–XL.", 2*D, "redshirt", 2, 3, ["shati","linen"]],
     ["Cover ya S23 Ultra", "electronics", "gadgets", 15000, "Ina ring ya kushikilia, inalinda kamera. Haishiki alama za vidole.", 7*H, "case", 2, 21, ["cover","samsung"]],
     ["Mouse ya kioo, wireless", "electronics", "gadgets", 25000, "Bluetooth + USB. Inachajiwa. Nyeupe au nyeusi.", D, "mouse", 3, 12, ["mouse"]],
-    ["Spika ya Bluetooth T8II", "electronics", "gadgets", 120000, "Sauti nzito, mkanda wa kubebea. Nyeusi au ya rangi.", 3*D, "speaker", 3, 5, ["spika"]],
+    ["Spika ya Bluetooth T8II", "electronics", "audio", 120000, "Sauti nzito, mkanda wa kubebea. Nyeusi au ya rangi.", 3*D, "speaker", 3, 5, ["spika"]],
     ["Joypad ya PC, USB", "electronics", "gadgets", 18000, "Inafanya kazi na PC na laptop. Chomeka uanze.", 2*D, "joypad", 2, 9, ["games"]],
-    ["TV 65\" QLED, Google TV", "electronics", "gadgets", 1850000, "Mpya kwenye boksi. 4K, Google TV. Warranty.", 4*D, "tv", 3, 2, ["tv"]],
-    ["Dryer ya saluni, stand", "other", null, 280000, "Nyeupe, nyeusi au nyekundu. Magurudumu 5.", 5*D, "dryer", 2, 3, ["saluni"]],
-    ["Water dispenser, moto & baridi", "other", null, 420000, "Bomba 2, tanki la chuma. Warranty miaka 2.", 3*D, "water", 3, 4, ["nyumbani"]],
-    ["Masanduku, seti ya 4", "accessories", "bags", 180000, "Magurudumu 4, kufuli. Saizi 4 tofauti.", 6*D, "luggage", 3, 6, ["safari"]]
+    ["TV 65\" QLED, Google TV", "electronics", "tv", 1850000, "Mpya kwenye boksi. 4K, Google TV. Warranty.", 4*D, "tv", 3, 2, ["tv"]],
+    ["Dryer ya saluni, stand", "beauty", "hair", 280000, "Nyeupe, nyeusi au nyekundu. Magurudumu 5.", 5*D, "dryer", 2, 3, ["saluni"]],
+    ["Water dispenser, moto & baridi", "home", "kitchen", 420000, "Bomba 2, tanki la chuma. Warranty miaka 2.", 3*D, "water", 3, 4, ["nyumbani"]],
+    ["Masanduku, seti ya 4", "fashion", "bags", 180000, "Magurudumu 4, kufuli. Saizi 4 tofauti.", 6*D, "luggage", 3, 6, ["safari"]]
   ];
   return { seed: DEMO_SEED, shop: { name: "Niagize Kariakoo", tagline: "", whatsapp: "255700000000", payments: [{ provider: "M-PESA", number: "5512 3487", name: "BOSS DEUS" }] },
     products: defs.map(function (d, i) { var at = new Date(now - d[5]).toISOString();
@@ -878,10 +932,10 @@ W.db = {
   live: live,
   /* shop */
   async getShop() {
-    if (!live) return demoGet().shop;
+    if (!live) { var ds = demoGet().shop; W.setTax(ds.taxonomy); return ds; }
     var r = await sb.from("shop").select("*").eq("id", 1).maybeSingle();
-    if (r.error) { var c = cacheGet("winga.cache.shop"); if (c) { W.offline = true; return c; } throw r.error; }
-    cacheSet("winga.cache.shop", r.data); W.offline = false; return r.data || {};
+    if (r.error) { var c = cacheGet("winga.cache.shop"); if (c) { W.offline = true; W.setTax(c.taxonomy); return c; } throw r.error; }
+    cacheSet("winga.cache.shop", r.data); W.offline = false; W.setTax(r.data && r.data.taxonomy); return r.data || {};
   },
   async saveShop(patch) {
     if (!live) { var d = demoGet(); Object.assign(d.shop, patch); demoSave(d); return d.shop; }
@@ -890,7 +944,7 @@ W.db = {
   },
   async ping() { if (!live) return "pilot"; try { var r = await sb.from("shop").select("id").eq("id", 1).maybeSingle(); return r.error ? "down" : (W.stage === "production" ? "live" : "pilot"); } catch (e) { return "down"; } },
   /* instant open: the copy saved on this phone last time (live shop only) */
-  cached() { if (!live) return null; var p = cacheGet("winga.cache.products"); if (!p || !p.length) return null; return { shop: cacheGet("winga.cache.shop") || {}, products: p.map(decorate) }; },
+  cached() { if (!live) return null; var p = cacheGet("winga.cache.products"); if (!p || !p.length) return null; var sh = cacheGet("winga.cache.shop") || {}; W.setTax(sh.taxonomy); return { shop: sh, products: p.map(decorate) }; },
   /* products */
   async listProducts(admin) {
     if (!live) {
@@ -943,17 +997,22 @@ W.db = {
     sb.rpc("log_event", { t: type, pid: pid || null, sid: W.sid }).then(function(){}, function(){});
   },
   /* orders: created on Tuma oda; prices are taken from the database */
-  async createOrder(items, delivery, addressId, name, phone) {
+  async createOrder(items, delivery, addressId, name, phone, addrLine) {
     if (!live) {
       var d = demoGet(), sub = 0, cnt = 0, priced = true, rows = [];
-      items.forEach(function (it) { var p = d.products.find(function (x) { return x.id === it.id && x.status === "active"; }); if (!p) return; var q = Math.max(1, Math.min(99, it.qty || 1)); rows.push({ product_id: p.id, name: p.name, price: p.price, qty: q, thumb: p.thumbs[0], note: (it.note || "").trim().slice(0, 200) || null }); if (p.price == null) priced = false; else sub += p.price * q; cnt += q; p.ordered = (p.ordered || 0) + q; });
+      items.forEach(function (it) { if (it.photo) { var qq = Math.max(1, Math.min(99, it.qty || 1)); rows.push({ product_id: null, name: (String(it.note || "").trim() || "Bidhaa kwa picha").slice(0, 80), price: null, qty: qq, thumb: it.photo, note: String(it.note || "").trim().slice(0, 200) || null }); priced = false; cnt += qq; return; } var p = d.products.find(function (x) { return x.id === it.id && x.status === "active"; }); if (!p) return; var q = Math.max(1, Math.min(99, it.qty || 1)); rows.push({ product_id: p.id, name: p.name, price: p.price, qty: q, thumb: p.thumbs[0], note: (it.note || "").trim().slice(0, 200) || null }); if (p.price == null) priced = false; else sub += p.price * q; cnt += q; p.ordered = (p.ordered || 0) + q; });
       var me = d.me && d.users.find(function (u) { return u.username === d.me; }); var addr = addressId && d.addresses.find(function (a) { return a.id === addressId; });
       var o = { code: demoCode(), created_at: new Date().toISOString(), status: "new", delivery: delivery, delivery_fee: null, agreed_total: null, seen_at: null, subtotal: sub, priced: priced, items_count: cnt, items: rows,
-        customer: me ? me.username : null, customer_name: me ? me.full_name : name, customer_phone: me ? me.whatsapp : phone, address: addr ? { label: addr.label, line: addr.line, landmark: addr.landmark } : null, history: [{ s: "new", at: new Date().toISOString() }] };
+        customer: me ? me.username : null, customer_name: me ? me.full_name : name, customer_phone: me ? me.whatsapp : phone, address: addr ? { label: addr.label, line: addr.line, landmark: addr.landmark } : (addrLine ? { line: String(addrLine).slice(0, 200) } : null), history: [{ s: "new", at: new Date().toISOString() }] };
       d.orders.unshift(o); demoSave(d); return { code: o.code, subtotal: sub, fee: o.delivery_fee, priced: priced, count: cnt };
     }
-    items = items.map(function (it) { var x = { id: it.id, qty: it.qty }; if (it.note && String(it.note).trim()) x.note = String(it.note).trim().slice(0, 200); return x; });
-    var r = await sb.rpc("create_order", { items: items, delivery: delivery, address_id: addressId || null, name: name || null, phone: phone || null });
+    items = items.map(function (it) { var x = it.photo ? { photo: it.photo, qty: it.qty || 1 } : { id: it.id, qty: it.qty }; if (it.note && String(it.note).trim()) x.note = String(it.note).trim().slice(0, 200); return x; });
+    /* v2.9: one-line address + photo items; the database bundle may not be in yet, then the old order call is used */
+    var r = await sb.rpc("create_order_v2", { items: items, delivery: delivery, address_id: addressId || null, name: name || null, phone: phone || null, addr_line: addrLine || null });
+    if (r.error && /create_order_v2|PGRST202|42883/.test((r.error.code || "") + " " + (r.error.message || ""))) {
+      if (items.some(function (x) { return x.photo; })) throw new Error("need_v29");
+      r = await sb.rpc("create_order", { items: items, delivery: delivery, address_id: addressId || null, name: name || null, phone: phone || null });
+    }
     if (r.error) throw r.error; return r.data;
   },
   async getOrder(code) {
@@ -968,6 +1027,14 @@ W.db = {
   async customerReceived(code, stars, note) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || (o.status !== "paid" && o.status !== "done")) throw new Error("status"); if (o.status !== "done") o.history.push({ s: "done", at: new Date().toISOString(), by: "customer" }); o.status = "done"; o.rating = stars; o.rating_note = note || null; o.received_at = o.received_at || new Date().toISOString(); demoSave(d); return demoOrderView(o, d); }
     var r = await sb.rpc("customer_received", { c: code, stars: stars, note: note || null }); if (r.error) throw r.error; return r.data;
+  },
+  /* a customer's "order by photo": shrink, then add to the public requests inbox (anyone may add, only the team may delete) */
+  async uploadRequest(file) {
+    var small = await W.shrink(file, 1080, .8);
+    if (!live) return await W.blobToData(small);
+    var path = "r/" + W.uid() + ".jpg";
+    var u = await sb.storage.from("requests").upload(path, small, { contentType: "image/jpeg", cacheControl: "31536000", upsert: false }); if (u.error) throw u.error;
+    return C.url + "/storage/v1/object/public/requests/" + path;
   },
   async setOrderPhone(code, phone) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || ["new", "progress", "invoiced"].indexOf(o.status) < 0) throw new Error("status"); o.customer_phone = phone; o.history.push({ s: "phone", at: new Date().toISOString(), by: "customer" }); demoSave(d); var v = demoOrderView(o, d); v.phone_tail = phone.slice(-3); return v; }

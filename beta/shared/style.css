@@ -272,3 +272,9 @@ ol.inst{padding:0;margin:0}
 .ifield.phone input.local{font-family:var(--num);letter-spacing:.01em}
 .ifield.phone{min-width:0}
 .ifield.phone input.local{min-width:0;width:100%}
+
+/* waiting overlay (W.wait) */
+#wwait{position:fixed;inset:0;z-index:400;background:rgba(18,18,18,.32);display:none;place-items:center}
+#wwait.on{display:grid}
+#wwait .wbox{background:var(--card);color:var(--ink);border-radius:18px;padding:18px 26px;display:flex;flex-direction:column;align-items:center;gap:10px;font-weight:600;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#wwait .sunload{width:34px;height:34px}
