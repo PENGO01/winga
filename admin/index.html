@@ -33,6 +33,17 @@ main{padding:0 var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px
 .period button{border:0;background:transparent;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--dim)}
 .period button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vipcard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:linear-gradient(135deg,#FFF6D6,#FFE9A8);border:0;border-radius:16px;padding:12px 14px;color:#121212;cursor:pointer}
+.vipcard .fi{background:rgba(255,255,255,.7);font-size:20px}.vipcard .grow{flex:1;min-width:0}.vipcard>svg{width:18px;height:18px;flex:none;opacity:.6}.vipcard b{font-size:15px}
+.vipsum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.vipsum div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.vipsum b{font-size:20px}.vipsum span{font-size:11.5px;color:var(--dim)}
+.viprow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.viprow.gold{border-color:#E8B923;box-shadow:0 2px 10px rgba(232,185,35,.25)}
+.viprow .rk{width:30px;text-align:center;font-weight:800;font-size:15px;flex:none}.viprow .nm{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vipb{display:inline-block;font-size:10.5px;font-weight:800;border-radius:6px;padding:1px 6px;vertical-align:1px;margin-right:4px}
+.vipb.gold{background:#F5C542;color:#3a2a00}.vipb.silver{background:#D9DEE5;color:#2b3440}.vipb.bronze{background:#E8B48A;color:#4a2608}
+.gjeye{margin-left:auto;border:0;background:rgba(255,255,255,.6);color:var(--green);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;cursor:pointer}.gjeye svg{width:18px;height:18px}
+.kpi.profit .l{display:flex;align-items:center;gap:6px;width:100%}.gjdots{letter-spacing:.12em}
 .kpi.profit{grid-column:1/-1;background:var(--green-soft);border-color:transparent}.kpi.profit .v{color:var(--green)}
 .ganji{background:var(--green-soft);border-color:transparent}
 .icopick{border:0;background:none;padding:0;display:grid;place-items:center;cursor:pointer}.icopick img{width:20px;height:20px}
@@ -418,11 +429,14 @@ function vHome(){
     h+='<section class="kpis">'+
      kpi(IC.money,t("d_sales"),'TSh '+W.money(d.sales),d.rating?'★ '+d.rating+' · '+esc(t("d_rating").toLowerCase()):'',null,"sales")+
      kpi(IC.users,t("d_visitors"),d.visitors,esc(t("d_views_s",{n:d.views})))+
-     (owner()?(function(){var gs=ganjiSum(S.days||1);return kpi(IC.money,t("d_ganji"),'TSh '+W.money(gs.sum),esc(t("d_ganji_s",{n:gs.n})),null,"profit");})():'')+'</section>';
+     (owner()?(function(){var gs=ganjiSum(S.days||1),hid=W.ls("winga.gjhide")!=="0";
+       return '<div class="kpi profit"><span class="l"><span class="fi">'+IC.money+'</span>'+esc(t("d_ganji"))+'<button class="gjeye" data-act="gjEye" aria-pressed="'+(!hid)+'" aria-label="'+esc(t(hid?"gj_show":"gj_hide"))+'" title="'+esc(t(hid?"gj_show":"gj_hide"))+'">'+(hid?IC.eye:IC.eyeOff)+'</button></span><span class="v">'+(hid?'TSh <span class="gjdots">••••••</span>':'TSh '+W.money(gs.sum))+'</span><span class="s">'+esc(t("d_ganji_s",{n:gs.n}))+'</span></div>';})():'')+'</section>';
     /* orders: one total in the middle, the three states beside it (no double counting) */
     h+='<button class="ocard" data-act="goOrders"><span class="top"><span class="fi">'+IC.inbox+'</span>'+esc(t("d_orders"))+'</span><span class="mid"><span class="big">'+(pn+pp+pd)+'</span><span class="rows">'+
      [[pn,"d_new","var(--blue)"],[pp,"d_pending","var(--amber)"],[pd,"d_done","var(--green)"]].map(function(r){return '<span class="rw"><i style="background:'+r[2]+'"></i><b>'+r[0]+'</b>'+esc(t(r[1]))+'</span>';}).join("")+
      (d.cancelled?'<span class="rw small muted"><i style="background:var(--line)"></i><b>'+d.cancelled+'</b>'+esc(t("d_cancelled"))+'</span>':'')+'</span></span></button>';
+    var vl=vipList(),vr=vl.filter(function(c){return c.done>=2;}).length;
+    h+='<button class="vipcard" data-act="vip"><span class="fi">👑</span><span class="grow"><b>'+esc(t("vip_card"))+'</b><br><span class="small muted">'+esc(vl.length?t("vip_card_s",{n:vr,m:vl.length}):t("vip_empty"))+'</span></span>'+chev()+'</button>';
     var bd=(d.by_day||[]).slice(-7),max=Math.max(1,Math.max.apply(null,bd.map(function(x){return x.orders;}).concat([0])));
     h+='<section class="card"><div class="row between"><b>'+esc(t("d_orders"))+'</b><span class="small muted">'+bd.length+(W.lang==="sw"?" siku":" days")+'</span></div><div class="bars">'+bd.map(function(x,i){var dd=new Date(x.d);
       return '<div class="b"><em>'+(x.orders||"")+'</em><i class="'+(i===bd.length-1?"today":"")+'" style="height:'+Math.max(3,Math.round(x.orders/max*80))+'px"></i><span>'+dd.toLocaleDateString(W.lang==="sw"?"sw-TZ":"en-GB",{weekday:"narrow"})+'</span></div>';}).join("")+'</div></section>';
@@ -629,7 +643,7 @@ PAGES.order=function(){
   var st=o.status,phone=W.waPhone(o.customer_phone),addr=o.address,closed=st==="done"||st==="cancelled",feeEdit=!closed&&(st==="new"||st==="progress");
   var h=hd(t("o_title",{code:o.code}),'<span class="ost '+st+'">'+esc(t(st==="progress"?"f_working":"st_"+st))+'</span>')+'<div class="bd">';
   var noName=!o.customer_name;
-  h+='<div class="card cust">'+(noName?'<button class="av tap" data-act="nameAdd" aria-label="'+esc(t("name_add"))+'">'+IC.user+'</button>':'<span class="av">'+esc(initials(o.customer_name))+'</span>')+'<div class="grow"><div style="font-weight:600">'+(noName?'<button class="linkbtn" data-act="nameAdd" style="font-weight:600">'+esc(t("guest"))+' ✎</button>':esc(o.customer_name))+'</div><div class="small muted num">'+(phone?'+'+esc(phone):'')+'</div></div>'+
+  h+='<div class="card cust">'+(noName?'<button class="av tap" data-act="nameAdd" aria-label="'+esc(t("name_add"))+'">'+IC.user+'</button>':'<span class="av">'+esc(initials(o.customer_name))+'</span>')+'<div class="grow"><div style="font-weight:600">'+vipBadge(o)+(noName?'<button class="linkbtn" data-act="nameAdd" style="font-weight:600">'+esc(t("guest"))+' ✎</button>':esc(o.customer_name))+'</div><div class="small muted num">'+(phone?'+'+esc(phone):'')+'</div></div>'+
    (phone?'<a class="fi" href="tel:+'+esc(phone)+'" aria-label="'+esc(t("a_call"))+'">'+IC.phone+'</a><a class="fi wa" href="'+esc(W.wa(phone,""))+'" target="_blank" rel="noopener" aria-label="WhatsApp">'+IC.wa+'</a>':'')+
    (O.o.status==="invoiced"||O.o.status==="paid"?'<button class="fi jua" data-act="cardInv" aria-label="'+esc(t("card_inv_btn"))+'" title="'+esc(t("card_inv_btn"))+'">'+IC.share2+'</button>':O.o.status==="done"?'<button class="fi jua" data-act="cardThx" aria-label="'+esc(t("card_thx_btn"))+'" title="'+esc(t("card_thx_btn"))+'">'+IC.share2+'</button>':'')+'</div>';
   /* no valid number yet: country + 9 digits, saved before the invoice can go */
@@ -808,6 +822,30 @@ async function loadTeam(){try{var r=await W.db.team("list");S.team=r.team||[];}c
 /* the full team brief (from a tapped alert): every line readable, order codes tappable */
 var BRIEF="";
 function openBrief(tx){BRIEF=String(tx||"");if(stack[stack.length-1]==="brief")draw(false);else open("brief");}
+/* v2.13 repeat buyers: one customer = one WhatsApp number (or account). Ranked by completed orders, then money spent. */
+function custKey(o){var w=W.waPhone(o.customer_phone);return w?("p"+w):o.customer_id?("u"+o.customer_id):null;}
+function vipList(){var m={};
+  (S.orders||[]).forEach(function(o){var k=custKey(o);if(!k)return;var c=m[k]||(m[k]={k:k,phone:W.waPhone(o.customer_phone),name:"",done:0,spent:0,orders:0,last:null,codes:[]});
+    c.orders++;if(o.customer_name&&!c.name)c.name=o.customer_name;if(!c.phone&&o.customer_phone)c.phone=W.waPhone(o.customer_phone);
+    if(o.status==="done"){c.done++;c.spent+=W.total(o);c.codes.push(o.code);var at=eventAt(o);if(!c.last||new Date(at)>new Date(c.last))c.last=at;}});
+  return Object.keys(m).map(function(k){return m[k];}).filter(function(c){return c.done>0;}).sort(function(a,b){return b.done-a.done||b.spent-a.spent;});}
+function tier(n){return n>=5?"gold":n>=3?"silver":n>=2?"bronze":"one";}
+function vipBadge(o){if(!o)return "";var k=custKey(o);if(!k)return "";var c=vipList().find(function(x){return x.k===k;});if(!c||c.done<2)return "";
+  return '<span class="vipb '+tier(c.done)+'" title="'+esc(t("vip_title"))+'">👑 '+esc(t("vip_badge",{n:c.done}))+'</span>';}
+var VIPF="all";
+PAGES.vip=function(){
+  var all=vipList(),rep=all.filter(function(c){return c.done>=2;}),list=(VIPF==="rep"?rep:all).slice(0,25);
+  var h=hd(t("vip_title"))+'<div class="bd"><div class="hint">'+esc(t("vip_s"))+'</div>'+
+   '<div class="vipsum"><div><b class="num">'+all.length+'</b><span>'+esc(t("vip_buyers"))+'</span></div><div><b class="num">'+rep.length+'</b><span>'+esc(t("vip_rep"))+'</span></div><div><b class="num">'+(all.length?Math.round(rep.length/all.length*100):0)+'%</b><span>'+esc(t("vip_rate"))+'</span></div></div>'+
+   '<div class="chips">'+[["all","vip_f_all"],["rep","vip_f_rep"]].map(function(x){return '<button class="chip" data-act="vipF" data-f="'+x[0]+'" aria-pressed="'+(VIPF===x[0])+'">'+esc(t(x[1]))+'</button>';}).join("")+'</div>';
+  if(!list.length)return h+'<div class="empty">'+esc(t("vip_empty"))+'</div></div>';
+  h+='<div class="stack" style="gap:8px">'+list.map(function(c,i){var nm=c.name||(c.phone?"+"+c.phone:t("guest")),tr=tier(c.done);
+    var msg=t("vip_msg",{name:(c.name||"").split(" ")[0]||(W.lang==="sw"?"Mteja wetu":"Dear customer"),n:c.done,shop:S.shop.name||"Niagize Kariakoo"});
+    return '<div class="viprow '+tr+'"><span class="rk">'+(i<3?["🥇","🥈","🥉"][i]:(i+1))+'</span><div class="grow" style="min-width:0"><div class="nm">'+esc(nm)+(tr!=="one"?' <span class="vipb '+tr+'">'+esc(t("tier_"+tr))+'</span>':'')+'</div>'+
+     '<div class="small muted num">'+esc(t("vip_done",{n:c.done,x:W.money(c.spent)}))+(c.last?' · '+esc(W.whenRel(c.last)):'')+'</div></div>'+
+     (c.phone?'<a class="fi wa" href="'+esc(W.wa(c.phone,msg))+'" target="_blank" rel="noopener" aria-label="'+esc(t("vip_send"))+'" title="'+esc(t("vip_send"))+'">'+IC.wa+'</a>':'')+'</div>';}).join("")+'</div>';
+  return h+'<div class="hint" style="margin-top:4px">'+esc(t("vip_tiers"))+'</div></div>';
+};
 PAGES.brief=function(){
   var L=BRIEF.split("\n"),title=L.shift()||"Niagize";
   var lines=L.join("\n").split(/\n| · (?=NK-)/).filter(Boolean).map(function(x){
@@ -898,6 +936,9 @@ document.addEventListener("click",async function(e){
     case "shareShop":await shareShop();break;
     case "copyLink":W.copy(W.shopUrl(),$("#shopUrl"));break;
     case "openShop":var sw=window.open(W.shopUrl(),"_blank");if(sw)sw.opener=null;else location.href=W.shopUrl();break;
+    case "vip":VIPF="all";open("vip");break;
+    case "vipF":VIPF=el.dataset.f;draw(false);break;
+    case "gjEye":W.ls("winga.gjhide",W.ls("winga.gjhide")!=="0"?"0":"1");render();break;
     case "days":S.days=+el.dataset.n;S.dash=null;render();loadDash();break;
     case "goOrders":S.tab="orders";S.ofilter=newCount()?"new":"pending";S.osub="all";render();scrollTo(0,0);reloadOrders();break;
     case "goArchive":S.tab="products";S.filter="archived";render();scrollTo(0,0);break;

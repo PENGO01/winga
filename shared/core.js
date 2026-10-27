@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.12.0";
+W.VERSION = "2.13.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -64,6 +64,12 @@ W.STRINGS = [
  ["inst_bar_s","Install","Fungua haraka kwa icon, bila kutafuta link","Open it from an icon, no link hunting"],
  ["inst_go","Install","Weka","Add"],
  ["new_strip","Shop","Mpya dukani","New in"],
+ ["new_n","Shop","{n} mpya wiki hii","{n} new this week"],
+ ["new_tag","Shop","MPYA","NEW"],
+ ["new_today","Shop","Leo","Today"],
+ ["ptr_pull","Common","Vuta chini kusasisha","Pull to refresh"],
+ ["ptr_go","Common","Achia kusasisha","Release to refresh"],
+ ["ptr_busy","Common","Inasasisha…","Refreshing…"],
  ["similar","Shop","Zinazofanana","Similar items"],
  ["noMatch","Shop","Pole, hatuna bidhaa hiyo! Jaribu neno tofauti","Sorry, we don't have that! Try another word"],
  ["sold_n","Shop","{n} wameagiza","{n} ordered"],
@@ -167,6 +173,26 @@ W.STRINGS = [
  ["pg_ph","Boss · Ganji","Ganji yako kwa kila moja","Your ganji on each one"],
  ["pg_s","Boss · Ganji","Siri yako. Mteja haioni kamwe. Inajaza Ganji ya oda yenyewe.","Your secret. Customers never see it. It fills the order's Ganji by itself."],
  ["gj_auto","Boss · Ganji","Imejazwa kutoka bidhaa. Badilisha kama mmekubaliana tofauti, kisha ✓","Filled from the products. Change it if you agreed otherwise, then ✓"],
+ ["vip_title","Boss · Customers","Wateja bora 25","Top 25 customers"],
+ ["vip_s","Boss · Customers","Wanaokamilisha oda nyingi zaidi. Wape punguzo au zawadi ili warudi tena.","Those with the most completed orders. Give them a discount or a gift so they come back."],
+ ["vip_card","Boss · Customers","Wateja wa kudumu","Loyal customers"],
+ ["vip_card_s","Boss · Customers","{n} wamerudi kununua · wanunuzi {m}","{n} came back · {m} buyers"],
+ ["vip_buyers","Boss · Customers","wanunuzi","buyers"],
+ ["vip_rep","Boss · Customers","wamerudi","came back"],
+ ["vip_rate","Boss · Customers","wanarudi","return rate"],
+ ["vip_f_all","Boss · Customers","Wote","All"],
+ ["vip_f_rep","Boss · Customers","Waliorudi (2+)","Repeat (2+)"],
+ ["vip_done","Boss · Customers","oda {n} · TSh {x}","{n} orders · TSh {x}"],
+ ["vip_empty","Boss · Customers","Bado hakuna oda zilizokamilika","No completed orders yet"],
+ ["vip_send","Boss · Customers","Mtumie zawadi WhatsApp","Send a perk on WhatsApp"],
+ ["vip_badge","Boss · Customers","Mara {n}","{n}× buyer"],
+ ["vip_msg","Boss · Customers","Habari {name}! 🎁 Asante kwa kununua nasi mara {n} {shop}. Kama shukrani, oda yako ijayo ina punguzo maalum. Tuambie unachotaka leo!","Hi {name}! 🎁 Thank you for buying from {shop} {n} times. As a thank-you, your next order gets a special discount. Tell us what you need today!"],
+ ["tier_gold","Boss · Customers","Dhahabu","Gold"],
+ ["tier_silver","Boss · Customers","Fedha","Silver"],
+ ["tier_bronze","Boss · Customers","Shaba","Bronze"],
+ ["vip_tiers","Boss · Customers","Dhahabu = oda 5+ · Fedha = 3–4 · Shaba = 2. Mteja ni namba moja ya WhatsApp.","Gold = 5+ orders · Silver = 3–4 · Bronze = 2. One customer = one WhatsApp number."],
+ ["gj_show","Boss · Ganji","Onyesha Ganji","Show Ganji"],
+ ["gj_hide","Boss · Ganji","Ficha Ganji","Hide Ganji"],
  ["d_ganji","Boss · Ganji","Ganji (faida)","Ganji (profit)"],
  ["d_ganji_s","Boss · Ganji","oda {n} · wingas tu 🔒","{n} orders · team only 🔒"],
  ["tax_s","Boss · Categories","Category 5 kuu ni za kudumu. Ongeza au futa Sub-Category chini ya kila moja.","The 5 main groups are fixed. Add or remove sub-groups under each one."],
@@ -724,10 +750,27 @@ W.sid = (function () { var k = "niagize.sid", v = ls(k); if (!v) { v = W.uid().s
 
 /* pull to refresh: drag down at the top of the page; the sun shows, release to reload */
 W.pullToRefresh = function (indicator, onRefresh) {
-  var startY = null, dist = 0, busy = false;
-  addEventListener("touchstart", function (e) { if (busy || window.scrollY > 0 || document.querySelector(".scrim")) { startY = null; return; } startY = e.touches[0].clientY; dist = 0; }, { passive: true });
-  addEventListener("touchmove", function (e) { if (startY == null) return; dist = e.touches[0].clientY - startY; if (dist > 12) { indicator.innerHTML = W.SUN; indicator.classList.add("on"); indicator.classList.toggle("ready", dist > 70); } }, { passive: true });
-  addEventListener("touchend", async function () { if (startY == null) return; startY = null; if (dist > 70) { busy = true; indicator.classList.add("spin"); try { await onRefresh(); } catch (e) {} busy = false; } indicator.classList.remove("on", "spin", "ready"); dist = 0; });
+  /* v2.13: only a clear downward pull from the very top counts. A touch that starts on anything that scrolls sideways
+     ("Mpya dukani", category chips, Zinazofanana) or moves sideways first is ignored, so swiping the strip never reloads. */
+  var startY = null, startX = 0, dist = 0, busy = false, mode = null, buzzed = false, ratio = 1.6, MAX = 96, GO = 78;
+  function sideways(el) { for (; el && el !== document.body; el = el.parentElement) { if (el.dataset && el.dataset.noptr != null) return true; var cs = getComputedStyle(el); if ((cs.overflowX === "auto" || cs.overflowX === "scroll") && el.scrollWidth > el.clientWidth + 2) return true; } return false; }
+  function show(d) { var p = Math.min(1, d / GO); indicator.innerHTML = W.SUN + '<span>' + W.esc(W.t(busy ? "ptr_busy" : p >= 1 ? "ptr_go" : "ptr_pull")) + '</span>'; indicator.classList.add("on"); indicator.classList.toggle("ready", p >= 1); var el = document.getElementById("ptr"); if (el) { el.style.height = Math.round(Math.min(MAX, d * 0.55)) + "px"; el.style.setProperty("--p", p.toFixed(2)); } }
+  function hide() { indicator.classList.remove("on", "spin", "ready"); var el = document.getElementById("ptr"); if (el) el.style.height = ""; }
+  addEventListener("touchstart", function (e) { mode = null; buzzed = false; if (busy || window.scrollY > 0 || document.querySelector(".scrim") || e.touches.length > 1) { startY = null; return; } ratio = sideways(e.target) ? 2.6 : 1.6; startY = e.touches[0].clientY; startX = e.touches[0].clientX; dist = 0; }, { passive: true });
+  addEventListener("touchmove", function (e) {
+    if (startY == null) return;
+    var dy = e.touches[0].clientY - startY, dx = e.touches[0].clientX - startX;
+    if (!mode) { if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return; mode = (dy > 0 && dy > Math.abs(dx) * ratio && window.scrollY <= 0) ? "pull" : "other"; }
+    if (mode !== "pull") { startY = null; hide(); return; }
+    dist = dy; if (dist > 14) show(dist - 14);
+    if (dist - 14 >= GO && !buzzed) { buzzed = true; try { navigator.vibrate && navigator.vibrate(8); } catch (_) {} }
+  }, { passive: true });
+  addEventListener("touchend", async function () {
+    if (startY == null) { mode = null; return; } startY = null;
+    if (mode === "pull" && dist - 14 >= GO) { busy = true; indicator.classList.add("spin"); show(GO); var el = document.getElementById("ptr"); if (el) el.style.height = "44px"; try { await onRefresh(); } catch (e) {} busy = false; }
+    hide(); dist = 0; mode = null;
+  });
+  addEventListener("touchcancel", function () { startY = null; mode = null; hide(); });
 };
 
 /* ---------------- order alerts (Web Push) ----------------
@@ -1080,7 +1123,7 @@ W.db = {
   /* team side */
   async orders() {
     if (!live) { var dd = demoGet(), ch = false; dd.orders.forEach(function (o) { if (o.status === "new" && o.seen_at && Date.now() - new Date(o.seen_at) > 120000) { o.status = "progress"; o.history.push({ s: "progress", at: new Date().toISOString(), auto: true }); ch = true; } }); if (ch) demoSave(dd); return dd.orders.map(function (o) { return JSON.parse(JSON.stringify(o)); }); }
-    var rr = await Promise.all([sb.from("orders").select("*,order_items(product_id,name,price,qty,thumb,note)").order("created_at", { ascending: false }).limit(300),
+    var rr = await Promise.all([sb.from("orders").select("*,order_items(product_id,name,price,qty,thumb,note)").order("created_at", { ascending: false }).limit(1000),
       sb.from("order_private").select("order_id,ganji").limit(1000)]);
     var r = rr[0], g = {}; if (r.error) throw r.error;
     W.ganjiOff = !!rr[1].error; (rr[1].data || []).forEach(function (x) { g[x.order_id] = x.ganji; });   // owners only (RLS); assistants get none
