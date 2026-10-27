@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="sw">
-<head>
-<meta name="robots" content="noindex">
+<head><meta name="robots" content="noindex">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Niagize Kariakoo</title>
@@ -29,7 +28,7 @@ header.shop .bar{display:flex;align-items:center;gap:6px;position:relative;z-ind
 header.shop .mark{flex:1;min-width:0;white-space:nowrap;overflow:visible}
 header.shop .mark .t{font-size:18px;min-width:0;overflow:hidden;text-overflow:ellipsis}
 header.shop .mark{position:relative}
-header.shop .betapill{position:absolute;left:18px;top:-5px;width:16px;height:16px;padding:0;display:grid;place-items:center;font-size:9.5px;margin:0;box-shadow:0 0 0 2px var(--navy)}
+header.shop .betapill{position:absolute;left:22px;top:-2px;margin:0;box-shadow:0 0 0 2px var(--navy)}
 header.shop .tag{color:var(--on-navy-dim);font-size:12.5px;margin-top:6px;position:relative;z-index:1}
 .sticky{position:sticky;top:0;z-index:15;background:var(--paper);padding:10px var(--gr) 6px var(--gl);display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
 .sbox{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--ink);border-radius:999px;padding:0 6px 0 14px;height:42px;transition:height .15s}
@@ -468,7 +467,7 @@ function vCart(){
   return h;
 }
 /* the total is plain text: the price only changes on the seller's side after agreeing on WhatsApp */
-function totalLine(s){return '<div class="sumline"><span>'+esc(t("cart_total"))+'</span><b>TSh '+W.money(s)+'</b></div><div class="hint" style="margin-top:-8px">+ '+esc(t("delivery"))+': '+esc(t("fee_tbd"))+'</div>';}
+function totalLine(s){return '<div class="sumline"><span>'+esc(t("cart_total"))+'</span><b>TSh '+W.money(s)+'</b></div><div class="hint" style="margin-top:-8px">'+esc(t("fee_tbd"))+'</div>';}
 function deliveryBlock(){
   return '<div class="stack" style="gap:8px"><div class="eyebrow">'+esc(t("delivery"))+'</div><div class="seg2">'+["leo","fasta"].map(function(d){
     return '<label class="radio" data-on="'+(S.delivery===d)+'"><input type="radio" name="dl" value="'+d+'"'+(S.delivery===d?" checked":"")+' data-act="dl"><span class="rt">'+esc(t("del_"+d))+'</span></label>';}).join("")+'</div></div>';

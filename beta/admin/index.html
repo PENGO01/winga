@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="sw">
-<head>
-<meta name="robots" content="noindex">
+<head><meta name="robots" content="noindex">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Niagize</title>
@@ -34,6 +33,8 @@ main{padding:0 var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px
 .period button{border:0;background:transparent;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--dim)}
 .period button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi.profit{grid-column:1/-1;background:var(--green-soft);border-color:transparent}.kpi.profit .v{color:var(--green)}
+.ganji{background:var(--green-soft);border-color:transparent}
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;text-align:left;color:var(--ink)}
 .kpi .l{font-size:12.5px;color:var(--dim);display:flex;align-items:center;gap:6px}
 .kpi .l .fi{width:26px;height:26px}.kpi .l .fi svg{width:14px;height:14px}
@@ -400,7 +401,8 @@ function vHome(){
     var pn=d.p_new!=null?d.p_new:d.new,pp=d.pending||0,pd=d.done||0;
     h+='<section class="kpis">'+
      kpi(IC.money,t("d_sales"),'TSh '+W.money(d.sales),d.rating?'★ '+d.rating+' · '+esc(t("d_rating").toLowerCase()):'',null,"sales")+
-     kpi(IC.users,t("d_visitors"),d.visitors,esc(t("d_views_s",{n:d.views})))+'</section>';
+     kpi(IC.users,t("d_visitors"),d.visitors,esc(t("d_views_s",{n:d.views})))+
+     (owner()?(function(){var gs=ganjiSum(S.days||1);return kpi(IC.money,t("d_ganji"),'TSh '+W.money(gs.sum),esc(t("d_ganji_s",{n:gs.n})),null,"profit");})():'')+'</section>';
     /* orders: one total in the middle, the three states beside it (no double counting) */
     h+='<button class="ocard" data-act="goOrders"><span class="top"><span class="fi">'+IC.inbox+'</span>'+esc(t("d_orders"))+'</span><span class="mid"><span class="big">'+(pn+pp+pd)+'</span><span class="rows">'+
      [[pn,"d_new","var(--blue)"],[pp,"d_pending","var(--amber)"],[pd,"d_done","var(--green)"]].map(function(r){return '<span class="rw"><i style="background:'+r[2]+'"></i><b>'+r[0]+'</b>'+esc(t(r[1]))+'</span>';}).join("")+
@@ -459,7 +461,7 @@ function vProducts(){
   var h='<div class="ph"><h1>'+esc(t("list_title"))+'</h1><span class="muted small num">'+list.length+'</span></div>'+
    '<div class="tools"><div class="chips">'+[["all",t("all")],["archived",t("f_archive")]].map(function(f){return '<button class="chip" data-act="filter" data-f="'+f[0]+'" aria-pressed="'+(S.filter===f[0])+'">'+esc(f[1])+'</button>';}).join("")+
     (S.cat?'<button class="chip" data-act="clearCat" aria-pressed="true">'+esc(W.catLabel(S.cat))+IC.x+'</button>':'')+
-   '</div><button class="icon-btn" data-act="cats" aria-label="Filter">'+IC.filter+(S.cat?'<span class="dot"></span>':'')+'</button></div>'+
+   '</div>'+(owner()?'<button class="icon-btn" data-act="cattax" aria-label="'+esc(t("tax_title"))+'" title="'+esc(t("tax_title"))+'">'+IC.tag+'</button>':'')+'<button class="icon-btn" data-act="cats" aria-label="Filter">'+IC.filter+(S.cat?'<span class="dot"></span>':'')+'</button></div>'+
    '<label class="ifield">'+IC.search+'<input id="aq" type="search" placeholder="'+esc(t("searchPh"))+'" value="'+esc(S.q)+'" autocomplete="off"></label>';
   if(S.filter==="archived")h+='<div class="hint">'+esc(t("archive_hint"))+'</div>';
   if(!list.length)return h+'<div class="empty">'+esc(t("noProducts"))+'</div>';
@@ -623,6 +625,7 @@ PAGES.order=function(){
    (o.agreed_total!=null?'<div class="row between small muted"><span>'+esc(t("total_orig"))+'</span><s class="num">TSh '+W.money((o.subtotal||0)+(o.delivery_fee||0))+'</s></div>':'')+
    '<div class="total"><span>'+esc(t("cart_total"))+'</span><span class="row" style="gap:8px"><b>TSh '+W.money(W.total(o))+'</b>'+(closed||st==="paid"?'':'<button class="fi sm" data-act="editTotal" aria-label="'+esc(t("total_edit"))+'">'+IC.pen+'</button>')+'</span></div>'+
    '<div class="ferr" id="o_err" role="alert"></div></div>';
+  if(owner()&&st!=="cancelled")h+=ganjiCard(o);
   if(o.claim_ref&&st==="invoiced")h+=claimHtml(o);
   if(o.rating)h+='<div class="ratebox"><span class="st">'+"★★★★★".slice(0,o.rating)+'</span><span class="grow">'+esc(t("by_customer"))+(o.rating_note?' · “'+esc(o.rating_note)+'”':'')+'</span></div>';
   if(o.pay_ref||o.pay_name)h+='<div class="paybox" style="display:flex;gap:10px;background:var(--green-soft);border-radius:12px;padding:10px 12px"><span class="fi sm" style="background:transparent;color:var(--green)">'+IC.money+'</span><span><b class="num">'+esc(o.pay_ref||"")+'</b><br><span class="small">'+esc(o.pay_name||"")+'</span></span></div>';
@@ -675,7 +678,14 @@ async function openOrder(code){
     try{await W.db.orders();var r2=await W.db.getOrder(O.o.code);if(O&&O.o&&r2&&r2.status!==O.o.status){keepFee();O.o=r2;draw(false);syncList(r2);}}catch(e){}
   },20000);
 }
-function keepFee(){var f=$("#o_fee");if(f&&O)O.fee=f.value;var c=$("#c_reason");if(c&&O)O.reason=c.value;}
+/* v2.10 Ganji: the winga's own top-up / service amount on an order = the real gain. Owners only, never shown to customers. */
+function ganjiOf(o){if(!o)return null;if(o.ganji!=null)return o.ganji;var x=(S.orders||[]).find(function(y){return y.code===o.code;});return x&&x.ganji!=null?x.ganji:null;}
+function ganjiCard(o){var g=ganjiOf(o),v=O.ganji!=null?O.ganji:g!=null?W.money(g):"";
+  return '<div class="card stack ganji" style="gap:8px"><div class="feerow" id="w_o_ganji"><span class="fi sm">'+IC.money+'</span><span class="grow"><span class="small muted">'+esc(t("gj"))+' · '+esc(t("gj_s"))+'</span><input id="o_ganji" class="num money" inputmode="numeric" placeholder="'+esc(t("gj_ph"))+'" value="'+esc(v)+'"></span><button class="fi sm jua" data-act="saveGanji" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div>'+
+   (W.ganjiOff?'<div class="hint">'+esc(t("gj_off"))+'</div>':'')+'<div class="ferr" id="g_err" role="alert"></div></div>';}
+function ganjiSum(days){var from=new Date();from.setHours(0,0,0,0);from=from.getTime()-(days-1)*864e5;var n=0,sum=0;
+  (S.orders||[]).forEach(function(o){if(o.status==="cancelled"||o.ganji==null||new Date(o.created_at).getTime()<from)return;n++;sum+=o.ganji;});return {n:n,sum:sum};}
+function keepFee(){var g=$("#o_ganji");if(g&&O)O.ganji=g.value;var f=$("#o_fee");if(f&&O)O.fee=f.value;var c=$("#c_reason");if(c&&O)O.reason=c.value;}
 function syncList(r){var i=S.orders.findIndex(function(x){return x.code===r.code;});if(i>=0){["status","delivery_fee","agreed_total","seen_at","pay_ref","pay_name","cancel_reason","customer_name","claim_ref","claim_name","claim_channel","rating","history","updated_at"].forEach(function(k){S.orders[i][k]=r[k];});}render();}
 async function moveOrder(status,extra,msgKey){
   var o=O.o;extra=extra||{};keepFee();
@@ -741,7 +751,7 @@ PAGES.settings=function(){
      '<button type="button" class="fi sm red" data-act="rmPay" data-i="'+i+'" aria-label="'+esc(t("del"))+'">'+IC.trash+'</button>'+
      '<div class="two"><input class="num" data-pay="number" data-i="'+i+'" inputmode="numeric" placeholder="'+esc(t("pay_num"))+'" value="'+esc(p.number||"")+'"><input data-pay="name" data-i="'+i+'" placeholder="'+esc(t("pay_acc"))+'" value="'+esc(p.name||"")+'"></div></div>';
   }).join("");
-  return hd(t("shop_settings"))+'<div class="bd">'+
+  return hd(t("shop_settings"))+'<div class="bd">'+mrow("cattax",IC.tag,t("tax_title"),W.CATS.length+" · "+W.TAX.reduce(function(n,c){return n+c[4].length;},0))+
    '<div class="eyebrow">'+esc(t("wa_label"))+'</div>'+W.phoneField("s_wa",D.whatsapp,IC.wa)+
    '<div class="row between"><div class="eyebrow">'+esc(t("pay_title"))+'</div><button type="button" class="fi sm" data-act="addPay" aria-label="+">'+IC.plus+'</button></div>'+pays+
    '<div class="ferr" id="s_err" role="alert"></div></div><div class="ft"><button class="btn primary block" data-act="saveSettings" style="border-radius:999px">'+esc(t("save"))+'</button></div>';
@@ -791,7 +801,7 @@ PAGES.steps=function(){
 };
 PAGES.cats=function(){
   return hd("")+'<div class="bd"><div class="catpick"><button class="chip" data-act="setCat" data-cat="" aria-pressed="'+(!S.cat)+'">'+esc(t("all"))+'</button>'+
-   W.CATS.map(function(c){var n=S.products.filter(function(p){return p.category===c;}).length;return '<button class="chip" data-act="setCat" data-cat="'+c+'" aria-pressed="'+(S.cat===c)+'">'+esc(W.catLabel(c))+' <span class="num" style="opacity:.6">'+n+'</span></button>';}).join("")+'</div></div>';
+   W.CATS.map(function(c){var n=S.products.filter(function(p){return p.category===c;}).length;return '<button class="chip" data-act="setCat" data-cat="'+c+'" aria-pressed="'+(S.cat===c)+'">'+esc(W.catLabel(c))+' <span class="num" style="opacity:.6">'+n+'</span></button>';}).join("")+'</div>'+(owner()?mrow("cattax",IC.tag,t("tax_edit"),t("tax_s")):'')+'</div>';
 };
 PAGES.share=function(){
   var u=W.shopUrl();
@@ -866,6 +876,8 @@ document.addEventListener("click",async function(e){
     case "cropZ":zoomTo(CR.z*(+el.dataset.d),{cx:CR.x,cy:CR.y,z:CR.z});paint();break;
     case "cropOk":var cf;try{cf=await cropFile();}catch(x){console.error(x);W.toast(t("error"));break;}W.prep(cf).catch(function(){});if(A)A.photos[CR.i]=cf;else E.items[CR.i]={f:cf};CR=null;back();break;
     case "openOrder":await openOrder(el.dataset.code);break;
+    case "saveGanji":var gv=($("#o_ganji")||{}).value||"",gn=String(gv).trim()===""?0:W.parseMoney(gv);if(/[^\d,.\s]/.test(gv)||!(gn>=0)||isNaN(gn))return bad("g_err","w_o_ganji",t("min_money"));
+      try{await W.db.setGanji(O.o.code,gn);}catch(e){console.error(e);draw(false);return bad("g_err","w_o_ganji",t("gj_off"));}O.o.ganji=gn;O.ganji=null;var so=(S.orders||[]).find(function(y){return y.code===O.o.code;});if(so)so.ganji=gn;W.toast(t("gj_saved"));draw(false);break;
     case "savePhone":var ph=W.phoneVal("o_phone");if(!W.phoneOk(ph))return bad("o_err","w_o_phone",W.phoneErr("o_phone"));keepFee();O.phone=ph;O.o=await W.db.setOrder(O.o.code,O.o.status,{phone:ph});syncList(O.o);W.toast(t("saved"));draw(false);break;
     case "nextStep":
       var st=O.o.status,nx=NEXT[st];keepFee();
@@ -935,7 +947,7 @@ document.addEventListener("click",async function(e){
   }}catch(err){console.error(err);W.toast(t(err&&err.message==="exists"?"team_exists":"error"));}
   finally{if(slow)W.busy(el,false);}
 });
-var SLOW={nextStep:1,confirmPaid:1,cancelSend:1,savePhone:1,saveTotal:1,clearTotal:1,saveName:1,saveEdit:1,addDone:1,addMore:1,yesDel:1,saveSettings:1,addMember:1,savePin:1,saveReset:1,pushOn:1,pushTest:1,still:1,archiveP:1,unarchive:1,signout:1};
+var SLOW={saveGanji:1,nextStep:1,confirmPaid:1,cancelSend:1,savePhone:1,saveTotal:1,clearTotal:1,saveName:1,saveEdit:1,addDone:1,addMore:1,yesDel:1,saveSettings:1,addMember:1,savePin:1,saveReset:1,pushOn:1,pushTest:1,still:1,archiveP:1,unarchive:1,signout:1};
 async function saveEdit(){
   if(!validProduct(E,E.items.length))return;
   var p=E.p,patch=productData(E);
