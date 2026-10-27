@@ -1,3 +1,5 @@
+html{touch-action:manipulation}
+html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
 /* Niagize Kariakoo shared look (v2.1): the striped sun.
    Market Ink shell, Market Gold for actions, Ocean Cyan for "you are here", Warm Sand light body.
    Light, dark, or follow the device (data-theme on <html>).
@@ -211,13 +213,13 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 .ost.new{background:var(--blue-soft);color:var(--blue)} .ost.progress,.ost.invoiced{background:var(--amber-soft);color:var(--amber)}
 .ost.paid{background:var(--green-soft);color:var(--green)} .ost.done{background:var(--sunk);color:var(--green)} .ost.cancelled{background:var(--red-soft);color:var(--red)}
 .timeline{display:flex;flex-direction:column;gap:0;padding-left:4px}
-.timeline .st{display:flex;gap:12px;align-items:flex-start;position:relative;padding-bottom:14px}
+.timeline .st{display:flex;gap:12px;align-items:flex-start;position:relative;min-height:48px;padding-bottom:0}
 .timeline .st::before{content:"";position:absolute;left:7px;top:16px;bottom:0;width:2px;background:var(--line)}
 .timeline .st:last-child::before{display:none}
 .timeline .dot{width:16px;height:16px;border-radius:50%;background:var(--line);flex:none;margin-top:2px;position:relative;z-index:1}
 .timeline .st.on .dot{background:var(--green)}
 .timeline .st.cur .dot{background:var(--jua);box-shadow:0 0 0 4px rgba(255,198,45,.28)}
-.timeline .st .tt{font-weight:600;font-size:14px}.timeline .st .ss{font-size:12px;color:var(--dim)}
+.timeline .st .tt{font-weight:600;font-size:14px;line-height:20px}.timeline .st .ss{font-size:12px;color:var(--dim);line-height:16px;min-height:16px}
 .timeline .st:not(.on):not(.cur) .tt{color:var(--faint)}
 
 /* ---------- v2.1: striped sun ---------- */
@@ -227,7 +229,10 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 .splash .big{width:150px;height:150px;margin-bottom:14px}
 .splash .sw{font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:-.03em;line-height:1}
 .splash .sk{font-size:13.5px;letter-spacing:.32em;text-transform:uppercase;color:#FFC62D;font-weight:500}
-.splash .sload{margin-top:22px}.splash .sload .sunload{width:28px;height:28px}
+.splash .sload{display:none}
+.splash .big rect{animation:stripe 1.2s ease-in-out infinite}.splash .big rect:nth-child(1){animation-delay:.5s}.splash .big rect:nth-child(2){animation-delay:.4s}.splash .big rect:nth-child(3){animation-delay:.3s}.splash .big rect:nth-child(4){animation-delay:.2s}.splash .big rect:nth-child(5){animation-delay:.1s}
+@media (prefers-reduced-motion:reduce){.splash .big rect{animation:none}}
+.bigload{display:grid;place-items:center;min-height:min(55vh,420px)}.bigload .sunload{width:72px;height:72px}
 .splash .stag{position:absolute;bottom:calc(40px + env(safe-area-inset-bottom,0px));font-size:13px;color:#8A8A8A;text-align:center;padding:0 24px}
 /* soft separator between sections */
 .sep{height:1px;border:0;margin:4px 0;background:linear-gradient(90deg,transparent,var(--line) 15%,var(--line) 85%,transparent)}

@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.13.0";
+W.VERSION = "2.14.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -87,6 +87,7 @@ W.STRINGS = [
  ["spec_title","Product","Maelekezo (Specs)","Specifications"],
  ["spec_ph","Product","Spec (Maelekezo): rangi au saizi","Spec: colour or size"],
  ["how_title","How to order","Namna ya kuagiza bidhaa","How to order"],
+ ["how_short","Me","Namna ya kuagiza","How to order"],
  ["how1","How to order","Chagua bidhaa upendayo","Pick what you like"],
  ["how2","How to order","Tuma oda","Send the order"],
  ["how3","How to order","Tutahakiki oda yako","We confirm your order"],
@@ -99,15 +100,28 @@ W.STRINGS = [
  ["delivery","Basket","Delivery","Delivery"],
  ["del_fasta","Basket","Inaharaka","Urgent"],
  ["del_leo","Basket","Utumwe Leo","Send today"],
- ["fee_tbd","Basket","Tutakutaarifu kuhusu gharama za delivery","We'll tell you the delivery cost"],
+ ["fee_tbd","Basket","Tutakutaarifu gharama za delivery kabla ya kulipa","We'll tell you the delivery cost before you pay"],
  ["deliver_to","Basket","Anwani ya kupokea","Delivery address"],
  ["add_addr","Basket","Ongeza anwani","Add address"],
- ["wa_hello","Basket (WhatsApp)","Habari! Napata mzigo huu?","Hello! Can I get these?"],
+ ["wa_hello","Basket (WhatsApp)","Mambo vipi ✌🏾\nNapata mzigo huu?","Hi ✌🏾\nCan I get these?"],
+ ["cancel","Common","Acha","Cancel"],
+ ["wa_photo","Basket (WhatsApp)","Mambo vipi ✌🏾\nNatafuta mzigo huu 👇 (picha kwenye oda)","Hi ✌🏾\nI'm looking for this 👇 (photo in the order)"],
+ ["card_dl","Card","Hifadhi","Save"],
+ ["del_pop_s","Order","Tunafunga mzigo wa oda {code}. Taarifa za delivery (nani analeta, lini) zitakufikia hivi punde kwenye WhatsApp.","We're packing order {code}. Delivery details (who brings it, when) will reach you shortly on WhatsApp."],
+ ["del_pop_t","Order","Malipo yamepokelewa ✓","Payment received ✓"],
+ ["del_soon","Order","Taarifa za delivery zitakufikia hivi punde","Delivery details are coming shortly"],
+ ["stamp_s","Order","Oda {code} imekamilika · TSh {x}","Order {code} completed · TSh {x}"],
+ ["stamp_t","Order","IMETHIBITISHWA ✓","VERIFIED ✓"],
+ ["ping_toast","Order","Oda {code}: {st}","Order {code}: {st}"],
+ ["loc_no","Basket","Imeshindikana kupata mahali. Ruhusu Location au andika","Couldn't get your location. Allow Location or type it"],
+ ["loc_ok","Basket","Mahali pamewekwa 📍","Location added 📍"],
+ ["use_loc","Basket","Tumia mahali nilipo","Use my location"],
+ ["shop_now","Shop","Anza kununua","Start shopping"],
  ["wa_items","Basket (WhatsApp)","Oda {code} · bidhaa {n}","Order {code} · {n} items"],
- ["wa_ask","Product (WhatsApp)","Habari! Naulizia hii:","Hello! I'm asking about this:"],
+ ["wa_ask","Product (WhatsApp)","Mambo vipi ✌🏾\nNaulizia hii:","Hi ✌🏾\nI'm asking about this:"],
  ["wa_one","Product share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
  ["wa_total","Basket (WhatsApp)","Jumla: TSh {x}","Total: TSh {x}"],
- ["wa_del","Basket (WhatsApp)","Delivery: {d} · {fee}","Delivery: {d} · {fee}"],
+ ["wa_del","Basket (WhatsApp)","Delivery: {d}","Delivery: {d}"],
  ["order_sent","Order","Oda imetumwa","Order sent"],
  ["order_sent_s","Order","Unaweza kufuatilia hapa, status ya oda yako","You can follow your order status here"],
  ["guest_hint","Order","Jisajili uone historia na kuagiza tena","Sign up to see your history and reorder"],
@@ -133,15 +147,15 @@ W.STRINGS = [
  ["claim_send","Order","Tuma kwa muuzaji","Send to seller"],
  ["claim_sent","Order","Imetumwa · Inasubiri uthibitisho","Sent · Waiting for confirmation"],
  ["claim_ok","Order","Malipo yamethibitishwa","Payment confirmed"],
- ["claim_wa","Order","Habari! Nimelipia oda {code}.\nKupitia: {ch}\nMuamala: {ref}\nJina: {name}\n\n{link}","Hello! I paid for order {code}.\nVia: {ch}\nTransaction: {ref}\nName: {name}\n\n{link}"],
+ ["claim_wa","Order","Mambo vipi ✌🏾\nNimelipia oda {code}.\n\nKupitia: {ch}\nMuamala: {ref}\nJina: {name}\n\n{link}","Hi ✌🏾\nI paid for order {code}.\n\nVia: {ch}\nTransaction: {ref}\nName: {name}\n\n{link}"],
  ["received","Order","Nimepokea","I've received it"],
  ["rate_title","Order","Umeridhika na huduma?","How was the service?"],
  ["rate_note","Order","Maoni (si lazima)","Comment (optional)"],
  ["rate_send","Order","Funga oda","Close the order"],
  ["rate_thanks","Order","Asante! Oda imefungwa","Thank you! Order closed"],
  ["rate_your","Order","Umetoa nyota {n}","You gave {n} stars"],
- ["chat_order","Order","Habari! Kuhusu oda {code}:","Hello! About order {code}:"],
- ["chat_status","Order","Habari! Naulizia status ya oda yangu: {code}\n{link}","Hello! I'm asking about the status of my order: {code}\n{link}"],
+ ["chat_order","Order","Mambo vipi ✌🏾, naulizia status ya oda yangu, {code}: TZS {x}","Hi ✌🏾, I'm asking about the status of my order, {code}: TZS {x}"],
+ ["chat_status","Order","Mambo vipi ✌🏾, naulizia status ya oda yangu, {code}: TZS {x}\n{link}","Hi ✌🏾, I'm asking about the status of my order, {code}: TZS {x}\n{link}"],
  ["g_wa","Basket","Namba yako ya WhatsApp","Your WhatsApp number"],
  ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
  ["g_hint","Basket","Invoice na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
@@ -158,7 +172,7 @@ W.STRINGS = [
  ["po_note","Shop","Eleza: saizi, rangi, idadi…","Describe: size, colour, how many…"],
  ["po_need","Shop","Weka picha kwanza","Add a photo first"],
  ["po_soon","Shop","Agiza kwa picha itaanza hivi karibuni. Mwandikie muuzaji kwenye WhatsApp","Ordering by photo starts soon. Message the seller on WhatsApp"],
- ["fab_msg","Shop","Habari! Nina swali kuhusu bidhaa za Niagize Kariakoo","Hello! I have a question about Niagize Kariakoo products"],
+ ["fab_msg","Shop","Mambo vipi ✌🏾\nNina swali kuhusu bidhaa za Niagize Kariakoo","Hi ✌🏾\nI have a question about Niagize Kariakoo products"],
  ["fab_l","Shop","Ongea nasi WhatsApp","Chat with us on WhatsApp"],
  ["wait","Common","Subiri kidogo…","One moment…"],
  ["tax_title","Boss · Categories","Product Categories","Product Categories"],
@@ -176,8 +190,8 @@ W.STRINGS = [
  ["vip_title","Boss · Customers","Wateja bora 25","Top 25 customers"],
  ["vip_s","Boss · Customers","Wanaokamilisha oda nyingi zaidi. Wape punguzo au zawadi ili warudi tena.","Those with the most completed orders. Give them a discount or a gift so they come back."],
  ["vip_card","Boss · Customers","Wateja wa kudumu","Loyal customers"],
- ["vip_card_s","Boss · Customers","{n} wamerudi kununua · wanunuzi {m}","{n} came back · {m} buyers"],
- ["vip_buyers","Boss · Customers","wanunuzi","buyers"],
+ ["vip_card_s","Boss · Customers","{n} wamerudi kununua · Idadi {m}","{n} came back · {m} in total"],
+ ["vip_buyers","Boss · Customers","Idadi","Count"],
  ["vip_rep","Boss · Customers","wamerudi","came back"],
  ["vip_rate","Boss · Customers","wanarudi","return rate"],
  ["vip_f_all","Boss · Customers","Wote","All"],
@@ -186,7 +200,7 @@ W.STRINGS = [
  ["vip_empty","Boss · Customers","Bado hakuna oda zilizokamilika","No completed orders yet"],
  ["vip_send","Boss · Customers","Mtumie zawadi WhatsApp","Send a perk on WhatsApp"],
  ["vip_badge","Boss · Customers","Mara {n}","{n}× buyer"],
- ["vip_msg","Boss · Customers","Habari {name}! 🎁 Asante kwa kununua nasi mara {n} {shop}. Kama shukrani, oda yako ijayo ina punguzo maalum. Tuambie unachotaka leo!","Hi {name}! 🎁 Thank you for buying from {shop} {n} times. As a thank-you, your next order gets a special discount. Tell us what you need today!"],
+ ["vip_msg","Boss · Customers","Mambo vipi {name} ✌🏾\n\n🎁 Asante kwa kununua nasi mara {n} {shop}. Kama shukrani, oda yako ijayo ina punguzo maalum.\n\nTuambie unachotaka leo!","Hi {name} ✌🏾\n\n🎁 Thank you for buying from {shop} {n} times. As a thank-you, your next order gets a special discount.\n\nTell us what you need today!"],
  ["tier_gold","Boss · Customers","Dhahabu","Gold"],
  ["tier_silver","Boss · Customers","Fedha","Silver"],
  ["tier_bronze","Boss · Customers","Shaba","Bronze"],
@@ -245,7 +259,7 @@ W.STRINGS = [
  ["have_acc","Me","Tayari nina akaunti","I already have an account"],
  ["no_acc","Me","Huna akaunti? Jisajili","No account? Sign up"],
  ["forgot","Me","Umesahau neno la siri?","Forgot password?"],
- ["forgot_msg","Me","Habari! Nimesahau neno la siri la Niagize. Username: @{u}. Naomba msaada.","Hello! I forgot my Niagize password. Username: @{u}. Please help."],
+ ["forgot_msg","Me","Mambo vipi ✌🏾\nNimesahau neno la siri la Niagize. Username: @{u}. Naomba msaada.","Hi ✌🏾\nI forgot my Niagize password. Username: @{u}. Please help."],
  ["err_taken","Me","Username hii imeshachukuliwa","That username is taken"],
  ["err_dup","Me","Tayari una akaunti kwa namba hii","You already have an account with this number"],
  ["err_wrong","Me","Taarifa si sahihi. Majaribio {n} yamebaki","Wrong details. {n} tries left"],
@@ -269,7 +283,7 @@ W.STRINGS = [
  ["help_title","Me · Help","Kituo cha msaada","Help centre"],
  ["help_wa","Me · Help","Ongea nasi kwenye WhatsApp","Chat with us on WhatsApp"],
  ["help_wa_s","Me · Help","Tunajibu haraka","We reply fast"],
- ["help_msg","Me · Help","Habari! Naomba msaada kuhusu:","Hello! I need help with:"],
+ ["help_msg","Me · Help","Mambo vipi ✌🏾\nNaomba msaada kuhusu:","Hi ✌🏾\nI need help with:"],
  ["help_form","Me · Help","Tuandikie","Write to us"],
  ["help_soon","Me · Help","Inakuja hivi karibuni","Coming soon"],
  ["help_subject","Me · Help","Kichwa","Subject"],
@@ -361,19 +375,19 @@ W.STRINGS = [
  ["card_thx","Card","ASANTE","THANK YOU"],
  ["card_thx_t","Card","Asante, {name}.","Thank you, {name}."],
  ["card_thx_p1","Card","Oda yako {code} imekamilika. Tunashukuru kwa kununua Kariakoo kupitia kwetu.","Your order {code} is complete. Thank you for shopping Kariakoo with us."],
- ["card_thx_p2","Card","Ukihitaji chochote, tuko ujumbe mmoja tu.","If you ever need anything, we are one message away."],
+ ["card_thx_p2","Card","Tuko hapa na wewe, tucheki chap!","We're right here with you, just ping us!"],
  ["card_recv","Card","IMEPOKELEWA {date}","RECEIVED {date}"],
  ["card_inv_btn","Card","Invoice (picha)","Invoice image"],
  ["card_thx_btn","Card","Kadi ya asante","Thank-you card"],
  ["card_saved","Card","Picha imehifadhiwa","Image saved"],
  ["step0","Boss · Discover","Weka app kwenye simu","Save the app on your phone"],
- ["step0s","Boss · Discover","Pata oda na arifa papo hapo","Get orders and alerts instantly"],
+ ["step0s","Boss · Discover","Pata oda na notification papo hapo","Get orders and notifications instantly"],
  ["step0b","Boss · Discover","Nionyeshe","Show me"],
  ["binst_1","Boss · Discover","Fungua Boss app kwenye Safari (iPhone) au Chrome (Android)","Open the Boss app in Safari (iPhone) or Chrome (Android)"],
  ["binst_2","Boss · Discover","iPhone: bonyeza Share (□↑) chini. Android: bonyeza dot tatu (⋮) juu kulia","iPhone: tap Share (□↑) at the bottom. Android: tap the three dots (⋮) top right"],
  ["binst_3","Boss · Discover","Shuka chini, chagua \"Add to Home Screen\"","Scroll down, choose \"Add to Home Screen\""],
  ["binst_4","Boss · Discover","Jina: Niagize, bonyeza Add","Name: Niagize, tap Add"],
- ["binst_5","Boss · Discover","Fungua kwa icon mpya, kisha washa Arifa","Open it from the new icon, then switch on Alerts"],
+ ["binst_5","Boss · Discover","Fungua kwa icon mpya, kisha washa Notification","Open it from the new icon, then switch on Notifications"],
  ["step1","Boss · Discover","Weka namba ya WhatsApp","Add your WhatsApp number"],
  ["step1s","Boss · Discover","Oda za wateja zinakuja hapa","Customer orders arrive here"],
  ["step2","Boss · Discover","Weka bidhaa 3","Add 3 products"],
@@ -414,8 +428,33 @@ W.STRINGS = [
  ["fee_name","Boss · Orders","Gharama ya delivery","Delivery fee"],
  ["total_edit","Boss · Orders","Badili jumla","Edit total"],
  ["total_new","Boss · Orders","Jumla mpya baada ya maelewano","New agreed total"],
+ ["new_tag_o","Boss · Orders","MPYA","NEW"],
+ ["st_ship","Boss · Orders","Mzigo uko njiani","On the way"],
+ ["ship_msg","Boss · Orders","Mambo vipi{name} ✌🏾\n🚚 Mzigo wa oda {code} uko njiani.\n{note}\n\nFuatilia hapa: {link}","Hi{name} ✌🏾\n🚚 Your order {code} is on the way.\n{note}\n\nTrack it here: {link}"],
+ ["ship_need","Boss · Orders","Andika nani analeta au lini","Write who brings it or when"],
+ ["ship_send","Boss · Orders","Tuma kwa mteja","Send to the customer"],
+ ["ship_when","Boss · Orders","Lini? (mf. Leo saa 10 jioni)","When? (e.g. today at 4 pm)"],
+ ["ship_who","Boss · Orders","Nani analeta? (mf. Juma boda · 0754 111 222)","Who brings it? (e.g. Juma, boda · 0754 111 222)"],
+ ["ship_s","Boss · Orders","Mteja ataona taarifa hizi kwenye oda yake na kwenye WhatsApp","The customer sees this on their order and on WhatsApp"],
+ ["ship_btn","Boss · Orders","Tuma taarifa za delivery","Send delivery details"],
+ ["remind_msg","Boss · Orders","Mambo vipi{name} ✌🏾\nTunakumbusha malipo ya oda {code}: TSh {x}.\n\nUkishalipa, weka namba ya muamala na jina kwenye oda yako hapa:\n{link}","Hi{name} ✌🏾\nA reminder about payment for order {code}: TSh {x}.\n\nOnce paid, add the transaction number and name on your order here:\n{link}"],
+ ["remind_pay","Boss · Orders","Mkumbushe","Remind"],
+ ["wait_claim","Boss · Orders","Inasubiri mteja atume taarifa za malipo","Waiting for the customer's payment details"],
+ ["gj_total","Boss · Orders","Ganji ya oda","Order Ganji"],
+ ["po_desc","Boss · Orders","Maelezo ya mteja","Customer's description"],
+ ["rider_msg","Boss · Orders","📦 Mzigo {code} · {del}\nMteja: {name} {phone}\n📍 {line}\nRamani: {map}\n\nBidhaa:\n{items}","📦 Parcel {code} · {del}\nCustomer: {name} {phone}\n📍 {line}\nMap: {map}\n\nItems:\n{items}"],
+ ["share_rider","Boss · Orders","Tuma kwa msafirishaji","Send to the delivery rider"],
+ ["need_v214","Boss · Orders","Inahitaji DB update v2.14 (Mipangilio ya database)","Needs the v2.14 database update"],
+ ["addr_set_ph","Boss · Orders","Mahali pa delivery (mf. Sinza Mori, karibu na sheli)","Delivery place (e.g. Sinza Mori, near the petrol station)"],
+ ["addr_need","Boss · Orders","Weka mahali pa delivery kwanza","Add the delivery place first"],
+ ["reopened","Boss · Orders","Oda imerudishwa: unaweza kubadili bei, kisha tuma invoice tena","Order reopened: change prices, then send the invoice again"],
+ ["a_reopen","Boss · Orders","Rudisha oda (fungua upya)","Reopen the order"],
+ ["locked","Boss · Orders","Bei imefungwa baada ya invoice. Gusa ↺ kurudisha oda kama unahitaji kubadili.","Prices are locked after the invoice. Tap ↺ to reopen the order if you must change them."],
+ ["fee_min","Boss · Orders","Weka 0 (bure) au kuanzia TSh 500","Enter 0 (free) or from TSh 500"],
+ ["fee_free","Boss · Orders","Bure","Free"],
+ ["fee_ph","Boss · Orders","mf. 5,000 · au gusa Bure","e.g. 5,000 · or tap Free"],
  ["total_new_ph","Boss · Orders","mf. 120,000","e.g. 120,000"],
- ["urg_leo","Boss · Orders","Mteja anataka leo: panga mzigo mapema","Customer wants it today: plan the parcel early"],
+ ["urg_leo","Boss · Orders","Mteja anataka mzigo leo","The customer wants it today"],
  ["urg_fasta","Boss · Orders","Haraka sana: anza na oda hii","Very urgent: start with this order"],
  ["total_orig","Boss · Orders","Bei ya awali","Original price"],
  ["total_reset","Boss · Orders","Rudisha bei ya awali","Back to original price"],
@@ -424,12 +463,12 @@ W.STRINGS = [
  ["reason","Boss · Orders","Sababu","Reason"],
  ["reason_ph","Boss · Orders","Weka sababu ya kusitisha","Why is it cancelled?"],
  ["need_phone","Boss · Orders","Weka namba ya mteja kwanza","Add the customer's number first"],
- ["inv_hi","Boss · Orders (WhatsApp)","{name}! Tafadhali fanya malipo ya Oda yako {code}.","{name}! Please pay for your order {code}."],
+ ["inv_hi","Boss · Orders (WhatsApp)","Mambo vipi{name} ✌🏾\nTafadhali fanya malipo ya oda yako {code}.","Hi{name} ✌🏾\nPlease pay for your order {code}."],
  ["inv_pay","Boss · Orders (WhatsApp)","Lipia kupitia:","Pay with:"],
- ["inv_after","Boss · Orders (WhatsApp)","Ukisha fanya malipo, tutumie namba ya muamala/risiti na Jina litakalokuja.","After paying, send us the transaction ID/receipt and the name that shows."],
+ ["inv_after","Boss · Orders (WhatsApp)","Ukisha fanya malipo, tutumie namba ya muamala/risiti na Jina litakalokuja kwenye Niagize Kariakoo App yako.","After paying, send us the transaction ID/receipt and the name that shows, in your Niagize Kariakoo app."],
  ["inv_track","Boss · Orders (WhatsApp)","Unaweza kuendelea kufuatilia oda yako hapa:","You can keep tracking your order here:"],
  ["msg_progress","Boss · Orders (WhatsApp)","Tumepokea oda {code}. Tunaishughulikia sasa hivi.","We got order {code}. Working on it now."],
- ["msg_paid","Boss · Orders (WhatsApp)","Tumepokea malipo ya oda {code}. Asante! 🤝\n\nTunashughulikia na tutakutaarifu hivi punde!\n\nUnaweza kuendelea kufuatilia oda yako hapa: {link}","Payment received for order {code}. Thank you! 🤝\n\nWe're on it and will update you shortly!\n\nTrack your order here: {link}"],
+ ["msg_paid","Boss · Orders (WhatsApp)","Asante! 🤝🏿 Tumepokea malipo ya oda {code}.\n\nTunashughulikia na tutakutaarifu hivi punde!\n\nUnaweza kuendelea kufuatilia oda yako hapa: {link}","Thank you! 🤝🏿 Payment received for order {code}.\n\nWe're on it and will update you shortly!\n\nYou can keep tracking your order here: {link}"],
  ["msg_done","Boss · Orders (WhatsApp)","Oda {code} imekamilika.\n\nAsante kwa kutuamini na kuagiza nasi, Karibu tena.\n\n*Niagize Kariakoo!*\nNi chap na salama, mpaka mlangoni kwako.\n\nUnataka kuagiza kitu kingine?\n{shop}","Order {code} is complete.\n\nThank you for trusting us and ordering with us. Welcome back.\n\n*Niagize Kariakoo!*\nFast and safe, to your door.\n\nWant something else?\n{shop}"],
  ["msg_cancel","Boss · Orders (WhatsApp)","Rafiki, pole kwa changamoto! Oda {code}, imesitishwa. Sababu: {reason}.","Friend, sorry for the trouble! Order {code} has been cancelled. Reason: {reason}."],
  // boss: add / edit product
@@ -486,33 +525,33 @@ W.STRINGS = [
  ["team_exists","Boss · Assistants","Barua pepe hii tayari ina akaunti","This email already has an account"],
  ["team_confirm","Boss · Assistants","Ondoa {x}?","Remove {x}?"],
  ["team_share","Boss · Assistants","Tuma link ya kuingia","Send sign-in link"],
- ["team_share_msg","Boss · Assistants","Habari {name}!\nKaribu tufanye kazi, tumia taarifa zako hapo chini kuingia Niagize: {url}\nJina: {login}","Hello {name}!\nWelcome to the team. Use the details below to sign in to Niagize: {url}\nName: {login}"],
+ ["team_share_msg","Boss · Assistants","Mambo vipi {name} ✌🏾\nKaribu tufanye kazi, tumia taarifa zako hapo chini kuingia Niagize: {url}\nJina: {login}","Hello {name}!\nWelcome to the team. Use the details below to sign in to Niagize: {url}\nName: {login}"],
  ["team_reset","Boss · Assistants","Weka neno jipya la siri","Set a new password"],
  ["team_reset_s","Boss · Assistants","Kwa {x}. Mpe neno hili jipya","For {x}. Give them this new password"],
  ["team_reset_ok","Boss · Assistants","Neno jipya la siri limewekwa","New password set"],
  ["you","Boss · Assistants","Wewe","You"],
  // boss: order notifications
- ["push_title","Boss · Alerts","Arifa za oda","Order alerts"],
- ["push_s","Boss · Alerts","Oda mpya inakufikia papo hapo. Gusa arifa, oda inafunguka hapa.","New orders reach you at once. Tap the alert to open the order here."],
+ ["push_title","Boss · Alerts","Notification za oda","Order notifications"],
+ ["push_s","Boss · Alerts","Oda mpya inakufikia papo hapo. Gusa notification, oda inafunguka hapa.","New orders reach you at once. Tap the notification to open the order here."],
  ["push_on","Boss · Alerts","Zimewashwa","On"],
  ["push_off","Boss · Alerts","Zimezimwa","Off"],
- ["push_enable","Boss · Alerts","Washa arifa","Turn on alerts"],
- ["push_disable","Boss · Alerts","Zima arifa","Turn off alerts"],
- ["push_test","Boss · Alerts","Jaribu arifa","Send a test"],
- ["push_test_ok","Boss · Alerts","Arifa ya majaribio imetumwa","Test alert sent"],
- ["push_nudge","Boss · Alerts","Washa arifa za oda","Turn on order alerts"],
+ ["push_enable","Boss · Alerts","Washa notification","Turn on notifications"],
+ ["push_disable","Boss · Alerts","Zima notification","Turn off notifications"],
+ ["push_test","Boss · Alerts","Jaribu notification","Send a test"],
+ ["push_test_ok","Boss · Alerts","Notification ya majaribio imetumwa","Test notification sent"],
+ ["push_nudge","Boss · Alerts","Washa notification za oda","Turn on order notifications"],
  ["push_nudge_s","Boss · Alerts","Ujue oda mpya papo hapo, bila kusubiri WhatsApp","Know about new orders at once, without waiting for WhatsApp"],
- ["push_denied","Boss · Alerts","Umezuia arifa. Fungua Settings → Niagize → Notifications → Allow","Alerts are blocked. Open Settings → Niagize → Notifications → Allow"],
- ["push_unsupported","Boss · Alerts","Simu hii haiwezi kupokea arifa za Niagize","This phone can't receive Niagize alerts"],
- ["push_d_and","Boss · Alerts","Android: gusa 🔒 au ⓘ kwenye link juu → Ruhusa (Permissions) → Arifa → Ruhusu. Au Settings → Apps → Chrome → Notifications → On","Android: tap 🔒 or ⓘ by the address → Permissions → Notifications → Allow. Or Settings → Apps → Chrome → Notifications → On"],
+ ["push_denied","Boss · Alerts","Umezuia notification. Fungua Settings → Niagize → Notifications → Allow","Notifications are blocked. Open Settings → Niagize → Notifications → Allow"],
+ ["push_unsupported","Boss · Alerts","Simu hii haiwezi kupokea notification za Niagize","This phone can't receive Niagize notifications"],
+ ["push_d_and","Boss · Alerts","Android: gusa 🔒 au ⓘ kwenye link juu → Ruhusa (Permissions) → Notifications → Ruhusu. Au Settings → Apps → Chrome → Notifications → On","Android: tap 🔒 or ⓘ by the address → Permissions → Notifications → Allow. Or Settings → Apps → Chrome → Notifications → On"],
  ["push_d_ios","Boss · Alerts","iPhone: Settings → Notifications → Niagize → Allow Notifications","iPhone: Settings → Notifications → Niagize → Allow Notifications"],
- ["push_d_bat","Boss · Alerts","Simu nyingi za Android: Battery → Chrome → No restrictions, arifa zisizime simu ikilala","Many Android phones: Battery → Chrome → No restrictions, so alerts keep coming when the phone sleeps"],
- ["push_welcome","Boss · Alerts","Karibu kwenye app! Washa arifa: oda mpya zikufikie papo hapo","Welcome to the app! Switch on alerts: new orders reach you at once"],
+ ["push_d_bat","Boss · Alerts","Simu nyingi za Android: Battery → Chrome → No restrictions, notification zisizime simu ikilala","Many Android phones: Battery → Chrome → No restrictions, so alerts keep coming when the phone sleeps"],
+ ["push_welcome","Boss · Alerts","Karibu kwenye app! Washa notification: oda mpya zikufikie papo hapo","Welcome to the app! Turn on notifications: new orders reach you at once"],
  ["push_install","Boss · Alerts","Kwanza weka Niagize kwenye Home Screen","First add Niagize to your Home Screen"],
  ["push_i1","Boss · Alerts","Fungua Niagize kwenye Safari, gusa Share","Open Niagize in Safari, tap Share"],
  ["push_i2","Boss · Alerts","Chagua \"Add to Home Screen\"","Choose \"Add to Home Screen\""],
  ["push_i3","Boss · Alerts","Fungua Niagize kutoka Home Screen, ingia, kisha rudi hapa","Open Niagize from the Home Screen, sign in, come back here"],
- ["push_fail","Boss · Alerts","Imeshindikana kuwasha arifa. Jaribu tena","Couldn't turn on alerts. Try again"],
+ ["push_fail","Boss · Alerts","Imeshindikana kuwasha notification. Jaribu tena","Couldn't turn on notifications. Try again"],
  // WhatsApp handoff page (admin/o.html)
  ["ho_title","Handoff","Oda {code}","Order {code}"],
  ["ho_open","Handoff","Fungua Niagize","Open Niagize"],
@@ -717,6 +756,8 @@ W.fmtMoneyInput = function (el) {
   try { el.setSelectionRange(i, i); } catch (e) {}
 };
 document.addEventListener("input", function (e) { if (e.target && e.target.classList && e.target.classList.contains("money")) W.fmtMoneyInput(e.target); });
+/* a field's red error goes away as soon as you type in it again */
+document.addEventListener("input", function (e) { var w = e.target && e.target.closest && e.target.closest(".err,.bad,[aria-invalid=true]"); if (w) { w.classList.remove("err", "bad"); w.removeAttribute("aria-invalid"); } var t = e.target; if (t && t.getAttribute("aria-invalid")) t.removeAttribute("aria-invalid"); var sh = t && t.closest && t.closest(".sheet,.bd,main"); if (sh) sh.querySelectorAll(".ferr").forEach(function (f) { if (f.textContent) f.textContent = ""; }); });
 /* a button that starts slow work shows the sun and can't be tapped twice */
 W.busy = function (el, on) { if (!el || el.tagName !== "BUTTON") return; if (on) { el.dataset.busy = "1"; el.classList.add("busy"); el.setAttribute("aria-busy", "true"); } else { delete el.dataset.busy; el.classList.remove("busy"); el.removeAttribute("aria-busy"); } };
 /* boot can't hang forever: after ms, show the retry screen (it reloads the page) */
@@ -1106,6 +1147,15 @@ W.db = {
     var u = await sb.storage.from("requests").upload(path, small, { contentType: "image/jpeg", cacheControl: "31536000", upsert: false }); if (u.error) throw u.error;
     return C.url + "/storage/v1/object/public/requests/" + path;
   },
+  /* v2.14: delivery place on an order; delivery update ("ship") in the history */
+  async setOrderAddress(code, line) {
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); o.address = Object.assign(o.address || {}, { line: String(line).trim().slice(0, 200) }); demoSave(d); return demoOrderView(o, d); }
+    var r = await sb.rpc("set_order_address", { c: code, line: line }); if (r.error) throw r.error; return r.data;
+  },
+  async addOrderEvent(code, ev, note) {
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); o.history.push({ s: ev, at: new Date().toISOString(), note: String(note || "").slice(0, 200) }); demoSave(d); return demoOrderView(o, d); }
+    var r = await sb.rpc("add_order_event", { c: code, ev: ev, note: note || null }); if (r.error) throw r.error; return r.data;
+  },
   async setOrderPhone(code, phone) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || ["new", "progress", "invoiced"].indexOf(o.status) < 0) throw new Error("status"); o.customer_phone = phone; o.history.push({ s: "phone", at: new Date().toISOString(), by: "customer" }); demoSave(d); var v = demoOrderView(o, d); v.phone_tail = phone.slice(-3); return v; }
     var r = await sb.rpc("set_order_phone", { c: code, phone: phone }); if (r.error) throw r.error; return r.data;
@@ -1124,10 +1174,10 @@ W.db = {
   async orders() {
     if (!live) { var dd = demoGet(), ch = false; dd.orders.forEach(function (o) { if (o.status === "new" && o.seen_at && Date.now() - new Date(o.seen_at) > 120000) { o.status = "progress"; o.history.push({ s: "progress", at: new Date().toISOString(), auto: true }); ch = true; } }); if (ch) demoSave(dd); return dd.orders.map(function (o) { return JSON.parse(JSON.stringify(o)); }); }
     var rr = await Promise.all([sb.from("orders").select("*,order_items(product_id,name,price,qty,thumb,note)").order("created_at", { ascending: false }).limit(1000),
-      sb.from("order_private").select("order_id,ganji").limit(1000)]);
+      sb.from("order_private").select("*").limit(1000)]);
     var r = rr[0], g = {}; if (r.error) throw r.error;
-    W.ganjiOff = !!rr[1].error; (rr[1].data || []).forEach(function (x) { g[x.order_id] = x.ganji; });   // owners only (RLS); assistants get none
-    return r.data.map(function (o) { o.items = o.order_items; delete o.order_items; if (g[o.id] != null) o.ganji = g[o.id]; return o; });
+    W.ganjiOff = !!rr[1].error; (rr[1].data || []).forEach(function (x) { g[x.order_id] = x; });   // owners only (RLS); assistants get none
+    return r.data.map(function (o) { o.items = o.order_items; delete o.order_items; var gx = g[o.id]; if (gx) { o.ganji = gx.ganji; if (gx.items) o.gitems = gx.items; } return o; });
   },
   /* v2.11 Ganji per product (owners only, product_private.ganji) */
   async productGanji() {
@@ -1141,11 +1191,14 @@ W.db = {
     var r = await sb.from("product_private").upsert({ product_id: id, ganji: amount }); if (r.error) throw r.error; return amount;
   },
   /* v2.10 Ganji: the winga's hidden top-up / service amount on an order (owners only) */
-  async setGanji(code, amount) {
+  async setGanji(code, amount, items) {
     amount = Math.max(0, Math.round(+amount || 0));
-    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); if (!o) throw new Error("not_found"); o.ganji = amount; demoSave(d); return amount; }
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); if (!o) throw new Error("not_found"); o.ganji = amount; if (items) o.gitems = items; demoSave(d); return amount; }
     var q = await sb.from("orders").select("id").eq("code", code).single(); if (q.error) throw q.error;
-    var r = await sb.from("order_private").upsert({ order_id: q.data.id, ganji: amount, updated_at: new Date().toISOString() }); if (r.error) { W.ganjiOff = true; throw r.error; }
+    var row = { order_id: q.data.id, ganji: amount, updated_at: new Date().toISOString() }; if (items) row.items = items;
+    var r = await sb.from("order_private").upsert(row);
+    if (r.error && items && /items/.test(r.error.message || "")) { delete row.items; r = await sb.from("order_private").upsert(row); }   // before v2.14 SQL: keep the total
+    if (r.error) { W.ganjiOff = true; throw r.error; }
     W.ganjiOff = false; return amount;
   },
   async setOrder(code, status, extra) {
@@ -1154,6 +1207,8 @@ W.db = {
       var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; });
       if (!o) throw new Error("not_found");
       if (status === "cancelled" && !String(extra.reason || "").trim() && o.status !== "cancelled") throw new Error("reason");
+      if ((o.status === "done" || o.status === "cancelled") && status !== o.status) throw new Error("closed");
+      if ((extra.fee != null || extra.total != null || extra.clear_total) && ["new", "progress"].indexOf(o.status) < 0) throw new Error("locked");   /* same rule as the database (v2.14) */
       if (o.status !== status) o.history.push({ s: status, at: new Date().toISOString() }); o.status = status;
       ["pay_ref","pay_name"].forEach(function (k) { if (extra[k]) o[k] = extra[k]; });
       if (extra.reason) o.cancel_reason = extra.reason; if (extra.phone) o.customer_phone = extra.phone; if (extra.fee != null) o.delivery_fee = extra.fee;
