@@ -628,10 +628,10 @@ var PAGES={
   /* picture slides, one at a time with Back / Endelea (no sideways swiping): real screens for buying, drawings for saving the app */
   var p=c.panel||0,ios=/iphone|ipad|ipod/i.test(navigator.userAgent),i=c.i||0;
   var slides=p?[[phoneArt(1,ios),t("sl_s1")],[phoneArt(2,ios),t(ios?"sl_s2i":"sl_s2a")],[phoneArt(3,ios),t(ios?"sl_s3i":"sl_s3a")],[phoneArt(4,ios),t("sl_s4")]]
-    :[1,2,3,4].map(function(n){return ['<img src="how/b'+n+'.webp" alt="" width="420" height="908" decoding="async">',t("sl_b"+n)];});
+    :[1,2,3,4].map(function(n){return ['<img src="how/b'+n+'.webp?v=2" alt="" width="420" height="908" decoding="async">',t("sl_b"+n)];});
   if(i>=slides.length)i=slides.length-1;
   var sl=slides[i],last=i===slides.length-1;
-  if(!W._tipsPre){W._tipsPre=1;[1,2,3,4].forEach(function(n){var im=new Image();im.decoding="async";im.src="how/b"+n+".webp";});}   /* all 4 pictures load at once: no wait on Endelea */
+  if(!W._tipsPre){W._tipsPre=1;[1,2,3,4].forEach(function(n){var im=new Image();im.decoding="async";im.src="how/b"+n+".webp?v=2";});}   /* all 4 pictures load at once: no wait on Endelea */
   return '<div class="thero"><span class="tsun">'+W.sunSvg(false)+'</span><div class="grow"><h2>'+esc(t(p?"tips_title_s":"tips_title"))+'</h2></div><button class="iconbtn" data-act="back" aria-label="'+esc(t("back"))+'">'+IC.x+'</button></div>'+
    '<div class="bd tips"><div class="ttabs" role="tablist">'+[[t("tips_buy"),IC.cart],[t("tips_save"),IC.addHome]].map(function(x,k){return '<button role="tab" data-act="tab" data-i="'+k+'" aria-pressed="'+(p===k)+'">'+x[1]+esc(x[0])+'</button>';}).join("")+'</div>'+
    '<div class="slide"><div class="scap"><span class="tn">'+(i+1)+'</span><span>'+esc(sl[1])+'</span></div><div class="shot">'+sl[0]+'</div>'+

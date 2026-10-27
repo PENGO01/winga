@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.11.0";
+W.VERSION = "2.12.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -156,6 +156,7 @@ W.STRINGS = [
  ["fab_l","Shop","Ongea nasi WhatsApp","Chat with us on WhatsApp"],
  ["wait","Common","Subiri kidogo…","One moment…"],
  ["tax_title","Boss · Categories","Product Categories","Product Categories"],
+ ["tax_icon","Boss · Categories","Chagua icon","Choose an icon"],
  ["tax_sub","Boss · Categories","Add or delete sub categories","Add or delete sub categories"],
  ["tax_edit","Boss · Categories","Product Categories · edit","Product Categories · edit"],
  ["gj","Boss · Ganji","Ganji","Ganji"],
