@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.14.0";
+W.VERSION = "2.15.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -108,13 +108,13 @@ W.STRINGS = [
  ["wa_photo","Basket (WhatsApp)","Mambo vipi ✌🏾\nNatafuta mzigo huu 👇 (picha kwenye oda)","Hi ✌🏾\nI'm looking for this 👇 (photo in the order)"],
  ["card_dl","Card","Hifadhi","Save"],
  ["del_pop_s","Order","Tunafunga mzigo wa oda {code}. Taarifa za delivery (nani analeta, lini) zitakufikia hivi punde kwenye WhatsApp.","We're packing order {code}. Delivery details (who brings it, when) will reach you shortly on WhatsApp."],
- ["del_pop_t","Order","Malipo yamepokelewa ✓","Payment received ✓"],
+ ["del_pop_t","Order","Malipo yamepokelewa","Payment received"],
  ["del_soon","Order","Taarifa za delivery zitakufikia hivi punde","Delivery details are coming shortly"],
  ["stamp_s","Order","Oda {code} imekamilika · TSh {x}","Order {code} completed · TSh {x}"],
- ["stamp_t","Order","IMETHIBITISHWA ✓","VERIFIED ✓"],
+ ["stamp_t","Order","IMETHIBITISHWA","VERIFIED"],
  ["ping_toast","Order","Oda {code}: {st}","Order {code}: {st}"],
  ["loc_no","Basket","Imeshindikana kupata mahali. Ruhusu Location au andika","Couldn't get your location. Allow Location or type it"],
- ["loc_ok","Basket","Mahali pamewekwa 📍","Location added 📍"],
+ ["loc_ok","Basket","Mahali pamewekwa","Location added"],
  ["use_loc","Basket","Tumia mahali nilipo","Use my location"],
  ["shop_now","Shop","Anza kununua","Start shopping"],
  ["wa_items","Basket (WhatsApp)","Oda {code} · bidhaa {n}","Order {code} · {n} items"],
@@ -180,16 +180,16 @@ W.STRINGS = [
  ["tax_sub","Boss · Categories","Add or delete sub categories","Add or delete sub categories"],
  ["tax_edit","Boss · Categories","Product Categories · edit","Product Categories · edit"],
  ["gj","Boss · Ganji","Ganji","Ganji"],
- ["gj_s","Boss · Ganji","faida yako · wingas tu 🔒","your gain · team only 🔒"],
+ ["gj_s","Boss · Ganji","Faida yako","Your gain"],
  ["gj_ph","Boss · Ganji","Weka ganji ya oda hii","Enter this order's ganji"],
- ["gj_saved","Boss · Ganji","Ganji imehifadhiwa ✓","Ganji saved ✓"],
+ ["gj_saved","Boss · Ganji","Ganji imehifadhiwa","Ganji saved"],
  ["gj_off","Boss · Ganji","Ganji itahifadhiwa baada ya DB update v2.10","Ganji saves after the v2.10 DB update"],
  ["pg_ph","Boss · Ganji","Ganji yako kwa kila moja","Your ganji on each one"],
  ["pg_s","Boss · Ganji","Siri yako. Mteja haioni kamwe. Inajaza Ganji ya oda yenyewe.","Your secret. Customers never see it. It fills the order's Ganji by itself."],
- ["gj_auto","Boss · Ganji","Imejazwa kutoka bidhaa. Badilisha kama mmekubaliana tofauti, kisha ✓","Filled from the products. Change it if you agreed otherwise, then ✓"],
+ ["gj_auto","Boss · Ganji","Imejazwa kutoka bidhaa. Badilisha kama mmekubaliana tofauti.","Filled from the products. Change it if you agreed otherwise."],
  ["vip_title","Boss · Customers","Wateja bora 25","Top 25 customers"],
  ["vip_s","Boss · Customers","Wanaokamilisha oda nyingi zaidi. Wape punguzo au zawadi ili warudi tena.","Those with the most completed orders. Give them a discount or a gift so they come back."],
- ["vip_card","Boss · Customers","Wateja wa kudumu","Loyal customers"],
+ ["vip_card","Boss · Customers","Wateja maarufu","Popular customers"],
  ["vip_card_s","Boss · Customers","{n} wamerudi kununua · Idadi {m}","{n} came back · {m} in total"],
  ["vip_buyers","Boss · Customers","Idadi","Count"],
  ["vip_rep","Boss · Customers","wamerudi","came back"],
@@ -208,7 +208,7 @@ W.STRINGS = [
  ["gj_show","Boss · Ganji","Onyesha Ganji","Show Ganji"],
  ["gj_hide","Boss · Ganji","Ficha Ganji","Hide Ganji"],
  ["d_ganji","Boss · Ganji","Ganji (faida)","Ganji (profit)"],
- ["d_ganji_s","Boss · Ganji","oda {n} · wingas tu 🔒","{n} orders · team only 🔒"],
+ ["d_ganji_s","Boss · Ganji","oda {n} · wingas tu","{n} orders · team only"],
  ["tax_s","Boss · Categories","Category 5 kuu ni za kudumu. Ongeza au futa Sub-Category chini ya kila moja.","The 5 main groups are fixed. Add or remove sub-groups under each one."],
  ["tax_ph","Boss · Categories","Sub-Category mpya (mf. Raba za watoto)","New Sub-Category (e.g. Kids' sneakers)"],
  ["tax_has","Boss · Categories","Ina bidhaa {n}: zihamishe kwanza","Has {n} products: move them first"],
@@ -440,7 +440,7 @@ W.STRINGS = [
  ["remind_msg","Boss · Orders","Mambo vipi{name} ✌🏾\nTunakumbusha malipo ya oda {code}: TSh {x}.\n\nUkishalipa, weka namba ya muamala na jina kwenye oda yako hapa:\n{link}","Hi{name} ✌🏾\nA reminder about payment for order {code}: TSh {x}.\n\nOnce paid, add the transaction number and name on your order here:\n{link}"],
  ["remind_pay","Boss · Orders","Mkumbushe","Remind"],
  ["wait_claim","Boss · Orders","Inasubiri mteja atume taarifa za malipo","Waiting for the customer's payment details"],
- ["gj_total","Boss · Orders","Ganji ya oda","Order Ganji"],
+ ["gj_total","Boss · Orders","Ganji yako · Faida yako","Your Ganji · Your gain"],
  ["po_desc","Boss · Orders","Maelezo ya mteja","Customer's description"],
  ["rider_msg","Boss · Orders","📦 Mzigo {code} · {del}\nMteja: {name} {phone}\n📍 {line}\nRamani: {map}\n\nBidhaa:\n{items}","📦 Parcel {code} · {del}\nCustomer: {name} {phone}\n📍 {line}\nMap: {map}\n\nItems:\n{items}"],
  ["share_rider","Boss · Orders","Tuma kwa msafirishaji","Send to the delivery rider"],
@@ -449,7 +449,7 @@ W.STRINGS = [
  ["addr_need","Boss · Orders","Weka mahali pa delivery kwanza","Add the delivery place first"],
  ["reopened","Boss · Orders","Oda imerudishwa: unaweza kubadili bei, kisha tuma invoice tena","Order reopened: change prices, then send the invoice again"],
  ["a_reopen","Boss · Orders","Rudisha oda (fungua upya)","Reopen the order"],
- ["locked","Boss · Orders","Bei imefungwa baada ya invoice. Gusa ↺ kurudisha oda kama unahitaji kubadili.","Prices are locked after the invoice. Tap ↺ to reopen the order if you must change them."],
+ ["locked","Boss · Orders","Bei imefungwa baada ya invoice. Gusa kitufe cha kurudisha chini ili kubadili.","Prices are locked after the invoice. Tap the reopen button below to change them."],
  ["fee_min","Boss · Orders","Weka 0 (bure) au kuanzia TSh 500","Enter 0 (free) or from TSh 500"],
  ["fee_free","Boss · Orders","Bure","Free"],
  ["fee_ph","Boss · Orders","mf. 5,000 · au gusa Bure","e.g. 5,000 · or tap Free"],

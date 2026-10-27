@@ -283,3 +283,31 @@ ol.inst{padding:0;margin:0}
 #wwait.on{display:grid}
 #wwait .wbox{background:var(--card);color:var(--ink);border-radius:18px;padding:18px 26px;display:flex;flex-direction:column;align-items:center;gap:10px;font-weight:600;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 #wwait .sunload{width:34px;height:34px}
+
+/* ===================== v2.15 Calm pass: the locked v2.1 rules, enforced =====================
+   Colour has one job each:
+     ink   = text and the shell
+     gold  = THE action on a screen, a selected chip, rating stars
+     cyan  = "you are here": current step, new, links
+     neutral (card / sunk / line) = everything else. No tinted cards.
+     red   = error text and a destructive confirm only. Green = the WhatsApp glyph only.
+   Sizes: card r16 p14 · field 48 · footer button 48 pill · icon button 40 round · tag 28 r8.
+   Icons: Feather (feathericons.com), stroke 2. No emoji on screens (WhatsApp messages may keep them). */
+.tag{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:8px;background:var(--sunk);color:var(--ink);font-size:12.5px;font-weight:600;white-space:nowrap;line-height:1}
+.tag svg{width:14px;height:14px;flex:none;color:var(--dim)}
+.tag.hot{background:transparent;box-shadow:inset 0 0 0 1.5px var(--jua)}.tag.hot svg{color:var(--jua-text)}
+.tag.sm{height:22px;padding:0 7px;border-radius:6px;font-size:11px;gap:4px}.tag.sm svg{width:12px;height:12px}
+.tag.cy{background:transparent;box-shadow:inset 0 0 0 1.5px var(--cyan);color:var(--cyan-text)}
+/* status: one neutral pill, the dot carries the meaning */
+.ost,.ost.new,.ost.progress,.ost.invoiced,.ost.paid,.ost.done,.ost.cancelled{background:var(--sunk);color:var(--ink)}
+.ost::before{background:var(--faint)}
+.ost.new::before{background:var(--cyan)}.ost.progress::before,.ost.invoiced::before,.ost.paid::before{background:var(--jua)}.ost.done::before{background:var(--ink)}.ost.cancelled::before{background:var(--red)}
+/* timeline: done = ink, you are here = cyan ring */
+.timeline .st.on .dot{background:var(--ink)}
+.timeline .st.cur .dot{background:var(--cyan);box-shadow:0 0 0 4px rgba(83,196,209,.25)}
+/* WhatsApp: neutral button, green glyph only */
+.fi.wa{background:var(--sunk);color:var(--wa)}
+:root[data-theme="dark"] .fi.wa{background:var(--sunk);color:var(--wa)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .fi.wa{background:var(--sunk);color:var(--wa)} }
+/* counters: gold, not red */
+.fi .bdg,.badge-n,.qt .bdg{background:var(--jua);color:var(--on-jua)}
