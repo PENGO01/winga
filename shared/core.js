@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.9.1";
+W.VERSION = "2.10.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -156,6 +156,14 @@ W.STRINGS = [
  ["fab_l","Shop","Ongea nasi WhatsApp","Chat with us on WhatsApp"],
  ["wait","Common","Subiri kidogo…","One moment…"],
  ["tax_title","Boss · Categories","Aina za bidhaa","Product categories"],
+ ["tax_edit","Boss · Categories","Hariri aina za bidhaa","Edit product categories"],
+ ["gj","Boss · Ganji","Ganji","Ganji"],
+ ["gj_s","Boss · Ganji","faida yako · wingas tu 🔒","your gain · team only 🔒"],
+ ["gj_ph","Boss · Ganji","Weka ganji ya oda hii","Enter this order's ganji"],
+ ["gj_saved","Boss · Ganji","Ganji imehifadhiwa ✓","Ganji saved ✓"],
+ ["gj_off","Boss · Ganji","Ganji itahifadhiwa baada ya DB update v2.10","Ganji saves after the v2.10 DB update"],
+ ["d_ganji","Boss · Ganji","Ganji (faida)","Ganji (profit)"],
+ ["d_ganji_s","Boss · Ganji","oda {n} · wingas tu 🔒","{n} orders · team only 🔒"],
  ["tax_s","Boss · Categories","Makundi 5 makuu ni ya kudumu. Ongeza au ondoa aina ndogo chini ya kila kundi.","The 5 main groups are fixed. Add or remove sub-groups under each one."],
  ["tax_ph","Boss · Categories","Aina ndogo mpya (mf. Raba za watoto)","New sub-group (e.g. Kids' sneakers)"],
  ["tax_has","Boss · Categories","Ina bidhaa {n}: zihamishe kwanza","Has {n} products: move them first"],
@@ -773,7 +781,7 @@ var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persist
 W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";
 W.beta = !!C.beta;          // the /beta/ copy shows a small BETA pill
-W.betaPill = function () { return W.demoForced ? '<span class="betapill" title="Mfano / Demo">M</span>' : W.beta ? '<span class="betapill" title="Beta">B</span>' : ""; };   // "production" or "pilot"
+W.betaPill = function () { var live = !W.demoForced && !W.beta && W.stage === "production"; return '<span class="betapill '+(live?"live":"pilot")+'" role="img" aria-label="'+(W.demoForced?"Demo":live?"Live":"Beta")+'" title="'+(W.demoForced?"Mfano / Demo":live?"Live":"Beta")+'"></span>'; };   // status dot: yellow = beta/pilot/demo, green = live
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 W.img = pub;
@@ -1053,8 +1061,19 @@ W.db = {
   /* team side */
   async orders() {
     if (!live) { var dd = demoGet(), ch = false; dd.orders.forEach(function (o) { if (o.status === "new" && o.seen_at && Date.now() - new Date(o.seen_at) > 120000) { o.status = "progress"; o.history.push({ s: "progress", at: new Date().toISOString(), auto: true }); ch = true; } }); if (ch) demoSave(dd); return dd.orders.map(function (o) { return JSON.parse(JSON.stringify(o)); }); }
-    var r = await sb.from("orders").select("*,order_items(product_id,name,price,qty,thumb,note)").order("created_at", { ascending: false }).limit(300);
-    if (r.error) throw r.error; return r.data.map(function (o) { o.items = o.order_items; delete o.order_items; return o; });
+    var rr = await Promise.all([sb.from("orders").select("*,order_items(product_id,name,price,qty,thumb,note)").order("created_at", { ascending: false }).limit(300),
+      sb.from("order_private").select("order_id,ganji").limit(1000)]);
+    var r = rr[0], g = {}; if (r.error) throw r.error;
+    W.ganjiOff = !!rr[1].error; (rr[1].data || []).forEach(function (x) { g[x.order_id] = x.ganji; });   // owners only (RLS); assistants get none
+    return r.data.map(function (o) { o.items = o.order_items; delete o.order_items; if (g[o.id] != null) o.ganji = g[o.id]; return o; });
+  },
+  /* v2.10 Ganji: the winga's hidden top-up / service amount on an order (owners only) */
+  async setGanji(code, amount) {
+    amount = Math.max(0, Math.round(+amount || 0));
+    if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); if (!o) throw new Error("not_found"); o.ganji = amount; demoSave(d); return amount; }
+    var q = await sb.from("orders").select("id").eq("code", code).single(); if (q.error) throw q.error;
+    var r = await sb.from("order_private").upsert({ order_id: q.data.id, ganji: amount, updated_at: new Date().toISOString() }); if (r.error) { W.ganjiOff = true; throw r.error; }
+    W.ganjiOff = false; return amount;
   },
   async setOrder(code, status, extra) {
     extra = extra || {};

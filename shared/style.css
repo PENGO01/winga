@@ -244,7 +244,7 @@ select.input{appearance:none;-webkit-appearance:none;background-image:linear-gra
 /* legal / long text */
 .legal{white-space:pre-wrap;line-height:1.55;font-size:14px}
 .soon{display:inline-flex;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--jua-soft);color:var(--jua-text);border-radius:999px;padding:3px 9px}
-.betapill{font-family:var(--num);font-size:10px;font-weight:600;letter-spacing:.08em;background:var(--cyan);color:#121212;border-radius:999px;padding:2px 7px;margin-left:2px;flex:none}
+.betapill{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px;flex:none;vertical-align:middle;background:var(--jua)}.betapill.live{background:#22B35E}
 /* v2.2 (review #3) */
 .busy{pointer-events:none;opacity:.7;position:relative}
 .busy::after{content:"";width:16px;height:16px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;display:inline-block;animation:spin .7s linear infinite;margin-left:8px;flex:none}
