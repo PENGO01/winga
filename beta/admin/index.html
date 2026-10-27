@@ -35,6 +35,11 @@ main{padding:0 var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kpi.profit{grid-column:1/-1;background:var(--green-soft);border-color:transparent}.kpi.profit .v{color:var(--green)}
 .ganji{background:var(--green-soft);border-color:transparent}
+.icopick{border:0;background:none;padding:0;display:grid;place-items:center;cursor:pointer}.icopick img{width:20px;height:20px}
+.icopick.big{width:44px;height:44px;flex:none}.icopick.big img{width:28px;height:28px}.icopick.on{outline:2px solid var(--jua);outline-offset:2px;border-radius:50%}
+.icogrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;background:var(--sunk);border-radius:14px;padding:10px}
+.icogrid button{aspect-ratio:1;border:0;border-radius:12px;background:var(--card);display:grid;place-items:center;cursor:pointer}
+.icogrid button img{width:70%;height:70%}.icogrid button[aria-pressed="true"]{outline:2px solid var(--jua);background:linear-gradient(160deg,#FFF8E6,#FFEFC7)}
 .fi.c3dw{background:linear-gradient(160deg,#FFF8E6,#FFEFC7)}.fi.c3dw img{width:26px;height:26px}
 .urg{display:flex;gap:10px;align-items:center;border-radius:14px;padding:10px 12px;margin:-2px -2px 2px}
 .urg .ui{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:18px}
@@ -753,10 +758,15 @@ PAGES.cattax=function(){
   var cnt=function(c,s){return S.products.filter(function(p){return p.category===c&&p.subcategory===s;}).length;};
   return hd(t("tax_title"))+'<div class="bd"><div class="hint">'+esc(t("tax_s"))+'</div>'+W.TAX.map(function(c){
     return '<div class="card stack" style="gap:10px"><div class="row" style="gap:10px"><span class="fi c3dw">'+W.catPic(c[0])+'</span><b class="grow">'+esc(W.catLabel(c[0]))+'</b></div>'+
-     '<div class="catpick">'+c[4].map(function(s){var n=cnt(c[0],s[0]);return '<span class="chip" style="gap:6px">'+esc(W.catLabel(c[0],s[0]))+(n?' <span class="num" style="opacity:.6">'+n+'</span>':'')+'<button class="iconbtn" data-act="taxDel" data-c="'+c[0]+'" data-s="'+esc(s[0])+'" aria-label="'+esc(t("del"))+'" style="width:22px;height:22px">'+IC.x+'</button></span>';}).join("")+'</div>'+
-     '<div class="row" style="gap:8px"><label class="ifield grow" id="w_tx_'+c[0]+'">'+IC.plus+'<input id="tx_'+c[0]+'" placeholder="'+esc(t("tax_ph"))+'" maxlength="40"></label><button class="fi jua" data-act="taxAdd" data-c="'+c[0]+'" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div></div>';}).join("")+
+     '<div class="catpick">'+c[4].map(function(s){var n=cnt(c[0],s[0]);return '<span class="chip" style="gap:6px"><button class="icopick'+(PICK.c===c[0]&&PICK.s===s[0]?" on":"")+'" data-act="taxIcon" data-c="'+c[0]+'" data-s="'+esc(s[0])+'" aria-label="'+esc(t("tax_icon"))+'">'+W.catPic(c[0],s[0])+'</button>'+esc(W.catLabel(c[0],s[0]))+(n?' <span class="num" style="opacity:.6">'+n+'</span>':'')+'<button class="iconbtn" data-act="taxDel" data-c="'+c[0]+'" data-s="'+esc(s[0])+'" aria-label="'+esc(t("del"))+'" style="width:22px;height:22px">'+IC.x+'</button></span>';}).join("")+'</div>'+
+     '<div class="row" style="gap:8px"><button class="fi c3dw icopick big'+(PICK.c===c[0]&&PICK.s===""?" on":"")+'" data-act="taxIcon" data-c="'+c[0]+'" data-s="" aria-label="'+esc(t("tax_icon"))+'" title="'+esc(t("tax_icon"))+'">'+iconImg(NEWICON[c[0]]||c[3])+'</button><label class="ifield grow" id="w_tx_'+c[0]+'"><input id="tx_'+c[0]+'" placeholder="'+esc(t("tax_ph"))+'" maxlength="40" value="'+esc(TXV[c[0]]||"")+'"></label><button class="fi jua" data-act="taxAdd" data-c="'+c[0]+'" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div>'+
+     (PICK.c===c[0]?'<div class="icogrid" role="listbox" aria-label="'+esc(t("tax_icon"))+'"><div class="small muted" style="grid-column:1/-1">'+esc(t("tax_icon"))+'</div>'+W.CAT3D.map(function(k){var cur=PICK.s===""?(NEWICON[c[0]]||c[3]):((c[4].find(function(x){return x[0]===PICK.s;})||[])[3]);return '<button data-act="taxPick" data-k="'+k+'" aria-pressed="'+(cur===k)+'">'+iconImg(k)+'</button>';}).join("")+'</div>':'')+'</div>';}).join("")+
    '<div class="ferr" id="tx_err" role="alert"></div></div>';
 };
+/* v2.12 icon picker: a new Sub-Category (or an existing one) gets any of the 30 3D icons */
+var PICK={c:null,s:null},NEWICON={},TXV={};
+function iconImg(k){return '<img class="c3d" src="../cat/'+k+'.webp" alt="" width="128" height="128" decoding="async">';}
+function keepTx(){W.CATS.forEach(function(c){var i=$("#tx_"+c);if(i)TXV[c]=i.value;});}
 function taxCustom(){var custom={subs:{}};W.TAX.forEach(function(c){custom.subs[c[0]]=c[4].map(function(s){return [s[0],s[1],s[2],s[3]];});});return custom;}
 /* show the change at once (input cleared, chip in place), save quietly in order; a failed save puts it back with a message */
 var TAXQ=Promise.resolve();
@@ -856,10 +866,15 @@ document.addEventListener("click",async function(e){
     case "profile":open("profile");break;
     case "share":open("share");break;
     case "markShared":W.ls("winga.shared","1");break;
-    case "cattax":open("cattax");break;
+    case "cattax":PICK={c:null,s:null};NEWICON={};TXV={};open("cattax");break;
     case "taxAdd":var tc=el.dataset.c,tin=$("#tx_"+tc),tn=(tin&&tin.value||"").trim();if(tn.length<2)break;
       var tm=W.TAX.find(function(x){return x[0]===tc;}),tk=W.subKey(tn);while(tm[4].some(function(x){return x[0]===tk;}))tk+="-2";
-      tm[4].push([tk,tn,tn,tm[3]]);taxNow();break;
+      keepTx();TXV[tc]="";tm[4].push([tk,tn,tn,NEWICON[tc]||tm[3]]);delete NEWICON[tc];PICK={c:null,s:null};taxNow();break;
+    case "taxIcon":keepTx();var ic=el.dataset.c,is=el.dataset.s||"";PICK=(PICK.c===ic&&PICK.s===is)?{c:null,s:null}:{c:ic,s:is};var by=($(".sheet .bd")||{}).scrollTop;draw(false);var bz=$(".sheet .bd");if(bz&&by!=null)bz.scrollTop=by;var ig=$(".icogrid");if(ig&&ig.scrollIntoView)ig.scrollIntoView({block:"nearest",behavior:"smooth"});break;
+    case "taxPick":keepTx();var pk=el.dataset.k;
+      if(PICK.s===""){NEWICON[PICK.c]=pk;PICK={c:null,s:null};var by2=($(".sheet .bd")||{}).scrollTop;draw(false);var bz2=$(".sheet .bd");if(bz2)bz2.scrollTop=by2;}
+      else{var pm=W.TAX.find(function(x){return x[0]===PICK.c;}),ps=pm&&pm[4].find(function(x){return x[0]===PICK.s;});PICK={c:null,s:null};if(ps){ps[3]=pk;taxNow();}}
+      break;
     case "taxDel":var dc=el.dataset.c,dsub=el.dataset.s,dn=S.products.filter(function(p){return p.category===dc&&p.subcategory===dsub;}).length;
       if(dn){bad("tx_err",null,t("tax_has",{n:dn}));break;}
       var dm=W.TAX.find(function(x){return x[0]===dc;});dm[4]=dm[4].filter(function(x){return x[0]!==dsub;});taxNow();break;
