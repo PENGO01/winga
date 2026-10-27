@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.9.0";
+W.VERSION = "2.9.1";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -140,8 +140,8 @@ W.STRINGS = [
  ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
  ["g_hint","Basket","Invoice na taarifa za oda zitakufikia hapa","Your invoice and order news come here"],
  ["inst_title","Install","Weka Niagize kwenye simu yako","Put Niagize on your phone"],
- ["g_addr","Basket","Mahali pa delivery (mf. Sinza Mori, karibu na sheli)","Delivery address (e.g. Sinza Mori, near the petrol station)"],
- ["g_addr_l","Basket","Tukuletee wapi?","Where do we deliver?"],
+ ["g_addr","Basket","mf. Sinza Mori, karibu na sheli","e.g. Sinza Mori, near the petrol station"],
+ ["g_addr_l","Basket","Mzigo wako, tuufikishe wapi? (Delivery Location/Address)","Where should we deliver your order? (Delivery Location/Address)"],
  ["g_addr_saved","Basket","Tutaleta hapa","We'll deliver here"],
  ["err_addr","Basket","Weka mahali pa delivery","Add a delivery address"],
  ["po_btn","Shop","Agiza kwa picha","Order by photo"],
