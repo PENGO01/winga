@@ -15,6 +15,7 @@ All four read `DESIGN.md` and `PRODUCT.md` at the repo root, and DESIGN.md wins 
 node .claude/skills/hallmark/scripts/sloplint.mjs beta/admin/index.html beta/shared/style.css beta/index.html --scope app
 ```
 Baseline on v2.15 (28 Oct 2026): 194 FAIL, 249 REFLEX, 35 WARN. 155 of the FAILs are colour literals outside the tokens.
+After v2.16 wave 2: 7 FAIL, 254 REFLEX, 20 WARN; 0 colour literals. The 7 left are deliberate: search-box and pull-to-refresh height transitions, the sheet scroll lock, the input focus border, the splash tagline, and the stamp comment.
 Known clashes with our house style (keep them, waive on record): " · " between two facts; the Hallmark stamp comment (rule 20).
 
 ## Updating a skill
