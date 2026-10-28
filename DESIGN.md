@@ -15,6 +15,7 @@ Operate, not Persuade. People finish a task on a phone over 4G in Kariakoo: brow
 | `--jua` | #FFC62D | Gold. **The one main action on a screen**, a selected chip, rating stars, counters |
 | `--cyan` / `--cyan-text` | #53C4D1 / #1C7F8B | "You are here": current step, new, links |
 | `--paper` `--card` `--sunk` `--line` | sand (light) / greys (dark) | Everything else. Neutral surfaces only |
+| `--faint` | #736750 / #8C8C8C | Muted text; passes 4.5:1 on every surface |
 | `--red` | #B8392A / #F08A7A | Error text and the cancel X only |
 | `--wa` | #1FA855 | The WhatsApp glyph only |
 
@@ -42,13 +43,14 @@ One family: Onest at 400, 500, 600 and 800. Inputs are 16px, so iPhone doesn't z
 - `.ost` status pill: neutral pill with a coloured dot. Cyan = new, gold = in progress / invoiced / paid, ink = done, red = cancelled.
 - `.timeline`: done steps ink, current step cyan.
 - Bottom bars: round 48px icons on the left, one gold pill filling the rest. Every button the same height.
+- Shop product card: the whole card is one button (photo, name, price, stars + sold count). No buttons inside a card.
 
 ## Icons and words
 - Icons are Feather (feathericons.com, MIT), stroke ~2, `currentColor`. **No emoji on screens.** WhatsApp message texts may keep emoji.
 - Prefer an icon to a word where the icon is clear.
 - Screen text is short Kiswahili in M-Pesa / Selcom tone (Kiswanglish is OK), with English as the switch. Every word lives in the table in `shared/core.js`.
-- House style (decided by the owner, don't "fix"): " · " joins two short facts, as in "Ganji yako · Faida yako" and "oda 2 · TSh 140,000". Open question: whether to drop it in v2.16.
-
+- **Separator (v2.16):** on screen, two facts sit side by side with no glyph: the first in ink, the second muted (`--faint`) after a small gap. Use `W.pair("a · b")` for a string, or `' <span class="pair2">…</span>'` in markup. Dates read "28 Okt, 18:59". Plain text (WhatsApp messages, toasts, page titles) keeps " · ". The tagline keeps its own " . ".
+- **Category 3D icons (v2.16):** Fluent 3D images appear only on category screens (the shop's Category tab and the Boss's Product Categories), on neutral `--sunk` discs with no gradient or shadow. Everywhere else uses Feather line icons.
 ## Order page (Boss): 3 cards and a footer
 1. **Customer**: name, number, delivery place. A missing field is an input inside the same card.
 2. **Items**: the urgency tag (Inaharaka / Utumwe Leo) sits right under the items.

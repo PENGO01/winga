@@ -6,7 +6,7 @@ html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
    --navy is the brand surface (headers, nav, primary buttons) and stays ink in both themes; --ink is text. */
 :root{
   --paper:#FFF7E2; --card:#FFFFFF; --sunk:#F6ECD3; --line:#EADFC4;
-  --ink:#242424; --dim:#6B6150; --faint:#9A8F78;
+  --ink:#242424; --dim:#6B6150; --faint:#736750;
   --navy:#121212; --navy2:#12375A; --on-navy:#FFFFFF; --on-navy-dim:#A8A8A8;
   --jua:#FFC62D; --amber-brand:#F3A500; --jua-text:#8A5C00; --jua-soft:#FFF0C2; --on-jua:#121212;
   --cyan:#53C4D1; --cyan-text:#1C7F8B; --ocean:#12375A;
@@ -23,14 +23,14 @@ html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --paper:#121212; --card:#1C1C1C; --sunk:#262626; --line:#2E2E2E;
-  --ink:#F2F2F2; --dim:#A8A8A8; --faint:#7A7A7A;
+  --ink:#F2F2F2; --dim:#A8A8A8; --faint:#8C8C8C;
   --navy:#0B0B0B; --navy2:#12375A; --on-navy:#FFFFFF; --on-navy-dim:#9A9A9A;
   --jua-text:#FFC62D; --jua-soft:#2A2410; --line-soft:#4A3D12; --cyan-text:#53C4D1;
   --green:#3CC47E; --green-soft:#12301F; --red:#F08A7A; --red-soft:#3A1E1A; --amber:#F2B54B; --amber-soft:#33270F; --blue:#53C4D1; --blue-soft:#10292D;
   --scrim:rgba(0,0,0,.65); --shadow:0 8px 24px rgba(0,0,0,.45); color-scheme: dark; } }
 :root[data-theme="dark"]{
   --paper:#121212; --card:#1C1C1C; --sunk:#262626; --line:#2E2E2E;
-  --ink:#F2F2F2; --dim:#A8A8A8; --faint:#7A7A7A;
+  --ink:#F2F2F2; --dim:#A8A8A8; --faint:#8C8C8C;
   --navy:#0B0B0B; --navy2:#12375A; --on-navy:#FFFFFF; --on-navy-dim:#9A9A9A;
   --jua-text:#FFC62D; --jua-soft:#2A2410; --line-soft:#4A3D12; --cyan-text:#53C4D1;
   --green:#3CC47E; --green-soft:#12301F; --red:#F08A7A; --red-soft:#3A1E1A; --amber:#F2B54B; --amber-soft:#33270F; --blue:#53C4D1; --blue-soft:#10292D;
@@ -311,3 +311,9 @@ ol.inst{padding:0;margin:0}
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .fi.wa{background:var(--sunk);color:var(--wa)} }
 /* counters: gold, not red */
 .fi .bdg,.badge-n,.qt .bdg{background:var(--jua);color:var(--on-jua)}
+
+/* v2.16 wave 1: counters are gold on ink text everywhere (white on red read 2.4:1) */
+.cnt-badge{background:var(--jua);color:var(--on-jua)}
+.qt .bdg,.fi .bdg,.badge-n{font-size:11px}
+.pair2{margin-left:.35em;color:var(--faint)}
+input::placeholder,textarea::placeholder{color:var(--faint);opacity:1}

@@ -2,7 +2,7 @@
 <html lang="sw">
 <head><meta name="robots" content="noindex">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Niagize</title>
 <meta property="og:title" content="Niagize">
 <meta property="og:description" content="Oda mpya · Niagize Kariakoo">
@@ -88,8 +88,8 @@ main{padding:0 var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:14px
 :root[data-theme="dark"] .bars .b i{background:#2E4E6E}
 :root[data-theme="dark"] .bars .b i.today{background:var(--jua)}
 .bars .b i.today{background:var(--jua)}
-.bars .b span{font-size:10.5px;color:var(--faint);font-family:var(--num)}
-.bars .b em{font-style:normal;font-size:10.5px;font-family:var(--num);color:var(--dim)}
+.bars .b span{font-size:11px;color:var(--faint);font-family:var(--num)}
+.bars .b em{font-style:normal;font-size:11px;font-family:var(--num);color:var(--dim)}
 .funnel{display:flex;flex-direction:column;gap:8px}
 .fr{display:grid;grid-template-columns:92px 1fr 44px;align-items:center;gap:8px;font-size:13px}
 .fr .tr{height:10px;border-radius:5px;background:var(--sunk);overflow:hidden}
@@ -204,7 +204,7 @@ nav.tabs .bdg{position:absolute;top:8px;left:calc(50% + 4px);min-width:17px;heig
 .fab{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:-28px;cursor:pointer}
 .fab span.c{width:58px;height:58px;border-radius:50%;background:var(--jua);border:4px solid var(--navy);box-shadow:0 6px 18px rgba(0,0,0,.3);display:grid;place-items:center;color:#121212}
 .fab span.c svg{width:25px;height:25px}
-.fab span.l{font-size:10.5px;font-weight:600;color:#fff}
+.fab span.l{font-size:11.5px;font-weight:600;color:#fff}
 .fileHidden{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .slot{position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:var(--sunk);border:1.5px dashed var(--line);display:grid;place-items:center;color:var(--dim);cursor:pointer}
@@ -844,7 +844,7 @@ function ganjiSaved(o){if(!o)return null;if(o.ganji!=null)return o.ganji;var x=(
 function ganjiAuto(o){var n=0,any=false;(o&&o.items||[]).forEach(function(i,ix){var g=lineGanji(o,i,ix);if(g!=null){n+=g;any=true;}});return any?n:null;}
 function ganjiOf(o){var g=ganjiSaved(o);return g!=null?g:ganjiAuto(o);}
 function ganjiRow(o){var g=ganjiSaved(o),au=ganjiAuto(o),v=O.ganji!=null?O.ganji:g!=null?W.money(g):au!=null?W.money(au):"";
-  var lbl='<span class="lb">'+esc(t("gj_total"))+'</span>';
+  var lbl='<span class="lb">'+W.pair(t("gj_total"))+'</span>';
   if(!O.gTotEdit)return '<div class="mrow2 gj"><span class="fi sm">'+IC.lock+'</span><span class="grow">'+lbl+'<b class="num">'+(g!=null||au!=null?'TSh '+W.money(g!=null?g:au):'—')+'</b></span>'+(o.status==="done"?'':'<button class="fi sm" data-act="gjTotEdit" aria-label="'+esc(t("edit"))+'">'+IC.pen+'</button>')+'</div>'+(W.ganjiOff?'<div class="hint">'+esc(t("gj_off"))+'</div>':'');
   return '<div class="mrow2 gj" id="w_o_ganji"><span class="fi sm">'+IC.lock+'</span><span class="grow">'+lbl+'<input id="o_ganji" class="num money" inputmode="numeric" placeholder="'+esc(t("gj_ph"))+'" value="'+esc(v)+'"></span><button class="fi sm jua" data-act="saveGanji" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div>'+
    (g==null&&au!=null?'<div class="hint">'+esc(t("gj_auto"))+'</div>':'')+(W.ganjiOff?'<div class="hint">'+esc(t("gj_off"))+'</div>':'')+'<div class="ferr" id="g_err" role="alert"></div>';}

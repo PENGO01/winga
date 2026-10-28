@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.15.0";
+W.VERSION = "2.16.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -50,7 +50,7 @@ W.STRINGS = [
  ["nav_cats","Shop · Menu","Category","Category"],
  ["nav_cart","Shop · Menu","Kapu","Basket"],
  ["nav_me","Shop · Menu","Mimi","Me"],
- ["searchPh","Shop","Search our products","Search our products"],
+ ["searchPh","Shop","Tafuta bidhaa…","Search products…"],
  ["emptyShop","Shop","Kaa mkao wa kula, bidhaa mpya zinakuja","Get ready, new products are coming"],
  ["g_wa_ok","Shop","Namba hii iko WhatsApp (Tutaitumia kuwasiliana na wewe)","This number is on WhatsApp (we'll use it to reach you)"],
  ["err_wa_ok","Shop","Thibitisha kuwa namba iko kwenye WhatsApp","Confirm the number is on WhatsApp"],
@@ -145,6 +145,7 @@ W.STRINGS = [
  ["claim_ref","Order","Namba ya muamala / risiti","Transaction ID / receipt"],
  ["claim_name","Order","Jina la aliyelipa","Payer name"],
  ["claim_send","Order","Tuma kwa muuzaji","Send to seller"],
+ ["items_n","Order","bidhaa {n}","{n} items"],
  ["claim_sent","Order","Imetumwa · Inasubiri uthibitisho","Sent · Waiting for confirmation"],
  ["claim_ok","Order","Malipo yamethibitishwa","Payment confirmed"],
  ["claim_wa","Order","Mambo vipi ✌🏾\nNimelipia oda {code}.\n\nKupitia: {ch}\nMuamala: {ref}\nJina: {name}\n\n{link}","Hi ✌🏾\nI paid for order {code}.\n\nVia: {ch}\nTransaction: {ref}\nName: {name}\n\n{link}"],
@@ -765,8 +766,11 @@ W.guard = function (promise, ms) { return Promise.race([promise, new Promise(fun
 W.DAY = 864e5; W.SHOW_DAYS = 60;   // products move to Archive after 60 days
 W.daysLeft = function (p) { return W.SHOW_DAYS - Math.floor((Date.now() - new Date(p.refreshed_at).getTime()) / W.DAY); };
 W.ago = function (iso) { var d = Math.floor((Date.now() - new Date(iso).getTime()) / W.DAY); return d <= 0 ? W.t("agoToday") : d === 1 ? W.t("agoYday") : W.t("agoDays", { n: d }); };
-W.when = function (iso) { var d = new Date(iso); return d.toLocaleDateString(W.lang === "sw" ? "sw-TZ" : "en-GB", { day: "numeric", month: "short" }) + " · " + d.toTimeString().slice(0, 5); };
-W.whenFull = function (iso) { var d = new Date(iso); return d.toLocaleDateString(W.lang === "sw" ? "sw-TZ" : "en-GB", { day: "numeric", month: "short", year: "numeric" }) + " · " + d.toTimeString().slice(0, 5); };
+W.when = function (iso) { var d = new Date(iso); return d.toLocaleDateString(W.lang === "sw" ? "sw-TZ" : "en-GB", { day: "numeric", month: "short" }) + ", " + d.toTimeString().slice(0, 5); };
+/* v2.16 separator rule: on screen, two facts = the first in ink, the second muted after a gap, no glyph.
+   Plain text (WhatsApp messages, toasts, titles) keeps " · ". */
+W.pair = function (text) { var p = String(text == null ? "" : text).split(" · "); return W.esc(p.shift()) + p.map(function (x) { return ' <span class="pair2">' + W.esc(x) + "</span>"; }).join(""); };
+W.whenFull = function (iso) { var d = new Date(iso); return d.toLocaleDateString(W.lang === "sw" ? "sw-TZ" : "en-GB", { day: "numeric", month: "short", year: "numeric" }) + ", " + d.toTimeString().slice(0, 5); };
 W.parseTags = function (s) { return String(s || "").split(/[\s,]+/).map(function (x) { return x.replace(/^#+/, "").toLowerCase().replace(/[^a-z0-9_\-]/g, ""); }).filter(Boolean).slice(0, 8); };
 W.toast = function (m) { var r = document.getElementById("toastRoot"); if (!r) return; r.innerHTML = '<div class="toast" role="status">' + W.esc(m) + "</div>"; clearTimeout(W.toast._t); W.toast._t = setTimeout(function () { r.innerHTML = ""; }, 2200); };
 W.copy = function (text, fallbackEl) { return navigator.clipboard.writeText(text).then(function(){ W.toast(W.t("copied")); }, function(){ if (fallbackEl) { var r = document.createRange(); r.selectNodeContents(fallbackEl); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } }); };
