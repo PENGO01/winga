@@ -373,7 +373,7 @@ function stars(n){n=n||2;var s="";for(var i=1;i<=3;i++)s+='<i class="'+(i<=n?"on
 function drop(p){return p.price>0&&p.prev_price>p.price&&p.price_drop_at&&(Date.now()-new Date(p.price_drop_at).getTime()<14*864e5)?Math.round((1-p.price/p.prev_price)*100):0;}
 function priceHtml(p){if(p.price==null)return '<span class="ask">'+esc(t("noPrice"))+'</span>';var d=drop(p);
   return '<b>TSh '+W.money(p.price)+'</b>'+(d?'<s class="was">'+W.money(p.prev_price)+'</s><span class="off">-'+d+'%</span>':'');}
-function hbtns(){return '<button class="hbtn" data-act="shareShop" aria-label="'+esc(t("share"))+'">'+IC.share+'</button><button class="hbtn" data-act="lang" aria-label="'+esc(t("lang"))+'">'+(W.lang==="sw"?"SW":"EN")+'</button><button class="hbtn" data-act="theme" aria-label="'+esc(t("theme"))+'">'+(W.isDark()?IC.sun:IC.moon)+'</button><button class="hbtn" data-act="how" aria-label="'+esc(t("how_title"))+'">'+IC.bulb+'</button>';}
+function hbtns(){return '<button class="hbtn" data-act="shareShop" aria-label="'+esc(t("share"))+'">'+IC.share+'</button><button class="hbtn" data-act="lang" aria-label="'+esc(t("lang"))+'">'+(W.lang==="sw"?"SW":"EN")+'</button>';}
 function chev(){return IC.chev.replace('<svg','<svg class="chev"');}
 /* "Zinazofanana": same group AND sub-group, and a price in the same range (¼× to 4×); best matches first.
    A TV doesn't get phone covers. No real match → the section is hidden. */
@@ -575,7 +575,7 @@ function vMe(){
   if(!S.me){
     /* R08: one compact card on top, then the things a guest can already do (their orders work without an account) */
     return '<section class="ghero"><div class="grow"><h2>'+esc(t("me_guest"))+'</h2><p>'+esc(t("me_guest_s"))+'</p><div class="row" style="gap:8px;margin-top:10px"><button class="btn primary" data-act="signin" style="border-radius:999px">'+esc(t("signin"))+'</button><button class="btn ghost" data-act="signup" style="border-radius:999px">'+esc(t("signup"))+'</button></div></div>'+W.sunSvg(true)+'</section>'+
-     meTiles(false)+forYou(8);
+     meTiles(false)+'<div class="list mprefs">'+'<button class="mrow" data-act="theme"><span class="fi">'+(W.isDark()?IC.moon:IC.sun)+'</span><span class="tt">'+esc(t("theme"))+'</span><span class="val">'+esc(W.isDark()?t("th_dark"):t("th_light"))+'</span></button>'+'</div>'+forYou(8);
   }
   if(S.me.needsProfile)return '<div class="guest">'+W.sunSvg(true)+'<h2>'+esc(t("complete_title"))+'</h2><p class="muted" style="margin:0">'+esc(t("complete_s"))+'</p></div><button class="btn primary block" data-act="complete" style="border-radius:999px">'+esc(t("complete_title"))+'</button>';
   var m=S.me,shown=m.username?"@"+m.username:(m.full_name||"");

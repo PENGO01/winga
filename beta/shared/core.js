@@ -323,6 +323,10 @@ W.STRINGS = [
  ["nav_orders","Boss · Menu","Oda","Orders"],
  // boss: dashboard
  ["d_sales","Boss · Dashboard","Mauzo","Sales"],
+ ["job_new","Boss · Home","Oda {n} mpya zinakusubiri","{n} new orders waiting"],
+ ["job_none","Boss · Home","Hakuna oda mpya","No new orders"],
+ ["job_open","Boss · Home","Fungua","Open"],
+ ["top_meta","Boss · Dashboard","oda {n} · wameangalia {m}","{n} orders · {m} views"],
  ["d_orders","Boss · Dashboard","Oda","Orders"],
  ["d_visitors","Boss · Dashboard","Wateja wapya","New visitors"],
  ["d_conv","Boss · Dashboard","Conversion","Conversion"],

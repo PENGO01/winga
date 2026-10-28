@@ -43,6 +43,8 @@ One family: Onest at 400, 500, 600 and 800. Inputs are 16px, so iPhone doesn't z
 - `.ost` status pill: neutral pill with a coloured dot. Cyan = new, gold = in progress / invoiced / paid, ink = done, red = cancelled.
 - `.timeline`: done steps ink, current step cyan.
 - Bottom bars: round 48px icons on the left, one gold pill filling the rest. Every button the same height.
+- Headers (v2.16): shop = logo + share + language; Boss = logo + stage dot + avatar. Theme lives in Mimi (shop) and the Boss profile; language and tips too in the Boss profile.
+- Boss dashboard (v2.16): opens on the job ("Oda N mpya zinakusubiri" + one gold Fungua), then KPIs as a divided list (label left, value right, no icon circles), then the funnel.
 - Shop product card: the whole card is one button (photo, name, price, stars + sold count). No buttons inside a card.
 
 ## Icons and words
