@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.16.0";
+W.VERSION = "2.17.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -26,6 +26,8 @@ W.STRINGS = [
  ["copy","Common","Nakili","Copy"],
  ["send","Common","Tuma","Send"],
  ["error","Common","Imeshindikana. Tafadhali jaribu tena","Failed. Please try again"],
+ ["err_owner","Order","Tumia namba ya WhatsApp uliyoagizia, au mwandikie muuzaji","Use the WhatsApp number you ordered with, or message the seller"],
+ ["err_locked","Order","Majaribio mengi. Subiri dakika 15 au mwandikie muuzaji","Too many tries. Wait 15 minutes or message the seller"],
  ["err_title","Common","Kuna hitilafu","Something went wrong"],
  ["err_sub","Common","Imeshindikana kupakia. Angalia mtandao kisha jaribu tena.","Couldn't load. Check your connection and try again."],
  ["off_title","Common","Hakuna mtandao","You're offline"],
@@ -1046,6 +1048,11 @@ var PCOLS = PCOLS0 + ",prev_price,price_drop_at";
 function noCol(e) { return e && (e.code === "42703" || /prev_price|price_drop_at/.test(e.message || "")); }
 
 /* --- public API --- */
+/* v2.17: a guest proves an order is theirs with the WhatsApp number saved on this phone; the database
+   answers {error:"owner"} (wrong number) or {error:"locked"} (5 wrong tries, 15 minutes) instead of the order */
+function guestProof() { try { var g = JSON.parse(localStorage.getItem("niagize.guest") || "{}"); return (g && g.wa) || null; } catch (e) { return null; } }
+function ownerCheck(d) { if (d && d.error && !d.code) throw new Error(d.error); return d; }
+
 W.db = {
   live: live,
   /* shop */
@@ -1141,11 +1148,11 @@ W.db = {
   /* customer: payment details after the invoice; "Nimepokea" + stars */
   async submitPayment(code, ref, payer, channel) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || o.status !== "invoiced") throw new Error("status"); o.claim_ref = ref; o.claim_name = payer; o.claim_channel = channel || null; o.claim_at = new Date().toISOString(); demoSave(d); return demoOrderView(o, d); }
-    var r = await sb.rpc("submit_payment", { c: code, ref: ref, payer: payer, channel: channel || null }); if (r.error) throw new Error((r.error.message || "").match(/ref|payer|status/) ? r.error.message.match(/ref|payer|status/)[0] : "error"); return r.data;
+    var r = await sb.rpc("submit_payment", { c: code, ref: ref, payer: payer, channel: channel || null, proof: guestProof() }); if (r.error) throw new Error((r.error.message || "").match(/ref|payer|status/) ? r.error.message.match(/ref|payer|status/)[0] : "error"); return ownerCheck(r.data);
   },
   async customerReceived(code, stars, note) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || (o.status !== "paid" && o.status !== "done")) throw new Error("status"); if (o.status !== "done") o.history.push({ s: "done", at: new Date().toISOString(), by: "customer" }); o.status = "done"; o.rating = stars; o.rating_note = note || null; o.received_at = o.received_at || new Date().toISOString(); demoSave(d); return demoOrderView(o, d); }
-    var r = await sb.rpc("customer_received", { c: code, stars: stars, note: note || null }); if (r.error) throw r.error; return r.data;
+    var r = await sb.rpc("customer_received", { c: code, stars: stars, note: note || null, proof: guestProof() }); if (r.error) throw r.error; return ownerCheck(r.data);
   },
   /* a customer's "order by photo": shrink, then add to the public requests inbox (anyone may add, only the team may delete) */
   async uploadRequest(file) {
@@ -1166,7 +1173,7 @@ W.db = {
   },
   async setOrderPhone(code, phone) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); if (!o || ["new", "progress", "invoiced"].indexOf(o.status) < 0) throw new Error("status"); o.customer_phone = phone; o.history.push({ s: "phone", at: new Date().toISOString(), by: "customer" }); demoSave(d); var v = demoOrderView(o, d); v.phone_tail = phone.slice(-3); return v; }
-    var r = await sb.rpc("set_order_phone", { c: code, phone: phone }); if (r.error) throw r.error; return r.data;
+    var r = await sb.rpc("set_order_phone", { c: code, phone: phone, proof: guestProof() }); if (r.error) throw r.error; return ownerCheck(r.data);
   },
   async setOrderName(code, name) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === code; }); o.customer_name = name; demoSave(d); return demoOrderView(o, d); }

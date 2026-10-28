@@ -972,7 +972,7 @@ document.addEventListener("click",async function(e){
     case "savePhoneO":var nw=W.phoneVal("op_wa");if(!W.phoneOk(nw))return bad("op_err","w_op_wa",W.phoneErr("op_wa"));
       try{var oo=await W.db.setOrderPhone(top().c.code,nw);back();var oc2=top();if(oc2&&oc2.n==="order"){oc2.c.o=Object.assign(oc2.c.o,oo||{});if(!oc2.c.o.customer_phone&&isGuest())oc2.c.o.phone_tail=nw.slice(-3);}
         if(isGuest()){var gg=S.guest||load("niagize.guest",{});gg.wa=nw;S.guest=gg;save("niagize.guest",gg);}draw(false);W.toast(t("saved"));}
-      catch(x){console.error(x);bad("op_err",null,t("o_phone_fail"));}break;
+      catch(x){console.error(x);bad("op_err",null,t(/^(owner|locked)$/.test(x&&x.message)?"err_"+x.message:"o_phone_fail"));}break;
     case "instGo":var how=await W.install();W.ls("winga.instbar",String(Date.now()));if(how==="manual")open("tips",{panel:1});else render();break;
     case "instX":W.ls("winga.instbar",String(Date.now()));render();break;
     case "addrs":open("addrs");break;
@@ -997,7 +997,7 @@ document.addEventListener("click",async function(e){
       if(cl.name.length<2)return bad("cl_err","w_cl_name",t("need_field",{f:t("claim_name").toLowerCase()}));
       cc.o=await W.db.submitPayment(cc.o.code,cl.ref,cl.name,cl.ch);draw(false);
       W.openWa(cc.o.whatsapp||S.shop.whatsapp,t("claim_wa",{code:cc.o.code,ch:cl.ch,ref:cl.ref,name:cl.name,link:W.adminUrl()+"o.html#"+cc.o.code}));break;
-  }}catch(err){console.error(err);W.toast(t("error"));}
+  }}catch(err){console.error(err);W.toast(t(/^(owner|locked)$/.test(err&&err.message)?"err_"+err.message:"error"));}
   finally{if(slow)W.busy(el,false);}
 });
 var SLOW={sendNow:1,send:1,saveContacts:1,addrSave:1,addrDel:1,delAccYes:1,signout:1,claimSend:1,rateSend:1,history:1};
