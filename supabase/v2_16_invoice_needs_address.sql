@@ -1,3 +1,4 @@
+-- v2.16 wave 3: run 29 Oct 2026 (Super Admin go) together with v2.19.
 -- v2.16 wave 3 (fix 12): the server, not only the app, refuses an invoice without a customer number and a delivery place.
 -- Only set_order_v2 changes (used by the beta). The live v2.0 app calls set_order, which is untouched.
 -- Safe to re-run. Undo: re-run the previous definition (saved below the line at the end of this file as a comment).

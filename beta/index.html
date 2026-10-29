@@ -677,6 +677,10 @@ var PAGES={
  delinfo:function(c){
   return '<div class="bd"><div class="delpop"><span class="fi jua">'+IC.truck+'</span><h2 style="margin:0">'+esc(t("del_pop_t"))+'</h2><p class="muted" style="margin:0">'+esc(t("del_pop_s",{code:c.o.code}))+'</p><button class="btn primary block" data-act="back" style="border-radius:999px">'+esc(t("ok"))+'</button></div></div>';
  },
+ proof:function(c){
+  return hd(t("proof_t"))+'<div class="bd"><p class="muted" style="margin:0">'+esc(t("proof_s",{code:c.code}))+'</p>'+W.phoneField("pf_wa",c.wa||"",IC.wa.replace('<svg','<svg style="color:var(--wa)"'))+'<div class="ferr" id="pf_err" role="alert">'+(c.err?esc(t("err_owner")):'')+'</div></div>'+
+   '<div class="ft"><button class="btn primary block" data-act="proofSave" style="border-radius:999px">'+IC.check+esc(t("proof_go"))+'</button></div>';
+ },
  ophone:function(c){
   return hd(t("o_phone_title"))+'<div class="bd">'+W.phoneField("op_wa",c.wa||"",IC.wa.replace('<svg','<svg style="color:var(--wa)"'))+'<div class="hint">'+esc(t("o_phone_hint"))+'</div><div class="ferr" id="op_err" role="alert"></div></div>'+
    '<div class="ft"><button class="btn primary block" data-act="savePhoneO" style="border-radius:999px">'+IC.check+esc(t("save"))+'</button></div>';
@@ -1017,7 +1021,9 @@ document.addEventListener("click",async function(e){
     case "savePhoneO":var nw=W.phoneVal("op_wa");if(!W.phoneOk(nw))return bad("op_err","w_op_wa",W.phoneErr("op_wa"));
       try{var oo=await W.db.setOrderPhone(top().c.code,nw);back();var oc2=top();if(oc2&&oc2.n==="order"){oc2.c.o=Object.assign(oc2.c.o,oo||{});if(!oc2.c.o.customer_phone&&isGuest())oc2.c.o.phone_tail=nw.slice(-3);}
         if(isGuest()){var gg=S.guest||load("niagize.guest",{});gg.wa=nw;S.guest=gg;save("niagize.guest",gg);}draw(false);W.toast(t("saved"));}
-      catch(x){console.error(x);bad("op_err",null,t("o_phone_fail"));}break;
+      catch(x){console.error(x);if(x&&x.message==="owner"){open("proof",{code:top().c.code,act:"savePhoneO",err:W._proofTry===top().c.code});break;}bad("op_err",null,t(x&&x.message==="locked"?"err_locked":"o_phone_fail"));}break;
+    case "proofSave":var pv=W.phoneVal("pf_wa");if(!W.phoneOk(pv))return bad("pf_err","w_pf_wa",W.phoneErr("pf_wa"));var pc2=cur.c;W.setProof(pc2.code,pv);W._proofTry=pc2.code;back();
+      setTimeout(function(){var rb=document.querySelector('[data-act="'+pc2.act+'"]');if(rb)rb.click();},80);break;
     case "instGo":var how=await W.install();W.ls("winga.instbar",String(Date.now()));if(how==="manual")open("tips",{panel:1});else render();break;
     case "instX":W.ls("winga.instbar",String(Date.now()));render();break;
     case "addrs":open("addrs");break;
@@ -1036,7 +1042,7 @@ document.addEventListener("click",async function(e){
     case "received":open("rate",{n:0,o:cur.c.o});break;
     case "star":var rn=$("#r_note");cur.c.note=rn?rn.value:"";cur.c.n=+el.dataset.n;draw(false);break;
     case "rateSend":case "rateSkip":if(a==="rateSend"&&!cur.c.n)break;var note=a==="rateSkip"?"":(($("#r_note")||{}).value||"");var rc=cur.c,ro=null;
-      try{ro=await W.db.customerReceived(rc.o.code,a==="rateSkip"?null:rc.n,note.trim());}catch(x){if(a!=="rateSkip")throw x;console.error(x);}
+      try{ro=await W.db.customerReceived(rc.o.code,a==="rateSkip"?null:rc.n,note.trim());}catch(x){if(a!=="rateSkip"||/^(owner|locked)$/.test(x&&x.message))throw x;console.error(x);}
       back();var oc=top();if(ro&&oc&&oc.n==="order"){oc.c.o=ro;oc.c.fresh=false;}
       var thxo=ro||Object.assign({},rc.o,{received_at:new Date().toISOString()});W.ls("niagize.thxpop."+thxo.code,"1");
       open("cardprev",{o:thxo,kind:"thx",pop:true});makeCard(top().c);W.toast(t("rate_thanks"));break;
@@ -1046,10 +1052,13 @@ document.addEventListener("click",async function(e){
       if(cl.name.length<2)return bad("cl_err","w_cl_name",t("need_field",{f:t("claim_name").toLowerCase()}));
       cc.o=await W.db.submitPayment(cc.o.code,cl.ref,cl.name,cl.ch);if(!cc.o.claim_ref){cc.o.claim_ref=cl.ref;cc.o.claim_name=cl.name;cc.o.claim_channel=cl.ch;}draw(false);
       W.openWaUrl(claimWa(cc.o));break;
-  }}catch(err){console.error(err);W.toast(t("error"));}
+  }}catch(err){console.error(err);var em=err&&err.message;
+    /* v2.19: not proven to be this guest's order → ask for the number once, then repeat the same tap */
+    if(em==="owner"&&/^(claimSend|rateSend|rateSkip)$/.test(a)&&cur&&cur.c&&cur.c.o){open("proof",{code:cur.c.o.code,act:a,err:W._proofTry===cur.c.o.code});}
+    else W.toast(t(em==="locked"?"err_locked":em==="owner"?"err_owner":"error"));}
   finally{if(slow)W.busy(el,false);}
 });
-var SLOW={sendNow:1,send:1,saveContacts:1,addrSave:1,addrDel:1,delAccYes:1,signout:1,claimSend:1,rateSend:1,rateSkip:1,history:1};
+var SLOW={sendNow:1,send:1,saveContacts:1,addrSave:1,addrDel:1,delAccYes:1,signout:1,claimSend:1,rateSend:1,rateSkip:1,proofSave:1,history:1};
 document.addEventListener("change",function(e){
   if(e.target.id==="po_file"&&e.target.files&&e.target.files[0]){var pc=top();if(pc&&pc.n==="porder"){pc.c.note=($("#po_note")||{}).value||pc.c.note||"";pc.c.file=e.target.files[0];if(pc.c.url)URL.revokeObjectURL(pc.c.url);pc.c.url=URL.createObjectURL(pc.c.file);draw(false);}return;}
   var el=e.target;
