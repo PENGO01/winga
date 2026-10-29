@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <a href="https://pengo01.github.io/winga/"><b>Open the shop</b></a> ·
-  <a href="https://pengo01.github.io/winga/admin/">Boss side</a> ·
+  <a href="https://niagize.tz/"><b>Open the shop</b></a> ·
+  <a href="https://niagize.tz/admin/">Boss side</a> ·
   <a href="#how-it-works">How it works</a> ·
   <a href="#principles">Principles</a> ·
   <a href="#roadmap">Roadmap</a> ·
@@ -55,10 +55,10 @@ Today, ordering finishes on WhatsApp, where customers already are. In-app orders
 
 ## Use it
 
-**Customers:** open **https://pengo01.github.io/winga/**. On a phone, add it to the Home Screen to come back in one tap.
+**Customers:** open **https://niagize.tz/**. On a phone, add it to the Home Screen to come back in one tap.
 
 **Boss (iPhone):**
-1. Open **https://pengo01.github.io/winga/admin/** in **Safari**, tap **Share → Add to Home Screen**.
+1. Open **https://niagize.tz/admin/** in **Safari**, tap **Share → Add to Home Screen**.
 2. Open **Niagize Boss** from the Home Screen and sign in. Accounts are created by the Super Admin.
 3. Tap the bulb for **Hatua 3**: WhatsApp number, three products, share the link.
 
@@ -110,7 +110,7 @@ Effort follows one rule: **metrics 50% · onboarding 40% · features 10%.**
 
 ## Where it started
 
-Niagize Kariakoo grew out of **Winga Pocket** (`/pocket/`), a phone-only tool for a winga's catalog, margin math and orders. Field feedback from a working winga turned it into a shop customers can browse. The pocket tool still works at **https://pengo01.github.io/winga/pocket/**.
+Niagize Kariakoo grew out of **Winga Pocket** (`/pocket/`), a phone-only tool for a winga's catalog, margin math and orders. Field feedback from a working winga turned it into a shop customers can browse. The pocket tool still works at **https://niagize.tz/pocket/**.
 
 ## Contributing
 
