@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.20.0";
+W.VERSION = "2.21.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -956,7 +956,8 @@ var sb = live ? window.supabase.createClient(C.url, C.anonKey, { auth: { persist
 W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";
 W.beta = !!C.beta;          // the /beta/ copy shows a small BETA pill
-W.betaPill = function () { var live = !W.demoForced && !W.beta && W.stage === "production"; return '<span class="betapill '+(live?"live":"pilot")+'" role="img" aria-label="'+(W.demoForced?"Demo":live?"Live":"Beta")+'" title="'+(W.demoForced?"Mfano / Demo":live?"Live":"Beta")+'"></span>'; };   // status dot: yellow = beta/pilot/demo, green = live
+W.env = C.env || "prod";
+W.betaPill = function () { if (W.env === "dev" && !W.demoForced) return '<span class="envtag" title="Dev database">DEV</span>'; var live = !W.demoForced && !W.beta && W.stage === "production"; return '<span class="betapill '+(live?"live":"pilot")+'" role="img" aria-label="'+(W.demoForced?"Demo":live?"Live":"Beta")+'" title="'+(W.demoForced?"Mfano / Demo":live?"Live":"Beta")+'"></span>'; };   // status dot: yellow = beta/pilot/demo, green = live
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 W.img = pub;
