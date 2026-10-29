@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.16.0";
+W.VERSION = "2.17.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -50,6 +50,9 @@ W.STRINGS = [
  ["nav_cats","Shop · Menu","Category","Category"],
  ["nav_cart","Shop · Menu","Kapu","Basket"],
  ["nav_me","Shop · Menu","Mimi","Me"],
+ ["hint_digits","Common","Bado tarakimu {n}","{n} more digits"],
+ ["hint_email_at","Common","Endelea kuandika email (mf. jina@gmail.com)","Keep typing an email address"],
+ ["hint_email_dot","Common","Malizia email (mf. .com)","Finish the email (e.g. .com)"],
  ["searchPh","Shop","Tafuta bidhaa…","Search products…"],
  ["emptyShop","Shop","Kaa mkao wa kula, bidhaa mpya zinakuja","Get ready, new products are coming"],
  ["g_wa_ok","Shop","Namba hii iko WhatsApp (Tutaitumia kuwasiliana na wewe)","This number is on WhatsApp (we'll use it to reach you)"],
@@ -103,7 +106,7 @@ W.STRINGS = [
  ["fee_tbd","Basket","Tutakutaarifu gharama za delivery kabla ya kulipa","We'll tell you the delivery cost before you pay"],
  ["deliver_to","Basket","Anwani ya kupokea","Delivery address"],
  ["add_addr","Basket","Ongeza anwani","Add address"],
- ["wa_hello","Basket (WhatsApp)","Mambo vipi ✌🏾\nNapata mzigo huu?","Hi ✌🏾\nCan I get these?"],
+ ["wa_hello","Basket (WhatsApp)","Mambo vipi ✌🏾","Hi ✌🏾"],
  ["cancel","Common","Acha","Cancel"],
  ["wa_photo","Basket (WhatsApp)","Mambo vipi ✌🏾\nNatafuta mzigo huu 👇 (picha kwenye oda)","Hi ✌🏾\nI'm looking for this 👇 (photo in the order)"],
  ["card_dl","Card","Hifadhi","Save"],
@@ -155,7 +158,7 @@ W.STRINGS = [
  ["rate_send","Order","Funga oda","Close the order"],
  ["rate_thanks","Order","Asante! Oda imefungwa","Thank you! Order closed"],
  ["rate_your","Order","Umetoa nyota {n}","You gave {n} stars"],
- ["chat_order","Order","Mambo vipi ✌🏾, naulizia status ya oda yangu, {code}: TZS {x}","Hi ✌🏾, I'm asking about the status of my order, {code}: TZS {x}"],
+ ["chat_order","Order","Mambo vipi ✌🏾, naulizia status ya oda yangu, {code}: TZS {x}\n{link}","Hi ✌🏾, I'm asking about the status of my order, {code}: TZS {x}\n{link}"],
  ["chat_status","Order","Mambo vipi ✌🏾, naulizia status ya oda yangu, {code}: TZS {x}\n{link}","Hi ✌🏾, I'm asking about the status of my order, {code}: TZS {x}\n{link}"],
  ["g_wa","Basket","Namba yako ya WhatsApp","Your WhatsApp number"],
  ["g_name","Basket","Jina lako (si lazima)","Your name (optional)"],
@@ -185,8 +188,8 @@ W.STRINGS = [
  ["gj_ph","Boss · Ganji","Weka ganji ya oda hii","Enter this order's ganji"],
  ["gj_saved","Boss · Ganji","Ganji imehifadhiwa","Ganji saved"],
  ["gj_off","Boss · Ganji","Ganji itahifadhiwa baada ya DB update v2.10","Ganji saves after the v2.10 DB update"],
- ["pg_ph","Boss · Ganji","Ganji yako kwa kila moja","Your ganji on each one"],
- ["pg_s","Boss · Ganji","Siri yako. Mteja haioni kamwe. Inajaza Ganji ya oda yenyewe.","Your secret. Customers never see it. It fills the order's Ganji by itself."],
+ ["pg_ph","Boss · Ganji","Ganji/Service fee","Ganji/Service fee"],
+ ["pg_s","Boss · Ganji","Siri yako, Mteja haoni kamwe!","Yours only. Customers never see it!"],
  ["gj_auto","Boss · Ganji","Imejazwa kutoka bidhaa. Badilisha kama mmekubaliana tofauti.","Filled from the products. Change it if you agreed otherwise."],
  ["vip_title","Boss · Customers","Wateja bora 25","Top 25 customers"],
  ["vip_s","Boss · Customers","Wanaokamilisha oda nyingi zaidi. Wape punguzo au zawadi ili warudi tena.","Those with the most completed orders. Give them a discount or a gift so they come back."],
@@ -289,7 +292,7 @@ W.STRINGS = [
  ["help_soon","Me · Help","Inakuja hivi karibuni","Coming soon"],
  ["help_subject","Me · Help","Kichwa","Subject"],
  ["help_body","Me · Help","Eleza changamoto yako","Describe the problem"],
- ["set_title","Me · Settings","Mipangilio","Settings"],
+ ["set_title","Me · Settings","Settings","Settings"],
  ["set_contacts","Me · Settings","Mawasiliano","Contacts"],
  ["set_about","Me · Settings","Kuhusu sisi","About us"],
  ["set_terms","Me · Settings","Vigezo na masharti","Terms and conditions"],
@@ -436,9 +439,17 @@ W.STRINGS = [
  ["new_tag_o","Boss · Orders","MPYA","NEW"],
  ["st_ship","Boss · Orders","Mzigo uko njiani","On the way"],
  ["ship_msg","Boss · Orders","Mambo vipi{name} ✌🏾\n🚚 Mzigo wa oda {code} uko njiani.\n{note}\n\nFuatilia hapa: {link}","Hi{name} ✌🏾\n🚚 Your order {code} is on the way.\n{note}\n\nTrack it here: {link}"],
- ["ship_need","Boss · Orders","Andika nani analeta au lini","Write who brings it or when"],
+ ["inv_resend","Boss · Orders","Tuma invoice tena","Resend invoice"],
+ ["inv_resent","Boss · Orders","Invoice imefunguliwa WhatsApp","Invoice opened in WhatsApp"],
+ ["card_short","Boss · Orders","Kadi ya invoice","Invoice card"],
+ ["pay_via","Boss · Orders","Mteja alipe kupitia","Customer pays to"],
+ ["ship_name","Boss · Orders","Jina la anayeleta","Rider's name"],
+ ["del_all_n","Boss · Products","Futa zote ({n})","Delete all ({n})"],
+ ["confirmDelN","Boss · Edit","Futa bidhaa {n} kabisa? Huwezi kurudisha.","Delete {n} products for good? This can't be undone."],
+ ["photo_change","Boss · Profile","Badilisha picha","Change photo"],
+ ["ship_need","Boss · Orders","Weka jina, namba au muda","Add a name, number or time"],
  ["ship_send","Boss · Orders","Tuma kwa mteja","Send to the customer"],
- ["ship_when","Boss · Orders","Lini? (mf. Leo saa 10 jioni)","When? (e.g. today at 4 pm)"],
+ ["ship_when","Boss · Orders","Lini? (mf. Leo saa 10)","When? (e.g. today 4 pm)"],
  ["ship_who","Boss · Orders","Nani analeta? (mf. Juma boda · 0754 111 222)","Who brings it? (e.g. Juma, boda · 0754 111 222)"],
  ["ship_s","Boss · Orders","Mteja ataona taarifa hizi kwenye oda yake na kwenye WhatsApp","The customer sees this on their order and on WhatsApp"],
  ["ship_btn","Boss · Orders","Tuma taarifa za delivery","Send delivery details"],
@@ -453,7 +464,7 @@ W.STRINGS = [
  ["addr_set_ph","Boss · Orders","Mahali pa delivery (mf. Sinza Mori, karibu na sheli)","Delivery place (e.g. Sinza Mori, near the petrol station)"],
  ["addr_need","Boss · Orders","Weka mahali pa delivery kwanza","Add the delivery place first"],
  ["reopened","Boss · Orders","Oda imerudishwa: unaweza kubadili bei, kisha tuma invoice tena","Order reopened: change prices, then send the invoice again"],
- ["a_reopen","Boss · Orders","Rudisha oda (fungua upya)","Reopen the order"],
+ ["a_reopen","Boss · Orders","Rudisha oda","Reopen"],
  ["locked","Boss · Orders","Bei imefungwa baada ya invoice. Gusa kitufe cha kurudisha chini ili kubadili.","Prices are locked after the invoice. Tap the reopen button below to change them."],
  ["fee_min","Boss · Orders","Weka 0 (bure) au kuanzia TSh 500","Enter 0 (free) or from TSh 500"],
  ["fee_free","Boss · Orders","Bure","Free"],
@@ -506,7 +517,7 @@ W.STRINGS = [
  ["role_super_admin","Boss · Profile","Super Admin","Super Admin"],
  ["role_boss","Boss · Profile","Boss","Boss"],
  ["role_assistant","Boss · Profile","Msaidizi","Assistant"],
- ["shop_settings","Boss · Profile","Mipangilio ya duka","Shop settings"],
+ ["shop_settings","Boss · Profile","Settings za duka","Shop settings"],
  ["shop_settings_s","Boss · Profile","WhatsApp na namba za malipo","WhatsApp and payment numbers"],
  ["team","Boss · Profile","Wasaidizi","Assistants"],
  ["team_s","Boss · Profile","Wanaoweza kuongeza bidhaa na kuhudumia oda","People who add products and serve orders"],
@@ -531,7 +542,7 @@ W.STRINGS = [
  ["team_confirm","Boss · Assistants","Ondoa {x}?","Remove {x}?"],
  ["team_share","Boss · Assistants","Tuma link ya kuingia","Send sign-in link"],
  ["team_share_msg","Boss · Assistants","Mambo vipi {name} ✌🏾\nKaribu tufanye kazi, tumia taarifa zako hapo chini kuingia Niagize: {url}\nJina: {login}","Hello {name}!\nWelcome to the team. Use the details below to sign in to Niagize: {url}\nName: {login}"],
- ["team_reset","Boss · Assistants","Weka neno jipya la siri","Set a new password"],
+ ["team_reset","Boss · Assistants","Badilisha namba ya siri","Change password"],
  ["team_reset_s","Boss · Assistants","Kwa {x}. Mpe neno hili jipya","For {x}. Give them this new password"],
  ["team_reset_ok","Boss · Assistants","Neno jipya la siri limewekwa","New password set"],
  ["you","Boss · Assistants","Wewe","You"],
@@ -710,6 +721,19 @@ W.phoneField = function (id, full, icon, ph) {
 /* the full number from a phone field ("" when empty) */
 W.phoneVal = function (id) { var i = document.getElementById(id), s = document.getElementById(id + "_cc"); if (!i) return ""; var d = i.value.replace(/\D/g, "").replace(/^0+/, ""), cc = s ? s.value : "255"; var cx = W.ccOf(cc); if (d.indexOf(cc) === 0 && (d.length > cx[2] || !cx[3].test(d))) d = d.slice(cc.length); return d ? cc + d : ""; };
 W.phoneErr = function (id) { var s = document.getElementById(id + "_cc"), c = W.ccOf(s ? s.value : "255"); return W.t("err_wa", { n: c[2], cc: c[0] }); };
+/* v2.17 live hint under a field while typing (phone, email): says what's still missing, then goes away */
+W.fieldHint = function (el) {
+  if (!el || !el.closest) return; var wrap = el.closest(".ifield"); if (!wrap) return;
+  var msg = "", v = el.value.trim();
+  if (el.dataset.phone) { var s = document.getElementById(el.id + "_cc"), c = W.ccOf(s ? s.value : "255"), n = v.replace(/\D/g, "").replace(/^0+/, "").length;
+    if (n && n < c[2]) msg = W.t("hint_digits", { n: c[2] - n }); }
+  else if (el.type === "email" && v) {
+    if (v.indexOf("@") < 0) msg = W.t("hint_email_at"); else if (!/@[^@\s]+\.[^@\s]{2,}$/.test(v)) msg = W.t("hint_email_dot"); }
+  var h = wrap.nextElementSibling; if (!(h && h.classList.contains("fhint"))) { if (!msg) return; h = document.createElement("div"); h.className = "fhint"; h.setAttribute("aria-live", "polite"); wrap.after(h); }
+  if (msg) { h.textContent = msg; h.hidden = false; } else h.hidden = true;
+};
+document.addEventListener("input", function (e) { var el = e.target; if (el && (el.dataset && el.dataset.phone || el.type === "email")) W.fieldHint(el); });
+document.addEventListener("focusout", function (e) { var el = e.target, w = el && el.closest && el.closest(".ifield"), h = w && w.nextElementSibling; if (h && h.classList.contains("fhint")) h.hidden = true; });
 /* while typing: digits only, no leading 0, grouped 3-3-3, never more than the country allows */
 document.addEventListener("input", function (e) {
   var el = e.target; if (!el || !el.dataset || !el.dataset.phone) return;
@@ -895,6 +919,9 @@ W.betaPill = function () { var live = !W.demoForced && !W.beta && W.stage === "p
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
 W.img = pub;
+W.centerChips = function (root, smooth) { (root || document).querySelectorAll(".chips").forEach(function (c) { var on = c.querySelector('[aria-pressed="true"]'); if (!on || c.scrollWidth <= c.clientWidth) return; var x = on.offsetLeft - (c.clientWidth - on.offsetWidth) / 2; try { c.scrollTo({ left: Math.max(0, x), behavior: smooth ? "smooth" : "auto" }); } catch (e) { c.scrollLeft = Math.max(0, x); } }); };
+/* v2.17 profile photos: products/avatars/<user id>.jpg (owners/team write, anyone reads) */
+W.avatarUrl = function (id, v) { return live ? pub("avatars/" + id + ".jpg") + "?v=" + encodeURIComponent(v || "0") : (ls("winga.avdata." + id) || ""); };
 W.decorateProduct = function (p) { return decorate(p); };
 function decorate(p) {
   p.thumbUrl = pub((p.thumbs && p.thumbs[0]) || (p.images && p.images[0]));
@@ -931,14 +958,17 @@ W.normalize = normalize;
   function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
   function day(d) { try { return new Date(d || Date.now()).toLocaleDateString(W.lang === "sw" ? "sw-TZ" : "en-GB", { day: "numeric", month: "short", year: "numeric" }); } catch (_) { return String(d || "").slice(0, 10); } }
   async function ready() { try { await Promise.all(["800 40px Onest", "600 30px Onest", "400 30px Onest"].map(function (f) { return document.fonts.load(f); })); } catch (_) {} }
+  /* v2.17: brand band on top (ink + the striped gold sun), gold rule, ink footer with the tagline */
   function head(c, shop, label) {
-    sun(c, 96, 112, 34); c.fillStyle = INK; font(c, 800, 40); c.textAlign = "left"; c.fillText(shop || "Niagize Kariakoo", 146, 126);
-    c.fillStyle = GOLD; c.fillRect(64, 176, 96, 6);
-    c.fillStyle = DIM; font(c, 600, 26); c.textAlign = "right"; c.fillText(label, Wd - 64, 124); c.textAlign = "left";
+    c.fillStyle = INK; c.fillRect(0, 0, Wd, 230);
+    c.save(); c.beginPath(); c.rect(0, 0, Wd, 230); c.clip(); c.globalAlpha = .9; sun(c, Wd - 120, 118, 150); c.restore();
+    sun(c, 96, 100, 36); c.fillStyle = "#FFFFFF"; font(c, 800, 42); c.textAlign = "left"; c.fillText(shop || "Niagize Kariakoo", 150, 116);
+    c.fillStyle = GOLD; font(c, 600, 24); c.fillText(String(label || "").toUpperCase(), 64, 186);
+    c.fillStyle = GOLD; c.fillRect(0, 230, Wd, 10);
   }
-  function foot(c, H, url) { c.fillStyle = LINE; c.fillRect(64, H - 128, Wd - 128, 2); c.fillStyle = INK; font(c, 800, 28); c.fillText("SHOP . DELIVER . SATISFY", 64, H - 74); c.fillStyle = DIM; font(c, 400, 26); c.textAlign = "right"; c.fillText(String(url || "").replace(/^https?:\/\//, "").replace(/\/$/, ""), Wd - 64, H - 74); c.textAlign = "left"; }
+  function foot(c, H, url) { c.fillStyle = INK; c.fillRect(0, H - 140, Wd, 140); c.fillStyle = GOLD; c.fillRect(0, H - 140, Wd, 6); font(c, 800, 28); c.textAlign = "left"; c.fillText("SHOP . DELIVER . SATISFY", 64, H - 58); c.fillStyle = "#C9C9C9"; font(c, 400, 26); c.textAlign = "right"; c.fillText(String(url || "").replace(/^https?:\/\//, "").replace(/\/$/, ""), Wd - 64, H - 58); c.textAlign = "left"; }
   function canvas(H) { var cv = document.createElement("canvas"); cv.width = Wd; cv.height = H; var c = cv.getContext("2d"); c.fillStyle = "#FFFFFF"; c.fillRect(0, 0, Wd, H); c.textBaseline = "alphabetic"; return { cv: cv, c: c }; }
-  function blob(cv) { return new Promise(function (res, rej) { cv.toBlob(function (b) { b ? res(b) : rej(new Error("png")); }, "image/png"); }); }
+  function blob(cv) { return new Promise(function (res, rej) { cv.toBlob(function (b) { b ? res(b) : rej(new Error("jpg")); }, "image/jpeg", .86); }); }
   W.cardInvoice = async function (o, shop, url) {
     await ready();
     var items = o.items || [], shown = items.slice(0, 6), pays = ((o.payments || (shop && shop.payments)) || []).filter(function (p) { return p.number; }).slice(0, 2);
@@ -979,7 +1009,7 @@ W.normalize = normalize;
   };
   /* share the picture where the phone can (WhatsApp shows it with the text); otherwise save it */
   W.shareCard = async function (b, name, text) {
-    var file = null; try { file = new File([b], name, { type: "image/png" }); } catch (_) {}
+    var file = null; try { file = new File([b], String(name).replace(/\.png$/, ".jpg"), { type: b.type || "image/jpeg" }); } catch (_) {}
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], text: text || "" }); return "shared"; } catch (e) { if (e && e.name === "AbortError") return "cancel"; } }
     var u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
     W.toast(W.t("card_saved")); return "saved";
@@ -1192,6 +1222,12 @@ W.db = {
     if (!live) { var m = {}; demoGet().products.forEach(function (p) { if (p.ganji != null) m[p.id] = p.ganji; }); return m; }
     var r = await sb.from("product_private").select("product_id,ganji").limit(2000); if (r.error) { W.pganjiOff = true; return {}; }
     var o = {}; r.data.forEach(function (x) { if (x.ganji != null) o[x.product_id] = x.ganji; }); return o;
+  },
+  async uploadAvatar(id, file) {
+    var blob = await W.shrink(file, 320, .82);
+    if (!live) { var d = await W.blobToData(blob); ls("winga.avdata." + id, d); return Date.now(); }
+    var r = await sb.storage.from("products").upload("avatars/" + id + ".jpg", blob, { contentType: "image/jpeg", cacheControl: "60", upsert: true });
+    if (r.error) throw r.error; return Date.now();
   },
   async setProductGanji(id, amount) {
     amount = amount == null ? null : Math.max(0, Math.round(+amount || 0));

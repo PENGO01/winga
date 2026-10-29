@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#121212">
 <meta property="og:title" content="Niagize Kariakoo">
 <meta property="og:description" content="SHOP . DELIVER . SATISFY">
-<meta property="og:image" content="https://niagize.kariakoo.workers.dev/og-v2.jpg">
+<meta property="og:image" content="https://pengo01.github.io/winga/beta/og-v3.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -262,7 +262,7 @@ html.sheet-open,html.sheet-open body{overflow:hidden}
 .pname{font-size:19px;font-weight:600;line-height:1.3}
 .prow{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .pmeta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);white-space:nowrap}
-.actbar.pbar{grid-template-columns:48px 1fr 1.35fr}
+.actbar.pbar{grid-template-columns:1fr 48px 1.35fr}
 .actbar.one{grid-template-columns:1fr}
 .cartsq{position:relative;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;padding:0;cursor:pointer}
 .cartsq svg{width:22px;height:22px}
@@ -289,11 +289,20 @@ html.sheet-open,html.sheet-open body{overflow:hidden}
 /* the header tagline also uses .tag: keep it on the ink header, not the sand chip */
 header.shop .tag{background:var(--on-navy-tint);box-shadow:none;height:auto;padding:4px 10px;color:var(--on-navy-dim)}
 .fab{width:48px;height:48px}
+/* v2.17 shop */
+.hbtn.how{background:var(--jua);color:var(--on-jua)}
+.psep{border:0;border-top:1px solid var(--line);margin:14px 0 4px}
+.simh{font-size:15px;margin-top:2px}
+.track{display:flex;justify-content:center;padding:6px 0 2px}
+.track .timeline{width:min(100%,300px)}
 </style>
 </head>
 <body>
 <script>window.NIAGIZE_APP = "shop";</script>
 <div class="app" id="app"></div>
+<script>/* v2.17: blank-screen guard: if the app hasn't drawn after 6 s (no network, a file missing), say so */
+setTimeout(function(){var a=document.getElementById("app");if(!a||a.children.length||document.getElementById("errRoot"))return;
+a.innerHTML='<div style="min-height:80vh;display:grid;place-items:center;text-align:center;padding:24px"><div><b style="display:block;font-size:20px;margin-bottom:6px">'+(navigator.onLine===false?'Hakuna mtandao':'Imeshindwa kufungua')+'</b><p style="margin:0 0 18px;opacity:.7">Washa data au Wi-Fi, kisha jaribu tena.</p><button onclick="location.reload()" style="border:0;border-radius:999px;background:#FFC62D;color:#121212;font-weight:600;padding:13px 26px">Jaribu tena</button></div></div>';},6000);</script>
 <nav class="tabs" id="tabs" aria-label="Menu" hidden></nav>
 <div id="sheetRoot"></div>
 <div id="toastRoot"></div>
@@ -373,7 +382,7 @@ function stars(n){n=n||2;var s="";for(var i=1;i<=3;i++)s+='<i class="'+(i<=n?"on
 function drop(p){return p.price>0&&p.prev_price>p.price&&p.price_drop_at&&(Date.now()-new Date(p.price_drop_at).getTime()<14*864e5)?Math.round((1-p.price/p.prev_price)*100):0;}
 function priceHtml(p){if(p.price==null)return '<span class="ask">'+esc(t("noPrice"))+'</span>';var d=drop(p);
   return '<b>TSh '+W.money(p.price)+'</b>'+(d?'<s class="was">'+W.money(p.prev_price)+'</s><span class="off">-'+d+'%</span>':'');}
-function hbtns(){return '<button class="hbtn" data-act="shareShop" aria-label="'+esc(t("share"))+'">'+IC.share+'</button><button class="hbtn" data-act="lang" aria-label="'+esc(t("lang"))+'">'+(W.lang==="sw"?"SW":"EN")+'</button>';}
+function hbtns(){return '<button class="hbtn how" data-act="how" aria-label="'+esc(t("how_title"))+'">'+IC.bulb+'</button><button class="hbtn" data-act="shareShop" aria-label="'+esc(t("share"))+'">'+IC.share+'</button><button class="hbtn" data-act="lang" aria-label="'+esc(t("lang"))+'">'+(W.lang==="sw"?"SW":"EN")+'</button>';}
 function chev(){return IC.chev.replace('<svg','<svg class="chev"');}
 /* "Zinazofanana": same group AND sub-group, and a price in the same range (¼× to 4×); best matches first.
    A TV doesn't get phone covers. No real match → the section is hidden. */
@@ -516,7 +525,7 @@ function newStrip(){
   var wk=S.products.filter(function(p){return Date.now()-new Date(p.created_at)<7*864e5;}).length;
   var one=function(dup){return n.map(function(p,i){var age=Date.now()-new Date(p.created_at),fresh=age<3*864e5,today=age<864e5,drop=p.prev_price&&p.price<p.prev_price;
     return '<button data-act="open" data-id="'+p.id+'"'+(dup?' aria-hidden="true" tabindex="-1"':'')+' style="--d:'+(i*60)+'ms"><span class="nim"><img src="'+esc(p.thumbUrl)+'" alt="'+(dup?"":esc(p.name))+'" width="400" height="400" loading="lazy" decoding="async">'+
-     (fresh?'<i class="ntag">'+esc(t(today?"new_today":"new_tag"))+'</i>':'')+'<b class="num nprice">'+(p.price!=null?W.money(p.price):"")+(drop?' <s>'+W.money(p.prev_price)+'</s>':'')+'</b></span><span class="nn">'+esc(p.name)+'</span></button>';}).join("");};
+'<b class="num nprice">'+(p.price!=null?W.money(p.price):"")+(drop?' <s>'+W.money(p.prev_price)+'</s>':'')+'</b></span><span class="nn">'+esc(p.name)+'</span></button>';}).join("");};
   return '<div class="newstrip"><div class="nsh"><span class="spark">'+IC.spark+'</span>'+esc(t("new_strip"))+(wk?'<span class="nlive"><i></i>'+esc(t("new_n",{n:wk}))+'</span>':'')+'</div><div class="nsv" id="nsv" data-noptr><div class="track"><span class="nbelt">'+one(false)+'</span><span class="nbelt">'+one(true)+'</span></div></div></div>';
 }
 function vCats(){
@@ -553,12 +562,11 @@ function guestBlock(){
   var g=S.guest||(S.guest=load("niagize.guest",{wa:"",name:""}));
   return '<div class="stack" style="gap:8px"><div class="eyebrow">'+esc(t("g_wa"))+'</div>'+
    W.phoneField("g_wa",g.wa,IC.wa.replace('<svg','<svg style="color:var(--wa)"'))+
-   '<label class="check" id="w_g_ok"><input type="checkbox" id="g_ok"'+(g.ok?" checked":"")+'><span>'+esc(t("g_wa_ok"))+'</span></label>'+
    field("g_name",IC.me,t("g_name"),g.name,' autocomplete="name" maxlength="60" data-guest="name"')+
    '<div class="eyebrow" style="margin-top:6px">'+esc(t("g_addr_l"))+'</div>'+
    (g.addr&&!g.editAddr?'<div class="savedaddr" id="w_g_addr"><span class="fi">'+IC.pin+'</span><div class="grow"><div class="small muted">'+esc(t("g_addr_saved"))+'</div><div>'+esc(g.addr)+'</div></div><button class="btn sm ghost" data-act="gAddrEdit" style="border-radius:999px">'+IC.pen+esc(t("o_phone_edit"))+'</button></div>'
      :field("g_addr",IC.pin,t("g_addr"),g.addr||"",' autocomplete="street-address" maxlength="200" data-guest="addr"')+'<button type="button" class="linkbtn locbtn" data-act="gLoc">'+IC.pin+esc(t("use_loc"))+'</button>')+
-   '<div class="hint" style="margin-top:-2px">'+esc(t("g_hint"))+'</div><div class="ferr" id="g_err" role="alert"></div></div>';
+   '<div class="ferr" id="g_err" role="alert"></div></div>';
 }
 function addrBlock(){
   if(!S.me||S.me.needsProfile)return guestBlock();
@@ -613,10 +621,10 @@ var PAGES={
    '<div class="prow"><div class="pp">'+(p.price!=null?'TSh '+W.money(p.price)+(drop(p)?'<s class="was">'+W.money(p.prev_price)+'</s><span class="off">-'+drop(p)+'%</span>':''):'<span class="tag">'+esc(t("noPrice"))+'</span>')+'</div>'+
    '<div class="pmeta">'+stars(p.rating)+(p.ordered?'<span>'+esc(t("sold_n",{n:p.ordered}))+'</span>':'')+'</div></div></div>'+
    (p.description?'<div class="desc">'+esc(p.description)+'</div>':'')+
-   (sim.length?'<div class="simh">'+esc(t("similar"))+'</div><div class="sim">'+sim.map(function(x){return '<button data-act="swapP" data-id="'+x.id+'"><img src="'+esc(x.thumbUrl)+'" alt="" width="400" height="400" loading="lazy" decoding="async"><span>'+esc(x.name)+'</span><b class="num">'+(x.price!=null?W.money(x.price):"")+'</b></button>';}).join("")+'</div>':'')+
+   (sim.length?'<hr class="psep"><div class="simh">'+esc(t("similar"))+'</div><div class="sim">'+sim.map(function(x){return '<button data-act="swapP" data-id="'+x.id+'"><img src="'+esc(x.thumbUrl)+'" alt="" width="400" height="400" loading="lazy" decoding="async"><span>'+esc(x.name)+'</span><b class="num">'+(x.price!=null?W.money(x.price):"")+'</b></button>';}).join("")+'</div>':'')+
    '</div><div class="ft"><div class="actbar '+(buyable(p)?"pbar":"one")+'">'+
-   (buyable(p)?'<button class="cartsq" data-act="qty" data-mode="cart" data-id="'+p.id+'" aria-label="'+esc(t("addCart"))+'" title="'+esc(t("addCart"))+'">'+IC.cartPlus+(inCart(p.id)?'<i>'+inCart(p.id).qty+'</i>':'')+'</button>':'')+
    '<button class="btn chat" data-act="chat" data-id="'+p.id+'">'+IC.wa+esc(t("chat"))+'</button>'+
+   (buyable(p)?'<button class="cartsq" data-act="qty" data-mode="cart" data-id="'+p.id+'" aria-label="'+esc(t("addCart"))+'" title="'+esc(t("addCart"))+'">'+IC.cartPlus+(inCart(p.id)?'<i>'+inCart(p.id).qty+'</i>':'')+'</button>':'')+
    (buyable(p)?'<button class="btn primary" data-act="qty" data-mode="buy" data-id="'+p.id+'">'+esc(t("buyNow"))+'</button>':'')+'</div></div>';
  },
  qty:function(c){
@@ -663,6 +671,7 @@ var PAGES={
    '<div class="timeline">'+steps.map(function(s,i){var sh=s==="pack"?(o.history||[]).filter(function(x){return x.s==="ship";}).pop():null,h=s==="pack"?sh:(o.history||[]).slice().reverse().find(function(x){return x.s===s;});
      var cls=(i<idx?" on":i===idx?" cur":"")+(s==="pack"?" pack":"")+(s==="paid"&&idx===4?" before-pack":"");
      return '<div class="st'+cls+'"><span class="dot"></span><div><div class="tt">'+esc(t(sh?"st_ship":"st_"+s))+'</div>'+(h?'<div class="ss">'+esc(W.whenRel(h.at))+(sh&&sh.note?' · '+esc(sh.note):'')+'</div>':'')+'</div></div>';}).join("")+'</div>';
+  if(!closed)tl='<div class="track">'+tl+'</div>';
   var pays=(o.payments||[]).filter(function(p){return p.number;});
   /* payment: nothing before the invoice; after it, where to pay + "I paid" details for the seller */
   var pay="";
@@ -696,7 +705,7 @@ var PAGES={
   if(cur==="done"&&o.rating)h+='<div class="hint" style="text-align:center"><span style="color:var(--jua);letter-spacing:2px">'+"★★★★★".slice(0,o.rating)+'</span> '+esc(t("rate_your",{n:o.rating}))+'</div>';
   h+=(!S.me?'<button class="mrow" data-act="signup"><span class="fi">'+IC.me+'</span><span class="tt">'+esc(t("guest_hint"))+'</span>'+chev()+'</button>':'')+'</div>';
   var paidUp=cur==="paid"||cur==="done"||(cur==="invoiced"&&o.claim_ref);
-  var chatText=paidUp?t("chat_status",{code:o.code,x:W.money(W.total(o)),link:W.adminUrl()+"o.html#"+o.code}):t("chat_order",{code:o.code,x:W.money(W.total(o))});
+  var chatText=paidUp?t("chat_status",{code:o.code,x:W.money(W.total(o)),link:W.adminUrl()+"o.html#"+o.code}):t("chat_order",{code:o.code,x:W.money(W.total(o)),link:W.adminUrl()+"o.html#"+o.code});
   var chat='<a class="btn green'+(cur==="paid"?'':' block')+'" style="border-radius:999px" href="'+esc(W.wa(o.whatsapp||S.shop.whatsapp,chatText))+'" aria-label="'+esc(t("o_chat"))+'">'+IC.wa+(cur==="paid"?'':esc(t("o_chat")))+'</a>';
   h+='<div class="ft">'+(cur==="paid"?'<div class="actbar two" style="grid-template-columns:1fr auto"><button class="btn primary" data-act="received" style="border-radius:999px">'+IC.check+esc(t("received"))+'</button>'+chat+'</div>':chat)+'</div>';
   return h;
@@ -836,7 +845,7 @@ function addToCart(id,q,note){
 async function placeOrder(items){
   var guest=isGuest(),g=S.guest||load("niagize.guest",{wa:"",name:""});
   if(guest){if($("#g_wa"))g.wa=W.phoneVal("g_wa");if(!W.phoneOk(g.wa)){bad("g_err","w_g_wa",$("#g_wa")?W.phoneErr("g_wa"):t("err_wa",{n:9,cc:"255"}));return false;}
-    if($("#g_ok")){g.ok=$("#g_ok").checked;if(!g.ok){bad("g_err","w_g_ok",t("err_wa_ok"));return false;}}
+    g.ok=true;
     if($("#g_addr"))g.addr=$("#g_addr").value.trim();if(!g.addr||g.addr.length<3){bad("g_err","w_g_addr",t("err_addr"));return false;}g.editAddr=false;
     S.guest=g;save("niagize.guest",g);}
   try{
@@ -955,7 +964,7 @@ document.addEventListener("click",async function(e){
     case "adLoc":readAddr();var ac=cur.c;myLocation(async function(lat,lng){ac.a.lat=lat;ac.a.lng=lng;if(!String(ac.a.line||"").trim()){try{var rv=await fetch("https://nominatim.openstreetmap.org/reverse?format=json&zoom=17&lat="+lat+"&lon="+lng+"&accept-language="+(W.lang==="sw"?"sw,en":"en")).then(function(r){return r.json();});if(rv&&rv.display_name)ac.a.line=rv.display_name;}catch(_){}}draw(false);W.toast(t("loc_ok"));});break;
     case "cardPrev":var cpo=cur.c.o;open("cardprev",{o:cpo,kind:el.dataset.k||"thx"});makeCard(top().c);break;
     case "cardSave":var cs=cur.c;if(cs.blob)await W.shareCard(cs.blob,"niagize-"+cs.o.code+(cs.kind==="inv"?"-invoice":"-asante")+".png",t("o_title",{code:cs.o.code}));break;
-    case "cardDl":var cd=cur.c;if(cd.blob){var du=URL.createObjectURL(cd.blob),da=document.createElement("a");da.href=du;da.download="niagize-"+cd.o.code+(cd.kind==="inv"?"-invoice":"-asante")+".png";document.body.appendChild(da);da.click();da.remove();setTimeout(function(){URL.revokeObjectURL(du);},4000);W.toast(t("card_saved"));}break;
+    case "cardDl":var cd=cur.c;if(cd.blob){var du=URL.createObjectURL(cd.blob),da=document.createElement("a");da.href=du;da.download="niagize-"+cd.o.code+(cd.kind==="inv"?"-invoice":"-asante")+".jpg";document.body.appendChild(da);da.click();da.remove();setTimeout(function(){URL.revokeObjectURL(du);},4000);W.toast(t("card_saved"));}break;
     case "history":var hctx={list:null};open("history",hctx);loadHistory(hctx);break;
     case "openOrder":openOrder(el.dataset.code);break;
     case "reorder":var hl=cur.c.list.find(function(o){return o.code===el.dataset.code;});hl.items.forEach(function(i){if(i.product_id&&buyable(byId(i.product_id)))addToCart(i.product_id,i.qty,i.note);});S.tab="cart";closeAll();break;
@@ -1090,6 +1099,7 @@ async function boot(){
   try{await W.guard(fetchAll(),15000);}catch(e){console.error(e);if(!warm){W.errorScreen(function(){location.reload();});return;}}
   try{await W.guard(refreshMe(),8000);}catch(e){}
   W.db.log("visit");
+  setTimeout(function(){if(W._tipsPre)return;W._tipsPre=1;[1,2,3,4].forEach(function(n){var im=new Image();im.decoding="async";im.src="how/b"+n+".webp?v=2";});},1500);
   checkOrders(true);document.addEventListener("visibilitychange",function(){if(!document.hidden)checkOrders(false);});
   var m=location.hash.match(/^#p-(.+)$/),o=location.hash.match(/^#o-(.+)$/);
   if(/[?&]go=me/.test(location.search)){S.tab="me";try{history.replaceState(null,"",location.pathname);}catch(_){}render();if(S.me&&S.me.needsProfile)open("complete",{f:{name:S.me.full_name||""}});}

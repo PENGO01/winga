@@ -40,9 +40,13 @@ One family: Onest at 400, 500, 600 and 800. Inputs are 16px, so iPhone doesn't z
 
 ## Components
 - `.tag`: neutral chip, Feather icon plus a short word. `.tag.hot` has a gold outline (Inaharaka). `.tag.cy` has a cyan outline.
-- `.ost` status pill: neutral pill with a coloured dot. Cyan = new, gold = in progress / invoiced / paid, ink = done, red = cancelled.
+- `.ost` status pill (v2.17): neutral pill with a status light, traffic-light / macOS colours: `--st-new` red = new (act now), `--st-work` yellow = in progress / invoiced, `--st-ok` green = paid / done, `--st-off` grey = cancelled. These four are the only saturated colours outside gold, and only on status dots.
 - `.timeline`: done steps ink, current step cyan.
 - Bottom bars: round 48px icons on the left, one gold pill filling the rest. Every button the same height.
+- Order page second actions (v2.17): labelled chips above the timeline (Tuma invoice tena, Kadi ya invoice, Rudisha oda, Tuma taarifa za delivery). The footer keeps only X + the gold action, so it never shrinks.
+- Live field hint (v2.17): a quiet box under a phone or email field says what's missing while typing ("Bado tarakimu 5", "Endelea kuandika email") and hides when complete.
+- Loading (v2.17): the spinner replaces an icon in place; anything slower than 0.5 s also shows the centred sun box.
+- Cards and previews (v2.17): invoice and thank-you images have the ink brand band with the striped sun and an ink footer with the tagline; JPEG ~100 kB. Link previews use `beta/og-v3.jpg` (65 kB).
 - Headers (v2.16): shop = logo + share + language; Boss = logo + stage dot + avatar. Theme lives in Mimi (shop) and the Boss profile; language and tips too in the Boss profile.
 - Boss dashboard (v2.16): opens on the job ("Oda N mpya zinakusubiri" + one gold Fungua), then KPIs as a divided list (label left, value right, no icon circles), then the funnel.
 - Shop product card: the whole card is one button (photo, name, price, stars + sold count). No buttons inside a card.

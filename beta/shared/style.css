@@ -17,6 +17,9 @@ html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
   --shadow-xs:0 1px 2px rgba(18,18,18,.08); --photo-ink:rgba(18,18,18,.78); --grid-line:rgba(255,255,255,.35); --on-navy-tint:rgba(255,255,255,.08);
   --nav-raise:#262626; --live:#22B35E; --live-ring:rgba(34,179,94,.22); --jua-ring:rgba(255,198,45,.28); --cy-ring:rgba(83,196,209,.25); --red-ring:rgba(217,72,59,.22);
   --scrim-soft:rgba(18,18,18,.32); --bar:#12375A; --tint-dark:rgba(0,0,0,.12);
+  /* v2.17 status lights (traffic-light / macOS window buttons): new = red, working = yellow, paid/done = green, cancelled = grey */
+  --st-new:#FF5F57; --st-work:#FEBC2E; --st-ok:#28C840; --st-off:#8E8E93;
+  --st-new-ring:rgba(255,95,87,.22); --st-work-ring:rgba(254,188,46,.25); --st-ok-ring:rgba(40,200,64,.22);
   /* type: Mobile-money calm (21 Oct 2026). One family, Onest, in 400 / 500 / 600 / 800.
      Numbers use the same font (natural digit widths read best on big prices). */
   --display:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -324,3 +327,23 @@ ol.inst{padding:0;margin:0}
 .qt .bdg,.fi .bdg,.badge-n{font-size:11px}
 .pair2{margin-left:.35em;color:var(--faint)}
 input::placeholder,textarea::placeholder{color:var(--faint);opacity:1}
+
+/* ===== v2.17 ===== */
+/* status lights: deep dot + soft ring */
+.ost::before{width:8px;height:8px}
+.ost.new::before{background:var(--st-new);box-shadow:0 0 0 3px var(--st-new-ring)}
+.ost.progress::before,.ost.invoiced::before{background:var(--st-work);box-shadow:0 0 0 3px var(--st-work-ring)}
+.ost.paid::before,.ost.done::before{background:var(--st-ok);box-shadow:0 0 0 3px var(--st-ok-ring)}
+.ost.cancelled::before{background:var(--st-off);box-shadow:none}
+/* busy on an icon button: the spinner replaces the icon, centred, no overlap */
+.fi.busy,.rb.busy,.iconbtn.busy,.icon-btn.busy,.tbtn.busy{opacity:1}
+.fi.busy svg,.rb.busy svg,.iconbtn.busy svg,.icon-btn.busy svg{visibility:hidden}
+.fi.busy::after,.rb.busy::after,.iconbtn.busy::after,.icon-btn.busy::after{position:absolute;inset:0;margin:auto}
+/* buttons answer the finger at once */
+.btn:active,.fi:active,.rb:active,.chip:active,.tag.tbtn:active,.mrow:active{transform:scale(.97)}
+.btn,.fi,.rb,.chip,.tbtn,.mrow{transition:transform .12s ease-out,background-color .15s ease-out}
+@media (prefers-reduced-motion:reduce){.btn,.fi,.rb,.chip,.tbtn,.mrow{transition:none}}
+/* the centred wait box fades in */
+#wwait.on{display:grid;animation:fadein .18s ease-out}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.fhint{margin-top:-4px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;color:var(--dim);font-size:14px;animation:fadein .15s ease-out}
