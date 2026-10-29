@@ -250,6 +250,8 @@ nav.tabs .bdg{position:absolute;top:8px;left:calc(50% + 4px);min-width:17px;heig
 /* v2.1 */
 .kpi.sales{background:var(--ocean);border-color:var(--ocean);color:var(--on-navy)}
 .kpi.sales .v{color:var(--jua)} .kpi.sales .l,.kpi.sales .s{color:var(--on-navy-dim)} .kpi.sales .fi{background:var(--on-navy-tint);color:var(--jua)}
+.ofchips.three{display:grid!important;grid-template-columns:auto 1.4fr 1.2fr;gap:6px;overflow:visible;padding-left:0;padding-right:0}.ofchips.three .chip{justify-content:center;min-width:0;padding-left:8px;padding-right:8px;white-space:nowrap}
+.otag{display:flex!important;flex-wrap:wrap;align-items:center;gap:4px 8px}.otag .onx{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap}
 .osearch{display:flex;align-items:center;gap:6px;flex:1;min-width:0;max-width:220px;margin-left:auto;background:var(--card);border:1px solid var(--line);border-radius:999px;height:38px;padding:0 12px}
 .osearch svg{width:16px;height:16px;color:var(--dim);flex:none}
 .osearch input{border:0;outline:none;background:transparent;min-width:0;flex:1;font-family:var(--num);text-transform:uppercase}
@@ -450,8 +452,13 @@ var IC={
 var NEXT={new:"invoiced",progress:"invoiced",invoiced:"paid",paid:"done"};
 var NEXTLABEL={new:"a_invoice",progress:"a_invoice",invoiced:"a_paid",paid:"a_done"};
 /* order filters: Mpya · Zinasubiri (Inasubiri malipo, Inafanyiwa kazi) · Zimekamilika (Kamili, Zimesitishwa) */
-var OF={new:{all:["new"]},work:{all:["progress","paid"]},wait:{all:["invoiced"]},done:{all:["done","cancelled"],complete:["done"],cancelled:["cancelled"]},pending:{all:["progress","invoiced","paid"]}};
-var OSUB={done:[["all","all"],["complete","f_complete"],["cancelled","f_cancelled"]]};
+/* v2.20: three tabs by whose move it is. Mpya = send the invoice; Inafanyiwa kazi = invoice sent, until delivered
+   (customer-paid first, then paid-to-deliver, then waiting); Zimekamilika = done or cancelled. One search over all. */
+var OF={new:{all:["new","progress"]},work:{all:["invoiced","paid"]},done:{all:["done","cancelled"]},pending:{all:["progress","invoiced","paid"]}};
+var OSUB={};
+function orank(o){return o.status==="invoiced"&&o.claim_ref?0:o.status==="paid"?1:2;}
+function onext(o){var st=o.status;return st==="new"||st==="progress"?"nx_b_inv":st==="invoiced"?(o.claim_ref?"nx_b_verify":"nx_b_wait"):st==="paid"?"nx_b_ship":"";}
+function ostLabel(o){return o.status==="progress"?"st_new":o.status==="invoiced"&&o.claim_ref?"claim_badge":"st_"+o.status;}
 
 /* ---------------- helpers ---------------- */
 function owner(){return !!S.me&&(S.me.role==="boss"||S.me.role==="super_admin");}
@@ -560,13 +567,15 @@ function kpi(icon,label,value,sub,act,cls){return '<button class="kpi'+(cls?" "+
 
 /* ---------------- orders ---------------- */
 function vOrders(){
-  var f=OF[S.ofilter]||OF.new,want=f[S.osub]||f.all,q=S.oq.trim().toUpperCase().replace(/\s/g,"");
-  var list=q?S.orders.filter(function(o){return o.code.indexOf(q)>=0||o.code.replace("NK-","").indexOf(q.replace("NK-",""))>=0;}):S.orders.filter(function(o){return want.indexOf(o.status)>=0||(S.ofilter==="new"&&isUnseen(o));});
+  var f=OF[S.ofilter]||OF.new,want=f.all,q=S.oq.trim().toUpperCase().replace(/\s/g,""),qd=q.replace(/\D/g,"").replace(/^0/,""),qn=S.oq.trim().toLowerCase();
+  /* search: order number, customer name or phone (any format), across every tab */
+  var list=q?S.orders.filter(function(o){return o.code.indexOf(q)>=0||o.code.replace("NK-","").indexOf(q.replace("NK-",""))>=0||(qn.length>1&&String(o.customer_name||"").toLowerCase().indexOf(qn)>=0)||(qd.length>=3&&String(o.customer_phone||"").indexOf(qd)>=0);}):S.orders.filter(function(o){return want.indexOf(o.status)>=0;});
+  if(!q&&S.ofilter==="work")list=list.slice().sort(function(a,b){return orank(a)-orank(b)||new Date(eventAt(a))-new Date(eventAt(b));});
   if(!q&&S.ofilter==="done"&&S.oper&&S.oper!=="all"){var day0=new Date();day0.setHours(0,0,0,0);var from=S.oper==="today"?day0.getTime():day0.getTime()-((+S.oper)-1)*864e5;list=list.filter(function(o){return new Date(eventAt(o)).getTime()>=from;});}
   var h='<div class="ph"><h1>'+esc(t("o_list"))+'</h1><label class="osearch">'+IC.search+'<input id="oq" type="search" placeholder="'+esc(t("o_search"))+'" value="'+esc(S.oq)+'" autocomplete="off" autocapitalize="characters" spellcheck="false"></label><button class="iconbtn" data-act="reloadOrders" aria-label="Refresh">'+IC.refresh+'</button></div>';
   if(!q){
-    var cnt={new:newCount(),work:S.orders.filter(function(o){return OF.work.all.indexOf(o.status)>=0;}).length,wait:S.orders.filter(function(o){return o.status==="invoiced";}).length};
-    h+='<div class="chips ofchips">'+[["new","f_new"],["work","f_working"],["wait","f_waitpay"],["done","f_done"]].map(function(x){return '<button class="chip" data-act="ofilter" data-f="'+x[0]+'" aria-pressed="'+(S.ofilter===x[0])+'">'+esc(t(x[1]))+(cnt[x[0]]?'<span class="cnt">'+cnt[x[0]]+'</span>':'')+'</button>';}).join("")+'</div>';
+    var cnt={new:S.orders.filter(function(o){return OF.new.all.indexOf(o.status)>=0;}).length,work:S.orders.filter(function(o){return OF.work.all.indexOf(o.status)>=0;}).length};
+    h+='<div class="chips ofchips three">'+[["new","f_new"],["work","f_working"],["done","f_done"]].map(function(x){return '<button class="chip" data-act="ofilter" data-f="'+x[0]+'" aria-pressed="'+(S.ofilter===x[0])+'">'+esc(t(x[1]))+(cnt[x[0]]?'<span class="cnt">'+cnt[x[0]]+'</span>':'')+'</button>';}).join("")+'</div>';
     if(OSUB[S.ofilter])h+='<div class="chips subchips">'+OSUB[S.ofilter].map(function(x){return '<button class="chip" data-act="osub" data-f="'+x[0]+'" aria-pressed="'+(S.osub===x[0])+'">'+esc(t(x[1]))+'</button>';}).join("")+'</div>';
     if(S.ofilter==="done")h+='<div class="period operiod">'+[["all","p_all"],["today","p_today"],["7","p_7"],["30","p_30"]].map(function(x){return '<button data-act="oper" data-f="'+x[0]+'" aria-pressed="'+((S.oper||"all")===x[0])+'">'+esc(t(x[1]))+'</button>';}).join("")+'</div>';
   }
@@ -574,9 +583,9 @@ function vOrders(){
   return h+'<div class="stack" style="gap:8px">'+list.map(function(o){
     var photo=(o.items||[]).some(function(i){return !i.product_id&&i.thumb;}),unseen=isUnseen(o);
     return '<button class="oc'+(o.status==="new"||unseen?" new":"")+'" data-act="openOrder" data-code="'+esc(o.code)+'"><span class="th">'+(o.items||[]).slice(0,3).map(function(i){return '<img src="'+esc(W.img(i.thumb))+'" alt="" width="400" height="400" loading="lazy" decoding="async">';}).join("")+(photo?'<i class="pocam">'+IC.cam+'</i>':'')+'</span>'+
-     '<span class="grow" style="min-width:0"><span class="c">'+esc(o.code)+(unseen?' <span class="newtag">'+esc(t("new_tag_o"))+'</span>':'')+'</span><br><span class="m">'+esc(o.customer_name||(W.waPhone(o.customer_phone)?"+"+W.waPhone(o.customer_phone):t("guest")))+' <span class="pair2">'+esc(t("items_n",{n:o.items_count}))+'</span></span><br><span class="tm">'+esc(W.whenRel(eventAt(o)))+'</span>'+(o.status==="invoiced"&&o.claim_ref?'<span class="claim">✓ '+esc(t("claim_badge"))+'</span>':'')+
-     (o.status!=="done"&&o.status!=="cancelled"?'<span class="otag">'+urgency(o,true)+'</span>':'')+'</span>'+
-     '<span class="r"><span class="ost '+o.status+'">'+esc(t(o.status==="progress"?"f_working":"st_"+o.status))+'</span><b>TSh '+W.money(W.total(o))+'</b></span></button>';}).join("")+'</div>';
+     '<span class="grow" style="min-width:0"><span class="c">'+esc(o.code)+(unseen?' <span class="newtag">'+esc(t("new_tag_o"))+'</span>':'')+'</span><br><span class="m">'+esc(o.customer_name||(W.waPhone(o.customer_phone)?"+"+W.waPhone(o.customer_phone):t("guest")))+' <span class="pair2">'+esc(t("items_n",{n:o.items_count}))+'</span></span><br><span class="tm">'+esc(W.whenRel(eventAt(o)))+'</span>'+
+     (o.status!=="done"&&o.status!=="cancelled"?'<span class="otag">'+urgency(o,true)+'<span class="onx">'+esc(t(onext(o)))+'</span></span>':'')+'</span>'+
+     '<span class="r"><span class="ost '+(o.status==="invoiced"&&o.claim_ref?"paid":o.status)+'">'+esc(t(ostLabel(o)))+'</span><b>TSh '+W.money(W.total(o))+'</b></span></button>';}).join("")+'</div>';
 }
 
 /* ---------------- products ---------------- */
@@ -744,7 +753,7 @@ PAGES.order=function(){
   var o=O&&O.o;
   if(!o)return hd("")+'<div class="bd">'+(O&&O.loading?loader():'<div class="empty">'+esc(t("o_notfound"))+'</div>')+'</div>';
   var st=o.status,phone=W.waPhone(o.customer_phone),addr=o.address,closed=st==="done"||st==="cancelled",feeEdit=!closed&&(st==="new"||st==="progress");
-  var h=hd(t("o_title",{code:o.code}),'<span class="ost '+st+'">'+esc(t(st==="progress"?"f_working":"st_"+st))+'</span>')+'<div class="bd">';
+  var h=hd(t("o_title",{code:o.code}),'<span class="ost '+st+'">'+esc(t(ostLabel(o)))+'</span>')+'<div class="bd">';
   var noName=!o.customer_name;
   if(st==="done")h+='<button class="btn primary block" data-act="cardThx" style="border-radius:999px;min-height:48px">'+IC.share2+esc(t("card_thx_btn"))+'</button>';
   /* 1 · customer: name, number, place — one card */
@@ -752,9 +761,8 @@ PAGES.order=function(){
    '<div class="grow" style="min-width:0"><div class="nm">'+vipBadge(o)+(noName?'<button class="linkbtn" data-act="nameAdd">'+esc(t("guest"))+'</button>':esc(o.customer_name))+'</div>'+(phone?'<div class="small muted num">+'+esc(phone)+'</div>':'')+'</div>'+
    (phone?'<a class="fi" href="tel:+'+esc(phone)+'" aria-label="'+esc(t("a_call"))+'">'+IC.phone+'</a><a class="fi wa" href="'+esc(W.wa(phone,""))+'" target="_blank" rel="noopener" aria-label="WhatsApp">'+IC.wa+'</a>':'')+'</div>';
   /* no valid number yet: country + 9 digits, saved before the invoice can go */
-  if((!phone||!W.phoneOk(phone))&&!closed)h+='<div class="orow">'+W.phoneField("o_phone",O.phone||(phone||""),IC.wa)+(navigator.clipboard&&navigator.clipboard.readText?'<button class="fi" data-act="pastePhone" aria-label="'+esc(t("paste"))+'">'+IC.copy+'</button>':'')+'<button class="fi jua" data-act="savePhone" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div>';
+  if((!phone||!W.phoneOk(phone))&&!closed)h+='<div class="orow">'+W.phoneField("o_phone",O.phone||(phone||""),IC.wa)+'<button class="fi jua" data-act="savePhone" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div>';
   h+=addrHtml(o,closed)+'</div>';
-  if(st==="new"&&o.seen_at)h+='<div class="hint row" style="gap:6px">'+IC.clock.replace('<svg','<svg style="width:14px;height:14px"')+esc(t("auto_hint"))+'</div>';
   /* 2 · what they ordered, and how fast */
   h+=itemsHtml(o,closed);
   /* 3 · money: delivery, total, and (owners) Ganji — one card */
@@ -768,7 +776,7 @@ PAGES.order=function(){
    (payList().length>1&&(st==="new"||st==="progress")?'<div class="mrow2 pays"><span class="fi sm">'+IC.money+'</span><span class="grow"><span class="lb">'+esc(t("pay_via"))+'</span><span class="chips">'+payList().map(function(p,i){return '<button class="chip" data-act="paySel" data-i="'+i+'" aria-pressed="'+(paySel(o).indexOf(i)>=0)+'">'+esc(p.provider)+' <span class="num">'+esc(String(p.number).slice(-4))+'</span></button>';}).join("")+'</span></span></div>':'')+
    '<div class="ferr" id="o_err" role="alert"></div></div>';
   if(o.claim_ref&&st==="invoiced")h+=claimHtml(o);
-  else if(st==="invoiced")h+='<div class="card note2"><div class="row" style="gap:8px">'+IC.clock.replace('<svg','<svg class="ic"')+'<b class="small">'+esc(t("wait_claim"))+'</b></div>'+(W.waPhone(o.customer_phone)?'<a class="btn sm ghost" href="'+esc(W.wa(o.customer_phone,t("remind_msg",{name:(o.customer_name||"").split(" ")[0]?" "+(o.customer_name||"").split(" ")[0]:"",code:o.code,x:W.money(W.total(o)),link:W.shopUrl()+"#o-"+o.code})))+'" target="_blank" rel="noopener" style="border-radius:999px;align-self:flex-start">'+IC.wa+esc(t("remind_pay"))+'</a>':'')+'</div>';
+  else if(st==="invoiced")h+='<div class="card note2"><div class="row" style="gap:8px">'+IC.clock.replace('<svg','<svg class="ic"')+'<b class="small">'+esc(t("wait_claim"))+'</b></div>'+(W.waPhone(o.customer_phone)?'<a class="btn sm ghost" href="'+esc(W.wa(o.customer_phone,t("remind_msg",{name:(o.customer_name||"").split(" ")[0]?" "+(o.customer_name||"").split(" ")[0]:"",code:o.code,x:W.money(W.total(o)),link:W.orderLink(o.code)})))+'" target="_blank" rel="noopener" style="border-radius:999px;align-self:flex-start">'+IC.wa+esc(t("remind_pay"))+'</a>':'')+'</div>';
   var shipEv=(o.history||[]).filter(function(x){return x.s==="ship";}).pop();
   if(shipEv)h+='<div class="card note2"><div class="row" style="gap:8px">'+IC.truck.replace('<svg','<svg class="ic"')+'<b class="small">'+esc(t("st_ship"))+' <span class="pair2">'+esc(W.whenRel(shipEv.at))+'</span>'+'</b></div>'+(shipEv.note?'<div>'+esc(shipEv.note)+'</div>':'')+'</div>';
   if(o.rating)h+='<div class="card note2 row" style="gap:8px"><span class="st">'+"★★★★★".slice(0,o.rating)+'</span><span class="grow small">'+esc(t("by_customer"))+(o.rating_note?' · “'+esc(o.rating_note)+'”':'')+'</span></div>';
@@ -822,7 +830,7 @@ function invoiceText(o){
   lines.push("*"+t("cart_total")+": TSh "+W.money(W.total(o))+"*");
   var sel=paySel(o),pays=payList().filter(function(_,i){return sel.indexOf(i)>=0;});
   if(pays.length){lines.push("",t("inv_pay"));pays.forEach(function(p){lines.push(p.provider+": *"+p.number+"*"+(p.name?" ("+p.name+")":""));});}
-  lines.push("",t("inv_after"),"",t("inv_track"),W.shopUrl()+"#o-"+o.code);
+  lines.push("",t("inv_after"),"",t("inv_track"),W.orderLink(o.code));
   /* an assistant signs the invoice so the customer knows who they are talking to */
   if(S.me&&S.me.role==="assistant"&&S.me.name)lines.push("",t("sign_asst",{name:S.me.name}));
   return lines.join("\n");
@@ -885,7 +893,7 @@ async function moveOrder(status,extra,msgKey){
   var text=null;
   if(msgKey==="invoice")text=invoiceText(r);
   else if(msgKey==="msg_cancel")text=t("msg_cancel",{code:r.code,reason:extra.reason});
-  else if(msgKey)text=t(msgKey,{code:r.code,link:W.shopUrl()+"#o-"+r.code,shop:W.shopUrl()});
+  else if(msgKey)text=t(msgKey,{code:r.code,link:W.orderLink(r.code),shop:W.shopUrl()});
   syncList(r);draw(false);
   if(text&&W.waPhone(r.customer_phone))W.openWa(r.customer_phone,text);
 }
@@ -1105,7 +1113,7 @@ document.addEventListener("click",async function(e){
     case "vipF":VIPF=el.dataset.f;draw(false);break;
     case "gjEye":W.ls("winga.gjhide",W.ls("winga.gjhide")!=="0"?"0":"1");render();break;
     case "days":S.days=+el.dataset.n;S.dash=null;render();loadDash();break;
-    case "goOrders":S.tab="orders";S.ofilter=newCount()?"new":"work";S.osub="all";render();scrollTo(0,0);reloadOrders();break;
+    case "goOrders":S.tab="orders";S.ofilter=S.orders.some(function(o){return o.status==="new"||o.status==="progress";})?"new":"work";S.osub="all";render();scrollTo(0,0);reloadOrders();break;
     case "goArchive":S.tab="products";S.filter="archived";render();scrollTo(0,0);break;
     case "reloadOrders":el.classList.add("spinning");await reloadOrders();break;
     case "ofilter":S.ofilter=el.dataset.f;S.osub="all";render();break;
@@ -1117,8 +1125,6 @@ document.addEventListener("click",async function(e){
     case "openOrder":await openOrder(el.dataset.code);break;
     case "saveGanji":keepFee();var gv=($("#o_ganji")||{}).value||"",gn=String(gv).trim()===""?0:W.parseMoney(gv);if(/[^\d,.\s]/.test(gv)||!(gn>=0)||isNaN(gn))return bad("g_err","w_o_ganji",t("min_money"));
       try{await W.db.setGanji(O.o.code,gn);}catch(e){console.error(e);draw(false);return bad("g_err","w_o_ganji",t("gj_off"));}O.o.ganji=gn;O.ganji=null;O.gTotEdit=false;var so=(S.orders||[]).find(function(y){return y.code===O.o.code;});if(so)so.ganji=gn;W.toast(t("gj_saved"));draw(false);break;
-    case "pastePhone":var clip="";try{clip=await navigator.clipboard.readText();}catch(x){}var dg=String(clip||"").replace(/\D/g,"");if(dg.length<9){W.toast(t("paste_none"));break;}
-      O.phone=dg.length===9?"255"+dg:dg.replace(/^0(?=\d{9}$)/,"255");draw(false);setTimeout(function(){var i=$("#o_phone");if(i)i.dispatchEvent(new Event("input",{bubbles:true}));},30);break;
     case "savePhone":var ph=W.phoneVal("o_phone");if(!W.phoneOk(ph))return bad("o_err","w_o_phone",W.phoneErr("o_phone"));keepFee();O.phone=ph;O.o=await W.db.setOrder(O.o.code,O.o.status,{phone:ph});syncList(O.o);W.toast(t("saved"));draw(false);break;
     case "nextStep":
       var st=O.o.status,nx=NEXT[st];keepFee();
@@ -1154,7 +1160,7 @@ document.addEventListener("click",async function(e){
       if(!sw2&&!sn&&!stel)return bad("sh_err","w_sh_who",t("ship_need"));if(stel&&!W.phoneOk(stel))return bad("sh_err","w_sh_tel",W.phoneErr("sh_tel"));
       var note=[sw2,stel?"+"+stel:"",sn].filter(Boolean).join(" · ");
       try{O.o=await W.db.addOrderEvent(O.o.code,"ship",note);syncList(O.o);}catch(x){console.error(x);W.toast(t("need_v214"));}
-      back();draw(false);if(W.waPhone(O.o.customer_phone))W.openWa(O.o.customer_phone,t("ship_msg",{name:(O.o.customer_name||"").split(" ")[0]?" "+(O.o.customer_name||"").split(" ")[0]:"",code:O.o.code,note:note,link:W.shopUrl()+"#o-"+O.o.code}));break;
+      back();draw(false);if(W.waPhone(O.o.customer_phone))W.openWa(O.o.customer_phone,t("ship_msg",{name:(O.o.customer_name||"").split(" ")[0]?" "+(O.o.customer_name||"").split(" ")[0]:"",code:O.o.code,note:note,link:W.orderLink(O.o.code)}));break;
     case "photoBig":var pbi=O.o.items[+el.dataset.i];if(pbi&&pbi.thumb)window.open(W.img(pbi.thumb),"_blank");break;
     case "cardInv":case "cardThx":var bsel=paySel(O.o),bo=Object.assign({payments:payList().filter(function(_,i){return bsel.indexOf(i)>=0;})},O.o);
       var bb=a==="cardInv"?await W.cardInvoice(bo,S.shop,W.shopUrl()):await W.cardThanks(bo,S.shop,W.shopUrl());

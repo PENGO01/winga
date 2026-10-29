@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.19.0";
+W.VERSION = "2.20.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -295,6 +295,11 @@ W.STRINGS = [
  ["me_for_you","Me","Kwa ajili yako","For you"],
  ["no_orders","Me","Bado hujaagiza bidhaa","You haven't ordered yet"],
  ["reorder","Me","Agiza tena","Order again"],
+ ["nx_btn_pay","Me","Lipa sasa","Pay now"],
+ ["see_all","Me","Zote","See all"],
+ ["pay_pick","Order","Lipa kwa njia moja kati ya hizi","Pay with any one of these"],
+ ["inv_row_s","Order","Jumla TSh {x} · Hifadhi au share","Total TSh {x} · Save or share"],
+ ["add_short","Shop","Ongeza","Add"],
  ["hist_active","Me","Zinaendelea","In progress"],
  ["hist_past","Me","Zilizopita","Past orders"],
  ["nx_new","Me","Muuzaji anaandaa invoice","The seller is preparing your invoice"],
@@ -423,7 +428,11 @@ W.STRINGS = [
  ["go","Boss · Discover","Anza","Start"],
  // boss: orders
  ["o_list","Boss · Orders","Oda","Orders"],
- ["o_search","Boss · Orders","Namba ya oda","Order number"],
+ ["o_search","Boss · Orders","Tafuta oda, jina, namba","Order, name or number"],
+ ["nx_b_inv","Boss · Orders","Tuma invoice","Send invoice"],
+ ["nx_b_wait","Boss · Orders","Inasubiri malipo","Awaiting payment"],
+ ["nx_b_verify","Boss · Orders","Hakiki malipo","Check the payment"],
+ ["nx_b_ship","Boss · Orders","Tuma mzigo","Deliver"],
  ["f_new","Boss · Orders","Mpya","New"],
  ["f_pending","Boss · Orders","Zinasubiri","Pending"],
  ["f_done","Boss · Orders","Zimekamilika","Completed"],
@@ -1196,7 +1205,7 @@ W.db = {
       items.forEach(function (it) { if (it.photo) { var qq = Math.max(1, Math.min(99, it.qty || 1)); rows.push({ product_id: null, name: (String(it.note || "").trim() || "Bidhaa kwa picha").slice(0, 80), price: null, qty: qq, thumb: it.photo, note: String(it.note || "").trim().slice(0, 200) || null }); priced = false; cnt += qq; return; } var p = d.products.find(function (x) { return x.id === it.id && x.status === "active"; }); if (!p) return; var q = Math.max(1, Math.min(99, it.qty || 1)); rows.push({ product_id: p.id, name: p.name, price: p.price, qty: q, thumb: p.thumbs[0], note: (it.note || "").trim().slice(0, 200) || null }); if (p.price == null) priced = false; else sub += p.price * q; cnt += q; p.ordered = (p.ordered || 0) + q; });
       var me = d.me && d.users.find(function (u) { return u.username === d.me; }); var addr = addressId && d.addresses.find(function (a) { return a.id === addressId; });
       var o = { code: demoCode(), created_at: new Date().toISOString(), status: "new", delivery: delivery, delivery_fee: null, agreed_total: null, seen_at: null, subtotal: sub, priced: priced, items_count: cnt, items: rows,
-        customer: me ? me.username : null, customer_name: me ? me.full_name : name, customer_phone: me ? me.whatsapp : phone, address: addr ? { label: addr.label, line: addr.line, landmark: addr.landmark } : (addrLine ? { line: String(addrLine).slice(0, 200) } : null), history: [{ s: "new", at: new Date().toISOString() }] };
+        customer: me ? me.username : null, customer_name: me ? me.full_name : name, customer_phone: (me && me.whatsapp) || phone, address: addr ? { label: addr.label, line: addr.line, landmark: addr.landmark } : (addrLine ? { line: String(addrLine).slice(0, 200) } : null), history: [{ s: "new", at: new Date().toISOString() }] };
       d.orders.unshift(o); demoSave(d); return { code: o.code, subtotal: sub, fee: o.delivery_fee, priced: priced, count: cnt };
     }
     items = items.map(function (it) { var x = it.photo ? { photo: it.photo, qty: it.qty || 1 } : { id: it.id, qty: it.qty }; if (it.note && String(it.note).trim()) x.note = String(it.note).trim().slice(0, 200); return x; });
@@ -1419,6 +1428,7 @@ W.db = {
   },
   async signOut() { if (!live) { if (W.APP === "shop") { var d = demoGet(); d.me = null; demoSave(d); } return; } await sb.auth.signOut(); }
 };
+W.orderLink = function (code) { return W.shopUrl() + "?o=" + code + "#o-" + code; };
 W.shopUrl = function () { var u = location.href.split("#")[0].split("?")[0]; return u.replace(/admin\/?([a-z]+\.html)?$/, "").replace(/index\.html$/, ""); };
 W.adminUrl = function () { return W.shopUrl() + "admin/"; };
 })();

@@ -1,6 +1,6 @@
 import re
 HOOK_B="window.__T={reloadOrders:reloadOrders,get S(){return S},get O(){return O},set O(v){O=v},openOrder:openOrder,moveOrder:moveOrder,draw:draw};\n})();"
-HOOK_S="window.__T={addMy:function(c){MYORDERS.unshift(c);save(\"niagize.myorders\",MYORDERS);},get S(){return S},openOrder:openOrder,open:open,top:top,draw:draw,makeCard:makeCard,get PING(){return PING}};\n})();"
+HOOK_S="window.__T={get HIST(){return HIST},addMy:function(c){MYORDERS.unshift(c);save(\"niagize.myorders\",MYORDERS);},get S(){return S},openOrder:openOrder,open:open,top:top,draw:draw,makeCard:makeCard,get PING(){return PING}};\n})();"
 def install(ctx,base):
     def h(route,req,hook):
         r=route.fetch(); body=r.text()

@@ -240,7 +240,9 @@ html.sheet-open,html.sheet-open body{overflow:hidden}
 .oln{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;margin:2px 0}
 .olm{display:flex;justify-content:space-between;gap:8px}.olm b{color:var(--ink)}
 .olbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.olbar i{height:4px;border-radius:4px;background:var(--line)}.olbar i.on{background:var(--ink)}.olbar i.cur{background:var(--cyan,var(--blue))}
-.olnx{font-size:13px;color:var(--dim);margin-top:-4px}
+.olnx{font-size:13px;color:var(--dim)}
+.olfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:-4px}.olfoot .btn svg{width:16px;height:16px}
+.meopen{display:flex;flex-direction:column;gap:10px;margin-top:6px}
 .olact{display:flex;justify-content:flex-end;margin-top:-2px}.olact svg{width:16px;height:16px}
 .oi{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:var(--ink)}
 .oi .th{display:flex}
@@ -249,6 +251,11 @@ html.sheet-open,html.sheet-open body{overflow:hidden}
 .res{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .res button{border:0;border-top:1px solid var(--line);background:none;text-align:left;padding:10px 12px;font-size:13.5px;color:var(--ink)}
 .res button:first-child{border-top:0}
+.paycard{display:flex;flex-direction:column;gap:0;padding:6px 14px}.paycard>.small{padding:8px 0 2px}
+.payrow{display:flex;align-items:center;gap:12px;padding:12px 0}.payrow+.payrow{border-top:1px solid var(--line)}
+.payrow .pvb{width:40px;height:40px;border-radius:12px;background:var(--ink);color:var(--jua);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.payrow .pv{font-size:12px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.02em}.payrow .pn{font-family:var(--num);font-weight:700;font-size:18px}
+.invrow .fi{flex:none}
 .paybox{display:flex;align-items:center;gap:10px;background:var(--sunk);border-radius:12px;padding:10px 12px}
 .paybox .pv{font-size:12px;font-weight:700;color:var(--dim)}
 .paybox .pn{font-family:var(--num);font-weight:600;font-size:16px}
@@ -276,7 +283,8 @@ html.sheet-open,html.sheet-open body{overflow:hidden}
 .pname{font-size:19px;font-weight:600;line-height:1.3}
 .prow{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .pmeta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);white-space:nowrap}
-.actbar.pbar{grid-template-columns:1fr 48px 1.35fr}
+.actbar.pbar{grid-template-columns:1fr 1fr 1.2fr}
+.cartsq.lbl{width:auto;height:auto;min-height:48px;border-radius:999px;display:flex;gap:6px;justify-content:center;font-weight:600;font-size:14px}
 .actbar.one{grid-template-columns:1fr}
 .cartsq{position:relative;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;padding:0;cursor:pointer}
 .cartsq svg{width:22px;height:22px}
@@ -584,28 +592,49 @@ function guestBlock(){
      :field("g_addr",IC.pin,t("g_addr"),g.addr||"",' autocomplete="street-address" maxlength="200" data-guest="addr"')+'<button type="button" class="linkbtn locbtn" data-act="gLoc">'+IC.pin+esc(t("use_loc"))+'</button>')+
    '<div class="ferr" id="g_err" role="alert"></div></div>';
 }
+function needWa(){return !isGuest()&&!W.phoneOk(S.me.whatsapp);}
 function addrBlock(){
   if(!S.me||S.me.needsProfile)return guestBlock();
-  var h='<div class="stack" style="gap:8px"><div class="eyebrow">'+esc(t("deliver_to"))+'</div>';
+  var g=S.guest||(S.guest=load("niagize.guest",{wa:"",name:""}));
+  var h=(needWa()?'<div class="stack" style="gap:8px"><div class="eyebrow">'+esc(t("g_wa"))+'</div>'+W.phoneField("g_wa",g.wa,IC.wa.replace('<svg','<svg style="color:var(--wa)"'))+'<div class="ferr" id="g_err" role="alert"></div></div>':'')+'<div class="stack" style="gap:8px"><div class="eyebrow">'+esc(t("deliver_to"))+'</div>';
   if(!S.addrs.length)return h+'<button class="mrow" data-act="addrNew"><span class="fi">'+IC.pin+'</span><span class="tt">'+esc(t("add_addr"))+'</span>'+chev()+'</button></div>';
   if(!S.addrId)S.addrId=S.addrs[0].id;
   return h+S.addrs.map(function(a){return '<label class="radio" data-on="'+(S.addrId===a.id)+'"><input type="radio" name="ad" value="'+a.id+'"'+(S.addrId===a.id?" checked":"")+' data-act="ad"><span><span class="rt">'+esc(a.label||t("me_addr"))+'</span><br><span class="rs">'+esc(a.line)+'</span></span></label>';}).join("")+'</div>';
 }
+/* v2.20: one order card for Track oda and Mimi: where it stands, what to do next, one tap to do it */
+var OSTEPS=["new","invoiced","paid","done"];
+function orderCard(o){var st=o.status,ix=st==="progress"?0:OSTEPS.indexOf(st),items=o.items||[],open=ix>=0&&st!=="done";
+  var nx=st==="new"||st==="progress"?t("nx_new"):st==="invoiced"?(o.claim_ref?t("nx_claim"):t("nx_inv")):st==="paid"?t("nx_paid"):"";
+  var act=st==="invoiced"&&!o.claim_ref?["nx_btn_pay",IC.receipt]:st==="paid"?["received",IC.check]:null;
+  var name=items[0]?(items[0].name||t("po_tag")):"";
+  return '<div class="ol'+(PING[o.code]?" ping":"")+'"><button class="olmain" data-act="openOrder" data-code="'+esc(o.code)+'">'+
+    '<span class="th">'+items.slice(0,3).map(function(i){return '<img src="'+esc(W.img(i.thumb))+'" alt="" width="400" height="400" loading="lazy" decoding="async">';}).join("")+'</span>'+
+    '<span class="grow" style="min-width:0"><span class="olt"><b class="num">'+esc(o.code)+'</b><span class="ost '+(st==="progress"?"new":st)+'">'+esc(t("st_"+(st==="progress"?"new":st)))+'</span></span>'+
+    '<span class="oln">'+esc(name)+(items.length>1?' <span class="muted">+'+(items.length-1)+'</span>':'')+'</span>'+
+    '<span class="olm small muted"><span>'+esc(W.whenRel(o.updated_at||o.created_at))+'</span><b class="num">TSh '+W.money(W.total(o))+'</b></span></span>'+chev()+'</button>'+
+    (open?'<div class="olbar" aria-hidden="true">'+OSTEPS.map(function(s2,i){return '<i class="'+(i<ix?"on":i===ix?"cur":"")+'"></i>';}).join("")+'</div><div class="olfoot"><span class="olnx">'+esc(nx)+'</span>'+(act?'<button class="btn sm primary" data-act="openOrder" data-code="'+esc(o.code)+'" style="border-radius:999px">'+act[1]+esc(t(act[0]))+'</button>':'')+'</div>':'')+
+    (st==="done"?'<div class="olact"><button class="btn sm ghost" data-act="reorder" data-code="'+esc(o.code)+'" style="border-radius:999px">'+IC.cart+esc(t("reorder"))+'</button></div>':'')+'</div>';}
+/* open orders on Mimi itself (cached list first, refreshed quietly) */
+var HIST={list:load("niagize.hist",null),at:0};
+function refreshHist(){if(Date.now()-HIST.at<30000)return;HIST.at=Date.now();var ctx={list:HIST.list};loadHistory(ctx).then(function(){HIST.list=ctx.list;if(S.tab==="me"&&!stack.length)render();});}
+function meOpen(){var l=(HIST.list||[]).filter(function(o){return o.status!=="done"&&o.status!=="cancelled";});
+  if(!l.length)return "";
+  return '<section class="meopen"><div class="row between"><div class="eyebrow">'+esc(t("hist_active"))+' · '+l.length+'</div><button class="linkbtn" data-act="history">'+esc(t("see_all"))+'</button></div>'+l.slice(0,3).map(orderCard).join("")+'</section>';}
 function meTiles(signed){var pn=Object.keys(PING).length;
   return '<section class="tiles"><button class="tl" data-act="history"><span class="fi">'+IC.clock+(pn?'<span class="bdg">'+pn+'</span>':'')+'</span>'+esc(t("me_orders"))+'</button>'+
    (signed?'<button class="tl" data-act="addrs"><span class="fi">'+IC.pin+'</span>'+esc(t("me_addr"))+'</button>':'<button class="tl" data-act="how"><span class="fi">'+IC.bulb+'</span>'+esc(t("how_short"))+'</button>')+
    '<button class="tl" data-act="help"><span class="fi">'+IC.help+'</span>'+esc(t("me_help"))+'</button></section>';}
-function vMe(){
+function vMe(){refreshHist();
   if(!S.me){
     /* R08: one compact card on top, then the things a guest can already do (their orders work without an account) */
     return '<section class="ghero"><div class="grow"><h2>'+esc(t("me_guest"))+'</h2><p>'+esc(t("me_guest_s"))+'</p><div class="row" style="gap:8px;margin-top:10px"><button class="btn primary" data-act="signin" style="border-radius:999px">'+esc(t("signin"))+'</button><button class="btn ghost" data-act="signup" style="border-radius:999px">'+esc(t("signup"))+'</button></div></div>'+W.sunSvg(true)+'</section>'+
-     meTiles(false)+'<div class="list mprefs">'+'<button class="mrow" data-act="theme"><span class="fi">'+(W.isDark()?IC.moon:IC.sun)+'</span><span class="tt">'+esc(t("theme"))+'</span><span class="val">'+esc(W.isDark()?t("th_dark"):t("th_light"))+'</span></button>'+'</div>'+forYou(8);
+     meTiles(false)+meOpen()+'<div class="list mprefs">'+'<button class="mrow" data-act="theme"><span class="fi">'+(W.isDark()?IC.moon:IC.sun)+'</span><span class="tt">'+esc(t("theme"))+'</span><span class="val">'+esc(W.isDark()?t("th_dark"):t("th_light"))+'</span></button>'+'</div>'+forYou(8);
   }
   if(S.me.needsProfile)return '<div class="guest">'+W.sunSvg(true)+'<h2>'+esc(t("complete_title"))+'</h2><p class="muted" style="margin:0">'+esc(t("complete_s"))+'</p></div><button class="btn primary block" data-act="complete" style="border-radius:999px">'+esc(t("complete_title"))+'</button>';
   var m=S.me,shown=m.username?"@"+m.username:(m.full_name||"");
   var ini=(m.full_name||m.username||"?").split(/\s+/).map(function(w){return w[0];}).join("").slice(0,2).toUpperCase();
   return '<section class="mehead"><span class="av">'+esc(ini)+'</span><div class="grow"><div class="nm">'+esc(shown)+'</div><div class="wa">+'+esc(m.whatsapp||"")+''+'</div></div><button class="gear" data-act="settings" aria-label="'+esc(t("set_title"))+'">'+IC.gear+'</button></section>'+
-   meTiles(true)+forYou(10);
+   meTiles(true)+meOpen()+forYou(10);
 }
 
 /* ---------------- pages and sheets ---------------- */
@@ -644,7 +673,7 @@ var PAGES={
    (sim.length?'<hr class="psep"><div class="simh">'+esc(t("similar"))+'</div><div class="sim">'+sim.map(function(x){return '<button data-act="swapP" data-id="'+x.id+'"><img src="'+esc(x.thumbUrl)+'" alt="" width="400" height="400" loading="lazy" decoding="async"><span>'+esc(x.name)+'</span><b class="num">'+(x.price!=null?W.money(x.price):"")+'</b></button>';}).join("")+'</div>':'')+
    '</div><div class="ft"><div class="actbar '+(buyable(p)?"pbar":"one")+'">'+
    '<button class="btn chat" data-act="chat" data-id="'+p.id+'">'+IC.wa+esc(t("chat"))+'</button>'+
-   (buyable(p)?'<button class="cartsq" data-act="qty" data-mode="cart" data-id="'+p.id+'" aria-label="'+esc(t("addCart"))+'" title="'+esc(t("addCart"))+'">'+IC.cartPlus+(inCart(p.id)?'<i>'+inCart(p.id).qty+'</i>':'')+'</button>':'')+
+   (buyable(p)?'<button class="btn cartsq lbl" data-act="qty" data-mode="cart" data-id="'+p.id+'" aria-label="'+esc(t("addCart"))+'">'+IC.cartPlus+esc(t("add_short"))+(inCart(p.id)?'<i>'+inCart(p.id).qty+'</i>':'')+'</button>':'')+
    (buyable(p)?'<button class="btn primary" data-act="qty" data-mode="buy" data-id="'+p.id+'">'+esc(t("buyNow"))+'</button>':'')+'</div></div>';
  },
  qty:function(c){
@@ -701,7 +730,9 @@ var PAGES={
   /* payment: nothing before the invoice; after it, where to pay + "I paid" details for the seller */
   var pay="";
   if(cur==="invoiced"){
-    if(pays.length)pay+='<div class="eyebrow">'+esc(t("o_pay"))+'</div>'+pays.map(function(p){return '<div class="paybox"><div class="grow"><div class="pv">'+esc(p.provider)+'</div><div class="pn">'+esc(p.number)+'</div><div class="small muted">'+esc(p.name||"")+'</div></div><button class="fi" data-act="copyTxt" data-v="'+esc(p.number)+'" aria-label="'+esc(t("copy"))+'">'+IC.copy+'</button></div>';}).join("");
+    /* v2.20: the invoice picture first, then every way to pay on one card */
+    pay+='<button class="mrow invrow" data-act="cardPrev" data-k="inv"><span class="fi jua">'+IC.doc+'</span><span class="tt">'+esc(t("card_inv_btn"))+'<br><span class="small muted">'+esc(t("inv_row_s",{x:W.money(W.total(o))}))+'</span></span>'+chev()+'</button>';
+    if(pays.length)pay+='<div class="eyebrow">'+esc(t("o_pay"))+'</div><div class="card paycard">'+(pays.length>1?'<div class="small muted">'+esc(t("pay_pick"))+'</div>':'')+pays.map(function(p){var ini=String(p.provider||"").replace(/[^A-Za-z]/g,"").slice(0,2).toUpperCase();return '<div class="payrow"><span class="pvb">'+esc(ini||"₮")+'</span><div class="grow"><div class="pv">'+esc(p.provider)+'</div><div class="pn">'+esc(p.number)+'</div>'+(p.name?'<div class="small muted">'+esc(p.name)+'</div>':'')+'</div><button class="fi" data-act="copyTxt" data-v="'+esc(p.number)+'" aria-label="'+esc(t("copy"))+'">'+IC.copy+'</button></div>';}).join("")+'</div>';
     if(o.claim_ref)pay+=claimView(o,false)+'<button class="btn ghost block retrybtn" data-act="claimResend" style="border-radius:999px">'+IC.refresh+esc(t("claim_resend"))+'</button>';
     else{var cl=c.claim||(c.claim={ch:chOf(pays[0]&&pays[0].provider),ref:"",name:""});
       pay+='<div class="claimbox" id="claim"><b>'+esc(t("claim_title"))+'</b>'+
@@ -725,7 +756,7 @@ var PAGES={
   if(cur==="new"||cur==="progress"){h+='<div class="hint">'+esc(t("o_pay_wait"))+'</div>';}
   else if(o.claim_ref&&(cur==="paid"||cur==="done"))h+=claimView(o,true);
   h+=phoneRow;
-  if(cur==="invoiced"||cur==="paid")h+='<button class="mrow" data-act="cardPrev" data-k="inv"><span class="fi">'+IC.doc+'</span><span class="tt">'+esc(t("card_inv_btn"))+'</span>'+chev()+'</button>';
+  if(cur==="paid")h+='<button class="mrow" data-act="cardPrev" data-k="inv"><span class="fi">'+IC.doc+'</span><span class="tt">'+esc(t("card_inv_btn"))+'</span>'+chev()+'</button>';
   if(cur==="invoiced")h+='<div class="eyebrow" style="margin-top:6px">'+esc(t("o_title",{code:o.code}))+'</div>'+tl;
   if(cur==="done"&&o.rating)h+='<div class="hint" style="text-align:center"><span style="color:var(--jua);letter-spacing:2px">'+"★★★★★".slice(0,o.rating)+'</span> '+esc(t("rate_your",{n:o.rating}))+'</div>';
   h+=(!S.me?'<button class="mrow" data-act="signup"><span class="fi">'+IC.me+'</span><span class="tt">'+esc(t("guest_hint"))+'</span>'+chev()+'</button>':'')+'</div>';
@@ -816,17 +847,7 @@ var PAGES={
   if(!list.length)return hd(t("me_orders"))+'<div class="bd"><div class="emptyx"><div class="ecart">'+IC.cart+'</div><b>'+esc(t("no_orders"))+'</b><button class="btn primary" data-act="goHome" style="border-radius:999px">'+esc(t("shop_now"))+'</button></div></div>';
   /* v2.18: open orders first with where each one stands and what to do next; past orders below with Agiza tena */
   var live=list.filter(function(o){return o.status!=="done"&&o.status!=="cancelled";}),past=list.filter(function(o){return o.status==="done"||o.status==="cancelled";});
-  var STEPS=["new","invoiced","paid","done"];
-  var card=function(o){var st=o.status,ix=st==="progress"?0:STEPS.indexOf(st),items=o.items||[],open=ix>=0&&st!=="done";
-    var nx=st==="new"||st==="progress"?t("nx_new"):st==="invoiced"?(o.claim_ref?t("nx_claim"):t("nx_inv")):st==="paid"?t("nx_paid"):"";
-    var name=items[0]?(items[0].name||t("po_tag")):"";
-    return '<div class="ol'+(PING[o.code]?" ping":"")+'"><button class="olmain" data-act="openOrder" data-code="'+esc(o.code)+'">'+
-      '<span class="th">'+items.slice(0,3).map(function(i){return '<img src="'+esc(W.img(i.thumb))+'" alt="" width="400" height="400" loading="lazy" decoding="async">';}).join("")+'</span>'+
-      '<span class="grow" style="min-width:0"><span class="olt"><b class="num">'+esc(o.code)+'</b><span class="ost '+st+'">'+esc(t("st_"+(st==="progress"?"new":st)))+'</span></span>'+
-      '<span class="oln">'+esc(name)+(items.length>1?' <span class="muted">+'+(items.length-1)+'</span>':'')+'</span>'+
-      '<span class="olm small muted"><span>'+esc(W.whenRel(o.updated_at||o.created_at))+'</span><b class="num">TSh '+W.money(W.total(o))+'</b></span></span>'+chev()+'</button>'+
-      (open?'<div class="olbar" aria-hidden="true">'+STEPS.map(function(s2,i){return '<i class="'+(i<ix?"on":i===ix?"cur":"")+'"></i>';}).join("")+'</div><div class="olnx">'+esc(nx)+'</div>':'')+
-      (st==="done"?'<div class="olact"><button class="btn sm ghost" data-act="reorder" data-code="'+esc(o.code)+'" style="border-radius:999px">'+IC.cart+esc(t("reorder"))+'</button></div>':'')+'</div>';};
+  var card=orderCard;
   return hd(t("me_orders"))+'<div class="bd">'+(live.length?'<div class="eyebrow">'+esc(t("hist_active"))+' · '+live.length+'</div>'+live.map(card).join(""):'')+
    (past.length?'<div class="eyebrow">'+esc(t("hist_past"))+'</div>'+past.map(card).join(""):'')+(c.more?loader():'')+'</div>';
  },
@@ -887,9 +908,10 @@ async function placeOrder(items){
     g.ok=true;
     if($("#g_addr"))g.addr=$("#g_addr").value.trim();if(!g.addr||g.addr.length<3){bad("g_err","w_g_addr",t("err_addr"));return false;}g.editAddr=false;
     S.guest=g;save("niagize.guest",g);}
+  if(needWa()){if($("#g_wa"))g.wa=W.phoneVal("g_wa");if(!W.phoneOk(g.wa)){bad("g_err","w_g_wa",$("#g_wa")?W.phoneErr("g_wa"):t("err_wa",{n:9,cc:"255"}));return false;}S.guest=g;save("niagize.guest",g);}
   try{
     var addr=!guest&&S.addrs.length?S.addrId:null;
-    var r=await W.during(W.db.createOrder(items,S.delivery,addr,guest?(String(g.name||"").trim()||null):null,guest?g.wa:null,guest?g.addr:null));
+    var r=await W.during(W.db.createOrder(items,S.delivery,addr,guest?(String(g.name||"").trim()||null):null,guest||needWa()?g.wa:null,guest?g.addr:null));
     var ph=items[0]&&items[0].photo;
     var msg=(ph?t("wa_photo")+(items[0].note?"\n\n📝 "+items[0].note:""):t("wa_hello"))+"\n\n"+t("wa_items",{code:r.code,n:r.count})+"\n"+(ph?"":t("wa_total",{x:W.money(r.subtotal||0)})+"\n")+t("wa_del",{d:t("del_"+S.delivery)})+"\n\n"+W.adminUrl()+"o.html#"+r.code;
     MYORDERS.unshift(r.code);MYORDERS=MYORDERS.slice(0,30);save("niagize.myorders",MYORDERS);seenSet(r.code,"new");
@@ -937,7 +959,7 @@ async function loadHistory(ctx){
     mine=mine.concat(got.filter(Boolean)).sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
     save("niagize.hist",mine.slice(0,30));
   }catch(e){mine=cached||[];}
-  ctx.list=mine;ctx.more=false;if(top()&&top().c===ctx)draw(false);
+  ctx.list=mine;ctx.more=false;HIST.list=mine;if(top()&&top().c===ctx)draw(false);
 }
 var searchT=null;
 async function geocode(q){
@@ -1005,9 +1027,9 @@ document.addEventListener("click",async function(e){
     case "cardPrev":var cpo=cur.c.o;open("cardprev",{o:cpo,kind:el.dataset.k||"thx"});makeCard(top().c);break;
     case "cardSave":var cs=cur.c;if(cs.blob)await W.shareCard(cs.blob,"niagize-"+cs.o.code+(cs.kind==="inv"?"-invoice":"-asante")+".png",t("o_title",{code:cs.o.code}));break;
     case "cardDl":var cd=cur.c;if(cd.blob){var du=URL.createObjectURL(cd.blob),da=document.createElement("a");da.href=du;da.download="niagize-"+cd.o.code+(cd.kind==="inv"?"-invoice":"-asante")+".jpg";document.body.appendChild(da);da.click();da.remove();setTimeout(function(){URL.revokeObjectURL(du);},4000);W.toast(t("card_saved"));}break;
-    case "history":var hctx={list:null};open("history",hctx);loadHistory(hctx);break;
+    case "history":var hctx={list:HIST.list};open("history",hctx);loadHistory(hctx);break;
     case "openOrder":openOrder(el.dataset.code);break;
-    case "reorder":var hl=cur.c.list.find(function(o){return o.code===el.dataset.code;});hl.items.forEach(function(i){if(i.product_id&&buyable(byId(i.product_id)))addToCart(i.product_id,i.qty,i.note);});S.tab="cart";closeAll();break;
+    case "reorder":var hl=((cur&&cur.c&&cur.c.list)||HIST.list||[]).find(function(o){return o.code===el.dataset.code;});hl.items.forEach(function(i){if(i.product_id&&buyable(byId(i.product_id)))addToCart(i.product_id,i.qty,i.note);});S.tab="cart";closeAll();break;
     case "copyTxt":W.copy(el.dataset.v);break;
     case "photoOrder":open("porder",{});break;
     case "gAddrEdit":var ge=S.guest||load("niagize.guest",{});ge.editAddr=true;S.guest=ge;if(stack.length)draw(false);else render();setTimeout(function(){var i=$("#g_addr");if(i)i.focus();},60);break;
@@ -1140,6 +1162,8 @@ W.pullToRefresh(ptrProxy,fetchAll);
 W.watchNetwork(function(){fetchAll().catch(function(){});});
 async function boot(){
   S.me=load("niagize.me",null);
+  /* v2.20: order links carry ?o=CODE too (each order its own link preview); the hash wins if both are there */
+  if(!/^#o-/.test(location.hash)){var oq0=location.search.match(/[?&]o=(NK-[A-Za-z0-9]+)/);if(oq0)try{history.replaceState(null,"",location.pathname+location.search+"#o-"+oq0[1]);}catch(_){}}
   var o0=location.hash.match(/^#o-(.+)$/);
   if(o0){document.documentElement.classList.add("olink");openOrder(o0[1]);}
   /* instant open: show last time's shop straight away, then swap in fresh data quietly */
