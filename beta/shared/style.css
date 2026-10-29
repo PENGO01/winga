@@ -347,3 +347,11 @@ input::placeholder,textarea::placeholder{color:var(--faint);opacity:1}
 #wwait.on{display:grid;animation:fadein .18s ease-out}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 .fhint{margin-top:-4px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;color:var(--dim);font-size:14px;animation:fadein .15s ease-out}
+/* v2.18: WhatsApp hand-off retry bar (both apps) */
+.waretry{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);opacity:0;pointer-events:none;z-index:95;display:flex;align-items:center;gap:4px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);padding:4px 4px 4px 10px;width:min(calc(100% - 32px),360px);transition:opacity .2s,transform .2s}
+.waretry.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.waretry button{background:none;border:0;color:inherit;font:inherit;cursor:pointer}
+.waretry .wr-go{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 4px;text-align:left;flex:1;min-width:0;white-space:nowrap}.waretry .wr-go span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.waretry .wr-go svg{width:26px;height:26px;color:var(--wa);flex:none}
+.waretry .wr-go b{display:block;font-size:14px}.waretry .wr-go small{display:block;font-size:12px;color:var(--dim)}
+.waretry .wr-x{flex:none;width:40px;height:40px;border-radius:50%;font-size:22px;color:var(--dim)}

@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.17.0";
+W.VERSION = "2.18.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -72,7 +72,9 @@ W.STRINGS = [
  ["new_today","Shop","Leo","Today"],
  ["ptr_pull","Common","Vuta chini kusasisha","Pull to refresh"],
  ["ptr_go","Common","Achia kusasisha","Release to refresh"],
- ["ptr_busy","Common","Inasasisha…","Refreshing…"],
+ ["ptr_busy","Common","Tafadhali subiri…","Please wait…"],
+ ["wa_retry","Common","Fungua WhatsApp tena","Open WhatsApp again"],
+ ["wa_retry_s","Common","Haikufunguka? Gusa hapa","Didn't open? Tap here"],
  ["similar","Shop","Zinazofanana","Similar items"],
  ["noMatch","Shop","Pole, hatuna bidhaa hiyo! Jaribu neno tofauti","Sorry, we don't have that! Try another word"],
  ["sold_n","Shop","{n} wameagiza","{n} ordered"],
@@ -113,9 +115,7 @@ W.STRINGS = [
  ["del_pop_s","Order","Tunafunga mzigo wa oda {code}. Taarifa za delivery (nani analeta, lini) zitakufikia hivi punde kwenye WhatsApp.","We're packing order {code}. Delivery details (who brings it, when) will reach you shortly on WhatsApp."],
  ["del_pop_t","Order","Malipo yamepokelewa","Payment received"],
  ["del_soon","Order","Taarifa za delivery zitakufikia hivi punde","Delivery details are coming shortly"],
- ["stamp_s","Order","Oda {code} imekamilika · TSh {x}","Order {code} completed · TSh {x}"],
- ["stamp_t","Order","IMETHIBITISHWA","VERIFIED"],
- ["ping_toast","Order","Oda {code}: {st}","Order {code}: {st}"],
+  ["ping_toast","Order","Oda {code}: {st}","Order {code}: {st}"],
  ["loc_no","Basket","Imeshindikana kupata mahali. Ruhusu Location au andika","Couldn't get your location. Allow Location or type it"],
  ["loc_ok","Basket","Mahali pamewekwa","Location added"],
  ["use_loc","Basket","Tumia mahali nilipo","Use my location"],
@@ -150,6 +150,12 @@ W.STRINGS = [
  ["claim_send","Order","Tuma kwa muuzaji","Send to seller"],
  ["items_n","Order","bidhaa {n}","{n} items"],
  ["claim_sent","Order","Imetumwa · Inasubiri uthibitisho","Sent · Waiting for confirmation"],
+ ["claim_resend","Order","Tuma tena kwa WhatsApp","Send again on WhatsApp"],
+ ["ch_other","Order","Nyingine","Other"],
+ ["rate_skip","Order","Ruka, funga oda","Skip, close the order"],
+ ["thx_pop_t","Order","Asante kwa kununua nasi!","Thank you for shopping with us!"],
+ ["thx_pop_s","Order","Hii ni kadi yako. Ihifadhi au mtumie rafiki","Here is your card. Save it or send it to a friend"],
+ ["thx_row_s","Order","Oda {code} · Hifadhi au share","Order {code} · Save or share"],
  ["claim_ok","Order","Malipo yamethibitishwa","Payment confirmed"],
  ["claim_wa","Order","Mambo vipi ✌🏾\nNimelipia oda {code}.\n\nKupitia: {ch}\nMuamala: {ref}\nJina: {name}\n\n{link}","Hi ✌🏾\nI paid for order {code}.\n\nVia: {ch}\nTransaction: {ref}\nName: {name}\n\n{link}"],
  ["received","Order","Nimepokea","I've received it"],
@@ -284,6 +290,12 @@ W.STRINGS = [
  ["me_for_you","Me","Kwa ajili yako","For you"],
  ["no_orders","Me","Bado hujaagiza bidhaa","You haven't ordered yet"],
  ["reorder","Me","Agiza tena","Order again"],
+ ["hist_active","Me","Zinaendelea","In progress"],
+ ["hist_past","Me","Zilizopita","Past orders"],
+ ["nx_new","Me","Muuzaji anaandaa invoice","The seller is preparing your invoice"],
+ ["nx_inv","Me","Lipa, kisha tuma risiti","Pay, then send the receipt"],
+ ["nx_claim","Me","Risiti imetumwa · inathibitishwa","Receipt sent · being checked"],
+ ["nx_paid","Me","Ukipokea mzigo, bonyeza Nimepokea","When it arrives, tap I've received it"],
  ["help_title","Me · Help","Kituo cha msaada","Help centre"],
  ["help_wa","Me · Help","Ongea nasi kwenye WhatsApp","Chat with us on WhatsApp"],
  ["help_wa_s","Me · Help","Tunajibu haraka","We reply fast"],
@@ -432,6 +444,8 @@ W.STRINGS = [
  ["a_call","Boss · Orders","Piga simu","Call"],
  ["cust","Boss · Orders","Mteja","Customer"],
  ["cust_phone","Boss · Orders","Namba ya mteja","Customer number"],
+ ["paste","Boss · Orders","Bandika","Paste"],
+ ["paste_none","Boss · Orders","Hakuna namba kwenye clipboard","No number on the clipboard"],
  ["fee_set","Boss · Orders","Gharama ya delivery (TSh)","Delivery fee (TSh)"],
  ["fee_name","Boss · Orders","Gharama ya delivery","Delivery fee"],
  ["total_edit","Boss · Orders","Badili jumla","Edit total"],
@@ -485,7 +499,7 @@ W.STRINGS = [
  ["inv_track","Boss · Orders (WhatsApp)","Unaweza kuendelea kufuatilia oda yako hapa:","You can keep tracking your order here:"],
  ["msg_progress","Boss · Orders (WhatsApp)","Tumepokea oda {code}. Tunaishughulikia sasa hivi.","We got order {code}. Working on it now."],
  ["msg_paid","Boss · Orders (WhatsApp)","Asante! 🤝🏿 Tumepokea malipo ya oda {code}.\n\nTunashughulikia na tutakutaarifu hivi punde!\n\nUnaweza kuendelea kufuatilia oda yako hapa: {link}","Thank you! 🤝🏿 Payment received for order {code}.\n\nWe're on it and will update you shortly!\n\nYou can keep tracking your order here: {link}"],
- ["msg_done","Boss · Orders (WhatsApp)","Oda {code} imekamilika.\n\nAsante kwa kutuamini na kuagiza nasi, Karibu tena.\n\n*Niagize Kariakoo!*\nNi chap na salama, mpaka mlangoni kwako.\n\nUnataka kuagiza kitu kingine?\n{shop}","Order {code} is complete.\n\nThank you for trusting us and ordering with us. Welcome back.\n\n*Niagize Kariakoo!*\nFast and safe, to your door.\n\nWant something else?\n{shop}"],
+ ["msg_done","Boss · Orders (WhatsApp)","Oda {code} imekamilika.\n\nAsante kwa kutuamini na kuagiza nasi, Karibu tena.\n\n*Niagize Kariakoo!*\nNi chap na salama, mpaka mlangoni kwako.\n\n🎁 Kadi yako ya asante: {link}\n\nUnataka kuagiza kitu kingine?\n{shop}","Order {code} is complete.\n\nThank you for trusting us and ordering with us. Welcome back.\n\n*Niagize Kariakoo!*\nFast and safe, to your door.\n\n🎁 Your thank-you card: {link}\n\nWant something else?\n{shop}"],
  ["msg_cancel","Boss · Orders (WhatsApp)","Rafiki, pole kwa changamoto! Oda {code}, imesitishwa. Sababu: {reason}.","Friend, sorry for the trouble! Order {code} has been cancelled. Reason: {reason}."],
  // boss: add / edit product
  ["add_title","Boss · Add product","Ongeza bidhaa","Add product"],
@@ -747,16 +761,29 @@ W.wa = function (phone, text) { return "https://wa.me/" + (W.waPhone(phone) || "
 /* open WhatsApp without leaving a blank tab behind. Phones: the WhatsApp app directly (this screen stays as it is);
    if WhatsApp doesn't answer in 2.5 s, fall back to wa.me in this same tab. Computers: wa.me in a new tab. */
 W.mobile = function () { return /android|iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); };
-W.openWaUrl = function (web) {
+W.openWaUrl = function (web, quiet) {
   W._lastWa = web;
+  /* v2.18: every WhatsApp hand-off leaves a "Fungua WhatsApp tena" bar for a while, so a slow network or an
+     expired tap (after a save) is never a dead end */
+  if (!quiet) W.waRetry(web);
   var m = String(web).match(/^https:\/\/wa\.me\/(\d*)\?text=(.*)$/);
-  if (!W.mobile() || !m) { var w = null; try { w = window.open(web, "_blank"); if (w) w.opener = null; } catch (e) {} if (!w) location.href = web; return; }
+  if (!W.mobile() || !m) { var w = null; try { w = window.open(web, "_blank"); if (w) w.opener = null; } catch (e) {} return; }
   var app = "whatsapp://send?" + (m[1] ? "phone=" + m[1] + "&" : "") + "text=" + m[2], gone = false;
   var off = function () { gone = true; };
   addEventListener("blur", off); addEventListener("pagehide", off); document.addEventListener("visibilitychange", off);
   location.href = app;
   setTimeout(function () { removeEventListener("blur", off); removeEventListener("pagehide", off); document.removeEventListener("visibilitychange", off); if (!gone && document.visibilityState === "visible") location.href = web; }, 2500);
 };
+W.waRetry = function (web) {
+  var r = document.getElementById("waRetry");
+  if (!r) { r = document.createElement("div"); r.id = "waRetry"; r.className = "waretry"; document.body.appendChild(r); }
+  r.innerHTML = '<button type="button" class="wr-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.6-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg><span><b>' + W.esc(W.t("wa_retry")) + '</b><small>' + W.esc(W.t("wa_retry_s")) + '</small></span></button><button type="button" class="wr-x" aria-label="' + W.esc(W.t("cancel")) + '">\u00d7</button>';
+  r.querySelector(".wr-go").onclick = function (e) { e.preventDefault(); e.stopPropagation(); W.openWaUrl(web, true); clearTimeout(W.waRetry._t); W.waRetry._t = setTimeout(W.waRetry.hide, 20000); };
+  r.querySelector(".wr-x").onclick = function (e) { e.preventDefault(); e.stopPropagation(); W.waRetry.hide(); };
+  r.classList.add("on");
+  clearTimeout(W.waRetry._t); W.waRetry._t = setTimeout(W.waRetry.hide, 30000);
+};
+W.waRetry.hide = function () { var r = document.getElementById("waRetry"); if (r) r.classList.remove("on"); clearTimeout(W.waRetry._t); };
 W.openWa = function (phone, text) { W.openWaUrl(W.wa(phone, text)); };
 /* any wa.me link in either app goes through the same opener */
 document.addEventListener("click", function (e) { var a = e.target.closest && e.target.closest('a[href^="https://wa.me/"]'); if (!a || e.defaultPrevented) return; e.preventDefault(); W.openWaUrl(a.href); }, true);
@@ -1205,7 +1232,7 @@ W.db = {
   async myOrders() {
     if (!live) { var d = demoGet(); return d.orders.filter(function (o) { return d.me && o.customer === d.me; }); }
     var s = await sb.auth.getSession(); if (!s.data.session) return [];
-    var r = await sb.from("orders").select("code,created_at,status,subtotal,agreed_total,priced,delivery_fee,items_count,cancel_reason,order_items(product_id,name,price,qty,thumb,note)").eq("customer_id", s.data.session.user.id).order("created_at", { ascending: false }).limit(100);
+    var r = await sb.from("orders").select("code,created_at,updated_at,status,subtotal,agreed_total,priced,delivery_fee,items_count,cancel_reason,claim_ref,rating,order_items(product_id,name,price,qty,thumb,note)").eq("customer_id", s.data.session.user.id).order("created_at", { ascending: false }).limit(100);
     if (r.error) throw r.error; return r.data.map(function (o) { o.items = o.order_items; delete o.order_items; return o; });
   },
   /* team side */
