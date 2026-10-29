@@ -3,13 +3,15 @@
 </p>
 
 <p align="center">
-  <a href="https://pengo01.github.io/winga/"><b>Open the shop</b></a> ·
-  <a href="https://pengo01.github.io/winga/admin/">Boss side</a> ·
-  <a href="#how-it-works">How it works</a> ·
-  <a href="#principles">Principles</a> ·
+  <a href="https://niagize.tz/"><b>Open the shop</b></a> ·
+  <a href="https://niagize.tz/admin/">Boss app</a> ·
+  <a href="#how-an-order-flows">How an order flows</a> ·
+  <a href="#environments">Environments</a> ·
   <a href="#roadmap">Roadmap</a> ·
   <a href="LICENSE">MIT License</a>
 </p>
+
+<p align="center"><sub>Moving to <b>niagize.tz</b>. Until it is live, the same apps run at <a href="https://pengo01.github.io/winga/">pengo01.github.io/winga</a>.</sub></p>
 
 ---
 
@@ -24,54 +26,66 @@ It works. But it lives in WhatsApp status that disappears in 24 hours, in a phon
 ## What it does
 
 <p align="center">
-  <img src="docs/screens.png" alt="Five screens: the customer shop, the basket with a note per item, the Boss home dashboard, adding a product with up to three photos, and the two-column product list." width="100%">
+  <img src="docs/screens.png" alt="Six screens: the shop home, a product page, paying an order, Track oda on Mimi, the Boss dashboard and the Boss order list." width="100%">
 </p>
 
 | Side | Screen | What it does |
 |---|---|---|
-| Mteja | **Nyumbani** | Masonry grid: photo, name, short description, price, WhatsApp "Ulizia", quality stars, how many ordered, add to basket. Search and 6 categories with sub-categories |
-| Mteja | **Aina** | Temu-style: categories on the left, sub-categories as circles on the right |
-| Mteja | **Kapu → Tuma oda** | Quantities, delivery (Fasta / Utume Leo), address. Creates order **#NK-XXXXX** and sends the seller one WhatsApp message with a link to that order |
-| Mteja | **Oda page** | Live status (Imepokelewa → Nakurudia → Ankara → Imelipwa → Imekamilika), items, total, payment numbers |
-| Mteja | **Mimi** | Optional account: username + 6-digit PIN, WhatsApp number, history and reorder, addresses (map search or typed), settings, delete account |
-| Boss | **Nyumbani** | Dashboard: sales, orders, visitors, conversion, 7-day chart, customer funnel, top products, then shortcuts and a peek at the shop |
-| Boss | **Oda** | Every order with one next step: Nakurudia → Tuma ankara (summary + payment numbers to WhatsApp) → Imelipwa (optional transaction ID) → Imekamilika, or Sitisha with a reason |
-| Boss | **Ongeza / Bidhaa** | Up to 3 photos, category + sub-category, price or "Acha mteja aulize bei", quality stars, #tags. Bulk edit, archive after 60 days |
-| Boss | **Profile** | Shop settings (WhatsApp, payment numbers, delivery fees), assistants, username + PIN |
+| Mteja | **Nyumbani** | New-in strip, category chips, two-column grid with price, stars and how many ordered. Fuzzy search ("kiatu" finds "viatu") |
+| Mteja | **Bidhaa** | Square photos, price, description, similar items. **Chat nasi · Ongeza · Agiza sasa** |
+| Mteja | **Kapu → Tuma oda** | Quantities, a note per item, Inaharaka / Utumwe Leo, delivery place, WhatsApp number. Creates order **NK-XXXXX** and opens the seller's WhatsApp with it |
+| Mteja | **Oda** | Status timeline; after the invoice: the invoice picture, every payment number on one card, "Umeshalipa?" (channel, receipt, payer), Nimepokea + optional stars, thank-you card |
+| Mteja | **Mimi** | Open orders with the next step (Lipa sasa / Nimepokea), Track oda, optional account, addresses, help |
+| Boss | **Nyumbani** | Sales, orders, visitors, conversion, customer funnel, hidden Ganji (margin), top products, team briefs at 09:30 and 13:30 |
+| Boss | **Oda** | Three tabs by whose move it is: **Mpya** (send the invoice) · **Inafanyiwa kazi** (invoice sent until delivered) · **Zimekamilika**. One search for order, name or phone |
+| Boss | **Ongeza / Bidhaa** | Pick photos, square crop, category + sub-category, price, Ganji per product. Archive after 60 days |
+| Boss | **Profile** | Shop settings (WhatsApp, payment numbers), categories, assistants, order alerts |
 
-## How it works
+## How an order flows
 
-```mermaid
-flowchart LR
-    G["200+ supplier<br/>WhatsApp groups"] -- "Save photo" --> PH["Boss's<br/>photo gallery"]
-    PH -- "Ongeza picha" --> B["Boss side<br/>photos · name · price"]
-    B --> DB[("Supabase<br/>products · photos")]
-    DB --> S["Shop link<br/>browse · filter · search"]
-    IG["Instagram /<br/>WhatsApp status"] -- "shared link" --> S
-    S -- "Kapu → Tuma oda" --> W["Boss's WhatsApp<br/>confirm · pay · boda"]
+```
+ Mteja                         WhatsApp                          Boss app
+ Kapu → Tuma oda ─────────────► "Oda NK-XXXXX" + link ──────────► Mpya: fee, place → Tuma invoice
+ Oda page: invoice + pay card ◄─ invoice text (to his own chat) ◄─┘
+ Umeshalipa? (receipt) ───────► "Nimelipia NK-XXXXX" ───────────► Hakiki malipo → Imelipwa
+ Nimepokea (+ stars) ◄─────────  delivery details ◄─────────────── Tuma mzigo → Imekamilika
+ Kadi ya asante pops ◄────────── thank-you link ◄──────────────────┘
 ```
 
-Today, ordering finishes on WhatsApp, where customers already are. In-app orders come only after the numbers show customers actually tap "Tuma oda" (see [Roadmap](#roadmap)).
+Money never passes through the app: customers pay the winga's own mobile-money or bank numbers, the app records the receipt and the winga confirms it. Every WhatsApp hand-off leaves a "Fungua WhatsApp tena" bar, so a slow network is never a dead end.
 
 ## Use it
 
-**Customers:** open **https://pengo01.github.io/winga/**. On a phone, add it to the Home Screen to come back in one tap.
+**Customers:** open the shop link and add it to the Home Screen.
 
 **Boss (iPhone):**
-1. Open **https://pengo01.github.io/winga/admin/** in **Safari**, tap **Share → Add to Home Screen**.
-2. Open **Niagize Boss** from the Home Screen and sign in. Accounts are created by the Super Admin.
-3. Tap the bulb for **Hatua 3**: WhatsApp number, three products, share the link.
+1. Open the Boss app in **Safari**, tap **Share → Add to Home Screen**.
+2. Open **Niagize** from the Home Screen and sign in (username + password; accounts come from the Super Admin).
+3. Turn on order alerts from the Home card (iOS 16.4+, Home Screen app only).
 
-> On iPhone, "Share → app" from WhatsApp isn't possible for web apps (WebKit limitation), so photos come from the gallery: in WhatsApp, hold a photo → **Save**, then **Ongeza picha**.
+> On iPhone, web apps can't receive "Share → app" from WhatsApp (WebKit limitation), so photos come from the gallery: in WhatsApp, hold a photo → **Save**, then **Ongeza picha**.
 
-**Super Admin:** creates accounts in Supabase (Authentication → Users → Add user, *Auto Confirm*) and grants a role in `public.admins` (`super_admin` or `boss`).
+## Environments
+
+| | Live | Dev |
+|---|---|---|
+| Web | `niagize.tz/` · `niagize.tz/admin/` | `niagize.tz/beta/` · `niagize.tz/beta/admin/` (**DEV** tag) |
+| Database | Supabase `winga` | Supabase `winga-dev`, a full copy of live as of 29 Oct 2026 |
+| Code | root files | `beta/` |
+
+```
+ branch ──► main ──► /beta/ on dev ──► test on phones ──► promote beta/ to the root (live)
+ SQL ─────► winga-dev first ──► test ──► winga (live) ──► saved in supabase/migrations/
+```
+
+Details and rules: [`supabase/dev/README.md`](supabase/dev/README.md). The live root still runs **v2.0** until v2.21 is promoted.
 
 ## Principles
 
 1. **Augment WhatsApp, never replace it.** It's where the winga and his customers live.
 2. **One winga, not a marketplace.** His trust is the product.
-3. **Protect his edge.** Suppliers and inside prices are never shown to customers.
-4. **Fresh or hidden.** Stale stock breaks trust; products expire unless confirmed.
+3. **Protect his edge.** Suppliers, costs and Ganji are never shown to customers or assistants.
+4. **Fresh or hidden.** Stale stock breaks trust; products archive after 60 days unless renewed.
 5. **Don't hold money.** Payments happen outside the app. We record, we don't touch.
 6. **Borrow the basics, innovate on go-to-market.** Shop grids and order flows are solved problems; reach and trust are not.
 
@@ -79,38 +93,46 @@ Today, ordering finishes on WhatsApp, where customers already are. In-app orders
 
 | | |
 |---|---|
-| **Frontend** | Plain HTML + JavaScript, no build step, hosted on GitHub Pages. Works offline from cache |
-| **Backend** | Supabase: Postgres, Auth (email + password), Storage for photos |
-| **Security** | Row Level Security: visitors read live products only; costs live in `product_private` (admins only); only admins upload or edit. See [`supabase/schema.sql`](supabase/schema.sql) |
-| **Photos** | Shrunk on the phone before upload: 1080 px full, 400 px thumbnail |
-| **Search** | Fuse.js fuzzy search, so "kiatu" finds "viatu" |
-| **Language** | Kiswahili first (short, M-Pesa style), English switch. All words live in one table in `shared/core.js` |
+| **Frontend** | Plain HTML + JavaScript PWAs, no build step. Hosted on Cloudflare (from `main`), GitHub Pages as fallback. Opens instantly from cache, works offline |
+| **Backend** | Supabase: Postgres, Auth, Storage, Edge Functions (`account`, `team`, `notify`), pg_cron |
+| **Security** | Row Level Security on every table; prices and totals come from the database; order actions need the team, the signed-in owner, or the WhatsApp number on the order (5 wrong tries lock it for 15 minutes) |
+| **Alerts** | Web Push (VAPID, no third party): new orders, morning and afternoon briefs, critical warnings |
+| **Photos** | Shrunk and square-cropped on the phone: 1080 px full, 400 px thumbnail |
+| **Language** | Kiswahili first (short, M-Pesa style), English switch. Every word lives in one table in `shared/core.js` |
+| **Design** | Locked system in [`DESIGN.md`](DESIGN.md): ink, one gold action per screen, cyan for "you are here", Onest, Feather icons |
 
 ```
-index.html             customer shop
-admin/                 Boss side (Niagize Boss)
-shared/                core.js (language, data layer), style.css, config.js (public Supabase URL + anon key)
-supabase/schema.sql    tables, security rules, storage bucket
-pocket/                v0.1: the original single-winga pocket tool (where this started)
-docs/                  README images
+index.html, admin/, shared/   live shop + Boss app (v2.0 until promoted)
+beta/                         the version under test, on the dev database (v2.21)
+  index.html                  shop
+  admin/index.html, o.html    Boss app, WhatsApp order hand-off page
+  shared/                     core.js (words + data layer), style.css, config.js (dev)
+supabase/
+  baseline/                   the first two schemas (17–18 Oct)
+  migrations/                 every later change, dated, with what ran where
+  functions/                  edge functions: account, team, notify
+  dev/                        environment plan + dev schema
+tests/                        Playwright checks (demo mode, no network)
+pocket/                       v0.1: the original Winga Pocket tool
+docs/                         README images, review sheets
 ```
 
-The anon key in `shared/config.js` is public by design. Row Level Security decides who can read or change what.
+The anon keys in `config.js` are public by design. Row Level Security decides who can read or change what.
 
 ## Roadmap
 
 Effort follows one rule: **metrics 50% · onboarding 40% · features 10%.**
 
 ```
- ✅ Shop + Boss side ──► ✅ Onboarding pass 1 ──► ✅ Review #1 ──► ✅ v2: orders, accounts, dashboard ──► ▶ Learn from real orders ──► In-app orders ──► Delivery · rating · reorder · alerts ──► WhatsApp forward bot · Instagram cards
+ ✅ Shop + Boss ─► ✅ Orders, accounts, dashboard ─► ✅ Invoices, payment proof, Ganji, alerts ─► ✅ Dev environment
+ ─► ▶ niagize.tz + go-live with Boss Deus ─► Learn from real orders ─► Delivery partners ─► WhatsApp forward bot · Instagram cards
 ```
 
-- **Metrics next:** visits, product views, order taps, products added per day, days active.
-- **In-app orders** (bargain, invoice, payment proof, verify) ship only if metrics show customers tap "order".
+What changed and when: [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Where it started
 
-Niagize Kariakoo grew out of **Winga Pocket** (`/pocket/`), a phone-only tool for a winga's catalog, margin math and orders. Field feedback from a working winga turned it into a shop customers can browse. The pocket tool still works at **https://pengo01.github.io/winga/pocket/**.
+Niagize Kariakoo grew out of **Winga Pocket** (`/pocket/`), a phone-only tool for a winga's catalog, margin math and orders. Field feedback from a working winga turned it into a shop customers can browse.
 
 ## Contributing
 

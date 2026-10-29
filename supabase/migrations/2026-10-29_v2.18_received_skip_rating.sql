@@ -1,4 +1,4 @@
--- v2.18 (NOT RUN YET — run in Supabase SQL editor after review)
+-- v2.18: run 29 Oct 2026 on live (Super Admin go); also part of winga-dev. Later merged into the v2.19 owner check.
 -- "Nimepokea" can close an order without stars ("Ruka, funga oda"). Stars stay 1–5 when given.
 -- Additive: v2.0 live and the v2.16/2.17 beta keep working (they always send stars).
 create or replace function public.customer_received(c text, stars integer, note text default null)

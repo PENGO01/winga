@@ -1,5 +1,5 @@
 /* Winga connection settings (Supabase project "winga", Frankfurt).
-   The anon key is public by design: Row Level Security (supabase/schema.sql) decides who can read or change what.
+   The anon key is public by design: Row Level Security (supabase/) decides who can read or change what.
    Clear url to run in example mode. */
 window.WINGA_CONFIG = {
   url: "https://omnigqtooirwmpmjgaio.supabase.co",

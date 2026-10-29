@@ -14,11 +14,11 @@ A single-winga online shop for Kariakoo, Dar es Salaam. One trusted winga (the s
 - `admin/index.html`: the Boss app (dashboard, orders, products, customers, settings, team).
 - `admin/o.html`: handoff page from the WhatsApp order link.
 - `shared/core.js` holds every screen word plus the data layer (Supabase). `shared/style.css` is the shared look.
-- `beta/` is the copy under test. The root is the live site.
+- `beta/` is the copy under test and runs on the dev database (`winga-dev`, DEV tag). The root is the live site (`winga`). See `supabase/dev/README.md`.
 
 ## Stack and constraints
-- Plain HTML + JS PWAs, no build step, GitHub Pages (moving to Cloudflare). No frameworks; don't add one.
-- Supabase (Postgres + Row Level Security) is the source of truth for roles and prices.
+- Plain HTML + JS PWAs, no build step, served from `main` (Cloudflare at niagize.tz; GitHub Pages as fallback). No frameworks; don't add one.
+- Supabase (Postgres + Row Level Security) is the source of truth for roles, prices and order ownership. SQL changes go to dev first, then live, and are saved in `supabase/migrations/`.
 - Keep pages light: one font family, Feather inline SVG icons, photos as small JPEG thumbs.
 
 ## What matters (NFX rules)

@@ -13,7 +13,7 @@
 -- turns that into an Error. Old clients still work for the team and signed-in customers;
 -- guests need the v2.17 client.
 --
--- Run 29 Oct 2026 (Super Admin go). Undo: supabase/v2_19_rollback.sql
+-- Run 29 Oct 2026 (Super Admin go). Undo: supabase/migrations/2026-10-29_v2.19_rollback.sql
 
 begin;
 
@@ -121,4 +121,4 @@ commit;
 -- select proname, pg_get_function_identity_arguments(oid), has_function_privilege('anon', oid, 'EXECUTE')
 --   from pg_proc where proname in ('set_order_phone','submit_payment','customer_received','order_caller');
 --
--- Rollback: supabase/v2_19_rollback.sql
+-- Rollback: supabase/migrations/2026-10-29_v2.19_rollback.sql

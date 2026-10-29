@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-import v218_hook as hook, urllib.parse
+import hook, urllib.parse
 B="http://localhost:8765/beta/"
 R=[]
 def ok(name,cond,extra=""):

@@ -21,13 +21,13 @@
 4. Dev can be refreshed from live whenever needed (same steps as below).
 
 ## How dev was built (29 Oct 2026)
-- `01_schema.sql`: tables, constraints, indexes (generated from the live catalog).
+- `dev_01_schema.sql`: tables, constraints, indexes (generated from the live catalog).
 - Functions, triggers, RLS policies, grants, storage buckets and rules, cron: copied from the live catalog with
   `pg_get_functiondef` / `pg_policies` / `aclexplode`; only the notify-hook URL and the photo-order prefix point at dev.
 - Edge functions `team`, `account`, `notify` deployed from the live source (`supabase/functions/`).
 - Data: auth users (same logins), shop, team, profiles, addresses, products (photos → live URLs), product Ganji,
   orders, order lines, order Ganji, events.
 
-## Live clean-up before the pilot (needs your confirmation)
-`pilot_clean_test_orders.sql`: deletes test orders and their trail on live; keeps shop, team, accounts, addresses
-and products (order/ask counters reset). Dev keeps the full copy.
+## Live clean-up before the pilot (done 29 Oct 2026)
+`../migrations/2026-10-29_live_clean_test_orders.sql` and `../migrations/2026-10-29_live_clear_products.sql`:
+live starts with no orders and no products; shop settings, team and accounts kept. Dev keeps the full copy.

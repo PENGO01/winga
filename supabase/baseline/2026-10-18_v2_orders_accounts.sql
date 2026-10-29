@@ -1,6 +1,6 @@
 -- Niagize Kariakoo v2 (2026-10-18): categories + sub-categories, tags, quality stars, orders,
 -- customer accounts (username + 6-digit PIN via the "account" edge function), addresses, events, dashboard.
--- Run after schema.sql. Edge functions: supabase/functions/team, supabase/functions/account.
+-- Run after 2026-10-17_v1_schema.sql. Edge functions: supabase/functions/team, supabase/functions/account.
 
 -- products
 alter table public.products add column if not exists subcategory text;
