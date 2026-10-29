@@ -1,4 +1,4 @@
--- Niagize live (winga, omnigqtooirwmpmjgaio): remove test orders before the pilot. NOT RUN YET — needs Super Admin OK.
+-- Niagize live (winga, omnigqtooirwmpmjgaio): remove test orders before the pilot. Run 29 Oct 2026 (Super Admin OK).
 -- A full copy of everything below lives in winga-dev (zgpaitukibhmikhazgvk) since 29 Oct 2026.
 -- Kept: shop settings, team, customer accounts and addresses, products (their order/ask counters reset to 0).
 begin;
