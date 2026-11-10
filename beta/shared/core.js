@@ -73,6 +73,8 @@ W.STRINGS = [
  ["inst_go","Install","Weka","Add"],
  ["new_strip","Shop","Mpya dukani","New in"],
  ["new_n","Shop","{n} mpya wiki hii","{n} new this week"],
+ ["drop_today","Shop","Mzigo wa leo","Today's drop"],
+ ["drop_n","Shop","{n} leo","{n} today"],
  ["new_tag","Shop","MPYA","NEW"],
  ["new_today","Shop","Leo","Today"],
  ["ptr_pull","Common","Vuta chini kusasisha","Pull to refresh"],
