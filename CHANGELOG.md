@@ -4,6 +4,7 @@ Versions ship to `beta/` first. "Live" is the root (`/`, `/admin/`).
 
 | Version | Date | What changed |
 |---|---|---|
+| **2.22** | 10 Nov | Design polish (on `beta/`, branch `v2.22-polish`): buttons in three heights (48 / 40 / 36), all pills; hover, press, focus and disabled states; motion tokens (4 durations, 1 curve), sheets rise from the edge; visible field edges and focus ring; WhatsApp buttons neutral with a green glyph; link and status contrast fixed; Boss profile photo fixed; tab mark; no tinted boxes left |
 | **2.21** | 29 Oct | Dev environment: beta runs on `winga-dev` (full copy of live), DEV tag. Live cleared for the pilot (test orders and products removed). Domain move to niagize.tz prepared (branch `domain-move-v2`) |
 | **2.20** | 29 Oct | Boss orders in three tabs by whose move it is; one search for order, name or phone; next step on every card. Open orders on Mimi with Lipa sasa / Nimepokea. Invoice picture first, payment numbers on one card. **Ongeza** button. Phone asked from every buyer without one. Unique order links for WhatsApp previews |
 | **2.19** | 29 Oct | Order actions need proof of ownership (team, signed-in owner, or the order's WhatsApp number; lock after 5 wrong tries). Server refuses an invoice without number and place |

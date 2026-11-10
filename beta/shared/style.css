@@ -9,10 +9,10 @@ html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
   --ink:#242424; --dim:#6B6150; --faint:#736750;
   --navy:#121212; --navy2:#12375A; --on-navy:#FFFFFF; --on-navy-dim:#A8A8A8;
   --jua:#FFC62D; --amber-brand:#F3A500; --jua-text:#8A5C00; --jua-soft:#FFF0C2; --on-jua:#121212;
-  --cyan:#53C4D1; --cyan-text:#1C7F8B; --ocean:#12375A;
+  --cyan:#53C4D1; --cyan-text:#176F7A; --ocean:#12375A;
   --line-soft:#F3D98A;
   --green:#0D7F48; --green-soft:#E3F4EA; --red:#B8392A; --red-soft:#FBE7E3; --amber:#9A5B00; --amber-soft:#FFF0D2; --blue:#12375A; --blue-soft:#E1ECF4;
-  --wa:#1FA855; --scrim:rgba(18,18,18,.55); --shadow:0 8px 24px rgba(18,18,18,.14);
+  --wa:#17924A; --scrim:rgba(18,18,18,.55); --shadow:0 8px 24px rgba(18,18,18,.14);
   /* v2.16 wave 2: every remaining colour has a token (no literals in component rules) */
   --shadow-xs:0 1px 2px rgba(18,18,18,.08); --photo-ink:rgba(18,18,18,.78); --grid-line:rgba(255,255,255,.35); --on-navy-tint:rgba(255,255,255,.08);
   --nav-raise:#262626; --live:#22B35E; --live-ring:rgba(34,179,94,.22); --jua-ring:rgba(255,198,45,.28); --cy-ring:rgba(83,196,209,.25); --red-ring:rgba(217,72,59,.22);
@@ -25,6 +25,10 @@ html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
   --display:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
   --body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
   --num:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* v2.22 polish: action pair, focus, field edge, motion */
+  --act:var(--navy); --on-act:var(--on-navy); --on-red:#FFFFFF; --focus:var(--cyan-text); --field-line:#978B6C; --on-cyan:#06222A;
+  --t-press:90ms; --t-fast:140ms; --t-base:200ms; --t-sheet:320ms;
+  --ease-out:cubic-bezier(.22,1,.36,1); --ease-std:cubic-bezier(.4,0,.2,1);
   --r:14px; --gl:max(16px, env(safe-area-inset-left, 0px)); --gr:max(16px, env(safe-area-inset-right, 0px));
   color-scheme: light;
 }
@@ -36,6 +40,7 @@ html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
   --green:#3CC47E; --green-soft:#12301F; --red:#F08A7A; --red-soft:#3A1E1A; --amber:#F2B54B; --amber-soft:#33270F; --blue:#53C4D1; --blue-soft:#10292D;
   --scrim:rgba(0,0,0,.65); --shadow:0 8px 24px rgba(0,0,0,.45);
   --shadow-xs:0 1px 2px rgba(0,0,0,.4); --bar:#2E4E6E;
+  --act:var(--jua); --on-act:var(--on-jua); --on-red:#121212; --focus:var(--cyan); --field-line:#6E6E6E; --wa:#1FA855;
   color-scheme: dark; } }
 :root[data-theme="dark"]{
   --paper:#121212; --card:#1C1C1C; --sunk:#262626; --line:#2E2E2E;
@@ -45,6 +50,7 @@ html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
   --green:#3CC47E; --green-soft:#12301F; --red:#F08A7A; --red-soft:#3A1E1A; --amber:#F2B54B; --amber-soft:#33270F; --blue:#53C4D1; --blue-soft:#10292D;
   --scrim:rgba(0,0,0,.65); --shadow:0 8px 24px rgba(0,0,0,.45);
   --shadow-xs:0 1px 2px rgba(0,0,0,.4); --bar:#2E4E6E;
+  --act:var(--jua); --on-act:var(--on-jua); --on-red:#121212; --focus:var(--cyan); --field-line:#6E6E6E; --wa:#1FA855;
   color-scheme: dark; }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -56,7 +62,7 @@ button{cursor:pointer}
 img{max-width:100%;height:auto}  /* width/height attributes reserve space without stretching */
 [hidden]{display:none!important}
 body{overscroll-behavior-y:contain}
-:focus-visible{outline:3px solid var(--jua);outline-offset:2px;border-radius:8px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .num{font-family:var(--num);font-variant-numeric:normal;letter-spacing:-.01em;font-weight:600}
 h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.02em;text-wrap:balance}
 h1{font-size:24px;font-weight:800} h2{font-size:18px;font-weight:600} h3{font-size:16px;font-weight:600}
@@ -67,13 +73,11 @@ h1{font-size:24px;font-weight:800} h2{font-size:18px;font-weight:600} h3{font-si
 
 .btn{border:0;border-radius:12px;padding:11px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;text-decoration:none;color:inherit;background:transparent}
 .btn svg{width:18px;height:18px;flex:none}
-.btn.primary{background:var(--navy);color:var(--on-navy)} .btn.sun{background:var(--jua);color:var(--on-jua)} .btn.green{background:var(--wa);color:var(--on-navy)} .btn.red{background:var(--red);color:var(--on-navy);border:1.5px solid var(--red)}
+.btn.primary{background:var(--act);color:var(--on-act)} .btn.sun{background:var(--jua);color:var(--on-jua)} .btn.green{background:var(--wa);color:var(--on-navy)} .btn.red{background:var(--red);color:var(--on-navy);border:1.5px solid var(--red)}
 .btn.ghost{background:var(--card);border:1px solid var(--line)} .btn.danger{background:var(--red-soft);color:var(--red)}
 .btn.block{width:100%} .btn.sm{min-height:36px;padding:7px 12px;font-size:13.5px;border-radius:10px}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .btn.primary{background:var(--jua);color:var(--on-jua)} }
-:root[data-theme="dark"] .btn.primary{background:var(--jua);color:var(--on-jua)}
 
 .icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--ink);flex:none;position:relative}
 .icon-btn svg{width:20px;height:20px}
@@ -357,4 +361,91 @@ input::placeholder,textarea::placeholder{color:var(--faint);opacity:1}
 .waretry .wr-x{flex:none;width:40px;height:40px;border-radius:50%;font-size:22px;color:var(--dim)}
 
 /* v2.21: the beta runs on the dev database */
-.envtag{display:inline-flex;align-items:center;height:18px;padding:0 6px;margin-left:6px;border-radius:6px;background:var(--cyan);color:#06222a;font:700 10px/1 var(--num,system-ui);letter-spacing:.06em;vertical-align:middle;flex:none}
+.envtag{display:inline-flex;align-items:center;height:18px;padding:0 6px;margin-left:6px;border-radius:6px;background:var(--cyan);color:var(--on-cyan);font:700 10px/1 var(--num,system-ui);letter-spacing:.06em;vertical-align:middle;flex:none}
+
+/* ===================== v2.22 Polish (10 Nov 2026): refine inside the locked system =====================
+   Buttons: three heights only. 48 = the action, 40 = a second action, 36 = a filter. All pills.
+   Every control answers in three ways: hover (pointer), press (finger), focus (keyboard).
+   Motion: four durations, one curve. Transform and opacity only.
+   Colour: fixes measured against WCAG 2.2 (text 4.5:1, control edges and icons 3:1). */
+
+/* --- buttons --- */
+.btn{min-height:48px;padding:0 20px;border-radius:999px;font-size:15px;line-height:1.2;letter-spacing:-.005em;-webkit-user-select:none;user-select:none}
+.btn.sm{min-height:40px;padding:0 14px;border-radius:999px;font-size:13.5px}
+.btn svg{width:18px;height:18px}
+.btn.ghost{border:1px solid var(--line)}
+.btn.red{background:var(--red);color:var(--on-red);border:0}
+.btn.danger{background:var(--sunk);color:var(--red)}
+/* WhatsApp: a neutral button, the glyph alone is green (white on green read 3.1:1) */
+.btn.green{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.green svg{color:var(--wa)}
+/* disabled reads as "not yet", never as a faded action */
+.btn:disabled,.btn[aria-disabled="true"]{opacity:1;background:var(--sunk);color:var(--faint);border-color:transparent;cursor:not-allowed}
+.btn.busy{opacity:1}
+.btn.primary:active,.btn.sun:active,.btn.red:active,.fi.jua:active{filter:brightness(.92)}
+.btn.ghost:active,.btn.green:active,.btn.danger:active,.rb:active,.mrow:active{background:var(--sunk)}
+button,.chip,.tag,.mrow{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+/* round icon buttons: 40 as the spec says; small ones keep a 40px touch area */
+.fi{width:40px;height:40px}.fi svg{width:20px;height:20px}
+.fi.sm{width:32px;height:32px}.fi.sm svg{width:16px;height:16px}
+.fi.red{background:var(--sunk);color:var(--red)}
+.hbtn{width:36px;height:36px}.hbtn svg{width:18px;height:18px}
+.fi.sm::before,.hbtn::before,.eye::before,.sbox .clr::before,.freechip::before,.linkbtn::before{content:"";position:absolute;inset:-4px}
+.eye,.sbox .clr,.freechip,.linkbtn{position:relative}
+.linkbtn::before{inset:-11px -6px}
+.qty button{width:40px;height:40px}
+/* filters */
+.chip{min-height:36px;padding:0 14px;line-height:1}
+/* press, for everything a finger can land on */
+.rb:active,.hbtn:active,.iconbtn:active,.icon-btn:active,.qt:active,.sc:active,.radio:active,.qty button:active,nav.tabs button:active{transform:scale(.96)}
+.pc:active{transform:scale(.985)}
+.btn,.fi,.rb,.chip,.tbtn,.mrow,.hbtn,.iconbtn,.icon-btn,.qt,.sc,.radio,.pc,.qty button,nav.tabs button{transition:transform var(--t-press) var(--ease-out),background-color var(--t-fast) var(--ease-std),border-color var(--t-fast) var(--ease-std),color var(--t-fast) var(--ease-std),filter var(--t-fast) var(--ease-std)}
+@media (hover:hover){
+  .btn.primary:hover,.btn.sun:hover,.btn.red:hover{filter:brightness(1.06)}
+  .btn.ghost:hover,.btn.green:hover,.rb:hover,.mrow:hover,.chip:not([aria-pressed="true"]):hover,.iconbtn:hover{background:var(--sunk)}
+  .fi:not(.jua):hover,.tag.tbtn:hover{background:var(--line)}
+}
+
+/* --- fields: an edge you can see, a ring where you are --- */
+.input{min-height:48px;border-radius:12px;border-color:var(--field-line)}
+.ifield{min-height:48px;border-color:var(--field-line)}
+.ifield input,.ifield textarea,.ifield select{padding:12px 0}
+.input:focus,.ifield:focus-within{border-color:var(--focus);box-shadow:0 0 0 3px var(--cy-ring)}
+.sbox:focus-within{box-shadow:0 0 0 3px var(--cy-ring)}
+.ifield.bad{border-color:var(--red);background:var(--card);box-shadow:0 0 0 3px var(--red-ring)}
+.input,.ifield,.sbox{transition:border-color var(--t-fast) var(--ease-std),box-shadow var(--t-fast) var(--ease-std)}
+input,textarea{caret-color:var(--focus)}
+::selection{background:var(--jua);color:var(--on-jua)}
+
+/* --- no tinted surfaces (the v2.15 rule, finished) --- */
+.banner{background:var(--sunk);border-color:var(--line)}
+.radio[data-on="true"]{background:var(--card);border-color:var(--jua);box-shadow:inset 0 0 0 1px var(--jua)}
+.claimok,.claimok.wait{background:var(--sunk)}
+.pill.soon,.pill.late,.pill.good,.pill.blue{background:var(--sunk);color:var(--ink)}
+.off,.soon{background:var(--sunk)}
+
+/* --- you are here: the bottom tab carries a mark, not only a colour --- */
+nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:0;left:50%;width:22px;height:3px;margin-left:-11px;border-radius:0 0 3px 3px;background:var(--cyan)}
+
+/* --- position: nothing sits on top of anything else --- */
+.toast{border-radius:16px;text-align:center;animation:toastin var(--t-base) var(--ease-out)}
+body:has(.waretry.on) .toast{bottom:calc(156px + env(safe-area-inset-bottom,0px))}
+.fab{transition:opacity var(--t-fast) var(--ease-std),transform var(--t-press) var(--ease-out)}
+.fab:active{transform:scale(.94)}
+body:has(.waretry.on) .fab{opacity:0;pointer-events:none}
+
+/* --- motion: sheets rise, pages slide, popups settle --- */
+.scrim.anim:not(.page){animation:fadein var(--t-base) var(--ease-std)}
+.scrim.anim .sheet{animation:up var(--t-sheet) var(--ease-out)}
+.scrim.center.anim .sheet{animation:settle var(--t-base) var(--ease-out)}
+.scrim.page.anim .sheet{animation:slide var(--t-base) var(--ease-out)}
+.waretry{transition:opacity var(--t-base) var(--ease-std),transform var(--t-sheet) var(--ease-out)}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+@keyframes settle{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
+@keyframes slide{from{transform:translateX(28px);opacity:0}to{transform:none;opacity:1}}
+@keyframes toastin{from{transform:translate(-50%,10px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+/* reduced motion: everything lands at once; spinners keep turning slowly so waiting still reads as waiting */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .busy::after,.ptr.spin svg,.spinning svg{animation-duration:2s!important;animation-iteration-count:infinite!important}
+}

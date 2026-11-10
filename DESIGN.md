@@ -13,11 +13,13 @@ Operate, not Persuade. People finish a task on a phone over 4G in Kariakoo: brow
 | `--ink` | #242424 / #F2F2F2 | Text |
 | `--navy` | #121212 / #0B0B0B | The shell: header and bottom nav |
 | `--jua` | #FFC62D | Gold. **The one main action on a screen**, a selected chip, rating stars, counters |
-| `--cyan` / `--cyan-text` | #53C4D1 / #1C7F8B | "You are here": current step, new, links |
+| `--cyan` / `--cyan-text` | #53C4D1 / #176F7A | "You are here": current step, new, links, the focus ring. Text shade passes 4.5:1 on paper and sunk (v2.22) |
 | `--paper` `--card` `--sunk` `--line` | sand (light) / greys (dark) | Everything else. Neutral surfaces only |
 | `--faint` | #736750 / #8C8C8C | Muted text; passes 4.5:1 on every surface |
 | `--red` | #B8392A / #F08A7A | Error text and the cancel X only |
-| `--wa` | #1FA855 | The WhatsApp glyph only |
+| `--wa` | #17924A / #1FA855 | The WhatsApp glyph only. Never a button fill (white on green reads 3.1:1) |
+| `--act` / `--on-act` | ink / gold | The main button. One token pair, so light = ink and dark = gold with no per-theme rules (v2.22) |
+| `--field-line` | #978B6C / #6E6E6E | The edge of an input. 3:1 against the surface, so a field is visible before it is tapped (v2.22) |
 
 Rules:
 - No tinted cards: no green, red or gold backgrounds on a card. Meaning rides on a dot, an outline or an icon.
@@ -32,11 +34,42 @@ One family: Onest at 400, 500, 600 and 800. Inputs are 16px, so iPhone doesn't z
 |---|---|
 | Card | radius 16, padding 14 |
 | Field | 48 high, radius 12 |
-| Footer button | 48 high, pill |
-| Round footer icon | 48 |
-| Icon button | 40 round (`.fi`), 32 small |
+| Button (`.btn`) | **48** high, pill. The action |
+| Second button (`.btn.sm`, `.tag.tbtn`) | **40** high, pill |
+| Filter (`.chip`) | **36** high, pill |
+| Round footer icon (`.rb`) | 48 |
+| Icon button | 40 round (`.fi`), 36 in the header (`.hbtn`), 32 small (`.fi.sm`) with a 40px touch area |
 | Tag (`.tag`) | 28 high, radius 8; `.tag.sm` 22 |
 | Spacing | 4px scale preferred (4, 8, 12, 16, 20, 24) |
+
+## Buttons (v2.22)
+Three heights only: 48, 40, 36. Nothing in between.
+| State | What happens |
+|---|---|
+| Press | scales to .97 in 90 ms; a filled button also darkens 8% |
+| Hover (mouse) | filled: 6% lighter. Neutral: `--sunk` |
+| Focus (keyboard) | 3px `--focus` ring, 2px off the edge. The shape never changes |
+| Disabled | `--sunk` fill, `--faint` text. Never a faded gold |
+| Busy | spinner after the label; on an icon button it replaces the icon |
+
+One filled button per screen. WhatsApp buttons are neutral with a green glyph. Red fill is for a destructive confirm only.
+
+## Motion (v2.22)
+| Token | Value | Used for |
+|---|---|---|
+| `--t-press` | 90 ms | finger feedback |
+| `--t-fast` | 140 ms | colour, border, focus ring |
+| `--t-base` | 200 ms | page slide, popup, toast, scrim |
+| `--t-sheet` | 320 ms | bottom sheet rising |
+| `--ease-out` | cubic-bezier(.22,1,.36,1) | anything entering |
+| `--ease-std` | cubic-bezier(.4,0,.2,1) | colour changes |
+
+Bottom sheets rise from the edge, pages slide 28px, popups settle from 96%. Transform and opacity only. With reduced motion everything lands at once; spinners keep turning slowly.
+
+## Position (v2.22)
+- The current bottom tab has a 3px cyan mark on top, not only a colour.
+- A toast moves up when the WhatsApp retry bar is showing; the chat bubble hides. Nothing overlaps.
+- Fields: `--field-line` edge, cyan ring on focus, red ring (no red fill) on error.
 
 ## Components
 - `.tag`: neutral chip, Feather icon plus a short word. `.tag.hot` has a gold outline (Inaharaka). `.tag.cy` has a cyan outline.
