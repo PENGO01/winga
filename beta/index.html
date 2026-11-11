@@ -1194,7 +1194,7 @@ document.addEventListener("submit",async function(e){
     draw(false);
     if(m==="taken")bad("a_err","w_a_user",t("err_taken"));
     else if(m==="locked")bad("a_err",null,t("err_locked"));
-    else if(m==="wrong")bad("a_err","w_a_pass",t("err_wrong",(x.info&&x.info.left!=null)?{n:Math.max(1,5-x.info.left),m:5}:{n:"…",m:5}));
+    else if(m==="wrong")bad("a_err","w_a_pass",t("err_wrong",(x.info&&x.info.left!=null)?{n:Math.min(4,Math.max(1,5-x.info.left)),m:4}:{n:"…",m:4}));
     else if(m==="password")bad("a_err","w_a_pass",t("err_pass"));
     else bad("a_err",null,t("error"));}
 });

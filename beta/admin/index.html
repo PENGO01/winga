@@ -1286,7 +1286,7 @@ document.addEventListener("submit",async function(e){
   S.busy=true;render();
   W.wait(true);
   try{await W.db.signIn(em,pw);S.busy=false;await afterAuth();W.wait(false);}
-  catch(x){W.wait(false);console.error(x);S.busy=false;render();var m=x.message;bad("lerr","w_pw",m==="locked"?t("err_locked"):m==="wrong"?t("err_wrong",{n:(x.info&&x.info.left!=null)?x.info.left:"…"}):t("wrongLogin"));}
+  catch(x){W.wait(false);console.error(x);S.busy=false;render();var m=x.message;bad("lerr","w_pw",m==="locked"?t("err_locked"):m==="wrong"?t("err_wrong",(x.info&&x.info.left!=null)?{n:Math.min(4,Math.max(1,5-x.info.left)),m:4}:{n:"…",m:4}):t("wrongLogin"));}
 });
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&stack.length){readAll();back();}});
 
