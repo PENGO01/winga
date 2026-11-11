@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.24.5";
+W.VERSION = "2.25.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -589,6 +589,16 @@ W.STRINGS = [
  ["team_reset_s","Boss · Assistants","Kwa {x}. Mpe neno hili jipya","For {x}. Give them this new password"],
  ["team_reset_ok","Boss · Assistants","Neno jipya la siri limewekwa","New password set"],
  ["you","Boss · Assistants","Wewe","You"],
+ ["forgot_staff_msg","Boss · Sign in","Mambo vipi ✌🏾\nNimesahau neno la siri la kuingia Niagize (Boss app). Jina: {u}. Naomba unibadilishie.","Hi ✌🏾\nI forgot my Niagize Boss app password. Sign-in name: {u}. Please reset it for me."],
+ ["rc_title","Boss · Reset","Weka upya neno la siri la mteja","Reset a customer's password"],
+ ["rc_sub","Boss · Reset","Mteja aliyesahau, amekutumia WhatsApp","A customer who forgot and messaged you"],
+ ["rc_login","Boss · Reset","@username au namba ya WhatsApp","@username or WhatsApp number"],
+ ["rc_hint","Boss · Reset","Andika jina lake la kuingia au namba yake ya WhatsApp. Tumeandaa neno jipya, unaweza kulibadilisha.","Type their sign-in name or WhatsApp number. A new password is filled in; you can change it."],
+ ["rc_notfound","Boss · Reset","Hakuna mteja mwenye jina au namba hii","No customer with that name or number"],
+ ["rc_staff","Boss · Reset","Huyu ni wa timu: weka upya kwenye Timu","This is a team member: reset in Team"],
+ ["rc_done","Boss · Reset","Neno jipya la {x} limewekwa","New password set for {x}"],
+ ["rc_send","Boss · Reset","Mtumie kwa WhatsApp","Send it on WhatsApp"],
+ ["rc_msg","Boss · Reset","Mambo vipi {name} ✌🏾\nNeno lako jipya la siri la Niagize ni: {pw}\nIngia kwa jina @{u} hapa {url} kisha libadilishe kwenye Mimi.","Hi {name} ✌🏾\nYour new Niagize password is: {pw}\nSign in as @{u} at {url}, then change it under Me."],
  // boss: order notifications
  ["push_title","Boss · Alerts","Notification za oda","Order notifications"],
  ["push_s","Boss · Alerts","Oda mpya inakufikia papo hapo. Gusa notification, oda inafunguka hapa.","New orders reach you at once. Tap the notification to open the order here."],
@@ -1391,6 +1401,7 @@ W.db = {
       if (action === "add") { if (d.team.some(function (m) { return m.email === body.email; })) throw new Error("exists"); d.team.push({ user_id: W.uid(), name: body.name, role: "assistant", email: body.email }); }
       if (action === "remove") d.team = d.team.filter(function (m) { return m.user_id !== body.user_id; });
       if (action === "reset" && String(body.password || "").length < 6) throw new Error("password_short");
+      if (action === "reset_customer") { if (String(body.password || "").length < 6) throw new Error("password_short"); var lg = String(body.login || "").trim().replace(/^@/, "").toLowerCase(); if (!lg || lg === "hakuna") throw new Error("not_found"); return { ok: true, name: "Mteja wa Mfano", username: /^[0-9+ ]+$/.test(lg) ? "mteja" : lg, whatsapp: "255700000000" }; }
       demoSave(d); return { ok: true, team: d.team };
     }
     var r = await sb.functions.invoke("team", { body: Object.assign({ action: action }, body || {}) });
