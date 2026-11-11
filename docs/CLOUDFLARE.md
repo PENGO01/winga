@@ -1,9 +1,18 @@
-# Cloudflare: finish line for niagize.tz (free plan)
+# Cloudflare: niagize.tz (free plan)
 
-Status 11 Nov: the app already runs at `niagize.kariakoo.workers.dev` (auto-deploys from `main`). What is left is the domain.
+**Status 11 Nov 2026 (checked in the dashboard): done.** Zone `niagize.tz` is active (full DNS). The Worker project **niagize** (static files, auto-deploys from `PENGO01/winga`) serves `niagize.tz`, `www.niagize.tz` and `niagize.kariakoo.workers.dev`. SSL mode *Full*. *Always Use HTTPS* switched on 11 Nov. `_headers` in this repo is read by that project. Mail records (MX) and a DMARC record exist.
 
-## 1. Pages project (5 min)
-Workers & Pages → the project → **Settings → Builds**: framework *None*, build command *(empty)*, output directory `/` (repo root), production branch `main`. Preview deployments: on (every branch gets its own link, use it to retest before merging).
+## Still open
+- `www.niagize.tz/*` → 301 to `https://niagize.tz/$1` (Rules → Redirect Rules). Until then both addresses show the same app.
+- Supabase → Authentication → URL Configuration: add `https://niagize.tz`.
+- Root `index.html` `og:image` → `https://niagize.tz/og-v2.jpg` (after promote).
+- Add SPF TXT record (Cloudflare recommends it); proxy or remove the DNS-only record that exposes an IP.
+- Web Analytics (free, no cookies): switch on.
+- Search Console, Bing, Google Business Profile (`docs/SEO.md`).
+
+## Reference (how it was set up)
+## 1. Project (5 min)
+Workers & Pages → niagize → **Settings → Builds**: no build command, static files from the repo root, production branch `main`. Branch previews give every branch its own link for retests.
 
 ## 2. Custom domain (10 min + DNS wait)
 1. Add `niagize.tz` as a site in Cloudflare (free plan). At the .tz registrar set the two Cloudflare nameservers it shows. `.tz` is run by TZNIC, so the change can take up to a day.
