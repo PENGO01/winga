@@ -13,7 +13,7 @@ Operate, not Persuade. People finish a task on a phone over 4G in Kariakoo: brow
 | `--ink` | #242424 / #F2F2F2 | Text |
 | `--navy` | #121212 / #0B0B0B | The shell: header and bottom nav |
 | `--jua` | #FFC62D | Gold. **The one main action on a screen**, a selected chip, rating stars, counters |
-| `--cyan` / `--cyan-text` | #53C4D1 / #176F7A | "You are here": current step, new, links, the focus ring. Text shade passes 4.5:1 on paper and sunk (v2.22) |
+| `--cyan` / `--cyan-text` | #53C4D1 / #176F7A | "You are here" inside a page: current step, new, links, the focus ring. Text shade passes 4.5:1 on paper and sunk (v2.22) |
 | `--paper` `--card` `--sunk` `--line` | sand (light) / greys (dark) | Everything else. Neutral surfaces only |
 | `--faint` | #736750 / #8C8C8C | Muted text; passes 4.5:1 on every surface |
 | `--red` | #B8392A / #F08A7A | Error text and the cancel X only |
@@ -67,7 +67,7 @@ One filled button per screen. WhatsApp buttons are neutral with a green glyph. R
 Bottom sheets rise from the edge, pages slide 28px, popups settle from 96%. Transform and opacity only. With reduced motion everything lands at once; spinners keep turning slowly.
 
 ## Position (v2.22)
-- The current bottom tab has a 3px cyan mark on top, not only a colour.
+- The current bottom tab (bar is navy) is gold: gold text and a 3px gold mark on top (v2.23). Cyan stays for in-page "you are here".
 - A toast moves up when the WhatsApp retry bar is showing; the chat bubble hides. Nothing overlaps.
 - Fields: `--field-line` edge, cyan ring on focus, red ring (no red fill) on error.
 
@@ -98,3 +98,9 @@ Bottom sheets rise from the edge, pages slide 28px, popups settle from 96%. Tran
 
 ## Never
 Gradient text, glassmorphism, a card inside a card, emoji as icons, decorative status dots, invented numbers or testimonials, `transition: all`, animating width or height.
+
+## v2.23 additions
+- **Save mark** (`.fav`, Feather bookmark): outline off, gold fill on; 44px touch area, sits top-right of cards and the product gallery. Not a gold *button*: it never competes with the one main action.
+- **Product bar**: Tuulize (WhatsApp glyph, neutral) · Tia kapuni (neutral, gold cart glyph) · Agiza chap → (the one gold filled action, arrow like every forward action).
+- **Backdrop**: light theme only, fixed, 16% opacity street-grid sketch with gold junction dots; hidden in dark and reduced-data. Original drawing, no map data.
+- **Payment badge** `W.payBadge()`: neutral monogram; an operator logo file in `beta/img/pay/<slug>.svg` covers it when present.

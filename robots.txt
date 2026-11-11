@@ -1,0 +1,20 @@
+# niagize.tz. The beta app stays out of search results.
+User-agent: *
+Allow: /
+Disallow: /beta/
+Disallow: /admin/
+Disallow: /pocket/
+
+# AI search and answer engines are welcome to read the public shop.
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://niagize.tz/sitemap.xml

@@ -1,0 +1,23 @@
+name: tests
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  suites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install playwright && python -m playwright install --with-deps chromium
+      - name: Serve the repo
+        run: python3 -m http.server 8765 >/dev/null 2>&1 &
+      - name: Run suites
+        working-directory: tests
+        run: |
+          for s in boss_orders shop_orders order_tabs v223_polish; do
+            echo "== $s"; python3 $s.py | tee out_$s.txt
+            tail -1 out_$s.txt | awk -F' / ' '{ if ($1 != $2) exit 1 }'
+          done

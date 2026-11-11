@@ -1,0 +1,13 @@
+# Niagize Kariakoo
+
+> Online shop of a single Kariakoo winga (trader) in Dar es Salaam, Tanzania. Customers pick products, send the order on WhatsApp, pay by mobile money (M-Pesa, Airtel Money, Mixx by Yas, HaloPesa, Selcom) or bank, and get delivery to their door. Prices are in Tanzanian shillings (TSh). Languages: Kiswahili and English.
+
+## How it works
+- Browse the shop at https://niagize.tz/ and open any product.
+- Tap "Agiza chap" to order. The seller confirms on WhatsApp and sends an invoice with the delivery fee.
+- Pay to the number on the invoice, then confirm "Nimepokea" when the goods arrive.
+
+## Facts
+- Location: Kariakoo, Dar es Salaam, Tanzania.
+- Currency: TZS. Delivery: within Dar es Salaam (fee agreed on the invoice).
+- Contact: through the WhatsApp button inside the shop.

@@ -37,7 +37,7 @@ with sync_playwright() as p:
     pid=pg.evaluate("(async()=>(await Winga.db.listProducts()).find(x=>x.price).id)()")
     pg.evaluate(f"__T.open('product',{{id:'{pid}'}})"); pg.wait_for_timeout(600)
     lbl=pg.evaluate("document.querySelector('[data-mode=cart]').innerText.trim()")
-    ok("P1 product page cart button reads Ongeza",lbl=="Ongeza",lbl)
+    ok("P1 product page cart button reads Tia kapuni",lbl=="Tia kapuni",lbl)
     pg.screenshot(path="/tmp/v220-shop_product2.png")
     pg.goto(B+"?demo"); pg.wait_for_timeout(2000)
     pg.evaluate(f"__T.openOrder('{Bc}')"); pg.wait_for_timeout(1000)
