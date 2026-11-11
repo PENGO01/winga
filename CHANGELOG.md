@@ -4,6 +4,7 @@ Versions ship to `beta/` first. "Live" is the root (`/`, `/admin/`).
 
 | Version | Date | What changed |
 |---|---|---|
+| **2.26** | 11 Nov | Staff WhatsApp numbers: adding an assistant asks for one; Team shows each number and lets an owner add or change it (Super Admin can also set Boss's); Profile has "Namba yangu ya WhatsApp". After a password reset, "Mtumie kwa WhatsApp" sends the new password to that number. Shop and Boss app: the bottom bar hides while the iPhone keyboard is up and is put back at the bottom when it or a sheet closes. A half-typed number's hint no longer vanishes on blur (it moved Save under the finger; the tap hit the backdrop). Server: `team` v2.26 (`set_phone`, numbers in `add` and `list`) |
 | **2.25** | 11 Nov | Forgot password, no email server needed. Boss app sign-in gets "Umesahau neno la siri?" (WhatsApp to the shop). Team gets "Weka upya neno la siri la mteja": find a customer by @username or WhatsApp number, set a new password (pre-filled, easy to read), send it on WhatsApp. Super Admin can reset Boss. New assistants get a sign-in name from their name (Boss Drew → `bossdrew`). Server: `team` function v2.25 |
 | **2.24.5 live** | 11 Nov | Updates reach phones on the next open: `/`, `/admin/` (and beta) are never cached by the network, and the service worker installs a new version straight from the server (`cache: reload`) |
 | **2.24.4 live** | 11 Nov | Boss app icon on black (was navy with a teal B) to match the shop; `favicon.ico` added; icon links carry `?v=3` so browsers and Home Screens pick up the new icon |
