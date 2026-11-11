@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.24.2";
+W.VERSION = "2.24.3";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -368,7 +368,7 @@ W.STRINGS = [
  ["job_open","Boss · Home","Fungua","Open"],
  ["top_meta","Boss · Dashboard","oda {n} · wameangalia {m}","{n} orders · {m} views"],
  ["d_orders","Boss · Dashboard","Oda","Orders"],
- ["d_visitors","Boss · Dashboard","Wateja wapya","New visitors"],
+ ["d_visitors","Boss · Dashboard","Wageni","Visitors"],
  ["d_conv","Boss · Dashboard","Conversion","Conversion"],
  ["d_open","Boss · Dashboard","Oda wazi","Open orders"],
  ["d_new","Boss · Dashboard","mpya","new"],

@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.24.1";
+W.VERSION = "2.24.3";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -368,7 +368,7 @@ W.STRINGS = [
  ["job_open","Boss · Home","Fungua","Open"],
  ["top_meta","Boss · Dashboard","oda {n} · wameangalia {m}","{n} orders · {m} views"],
  ["d_orders","Boss · Dashboard","Oda","Orders"],
- ["d_visitors","Boss · Dashboard","Wateja wapya","New visitors"],
+ ["d_visitors","Boss · Dashboard","Wageni","Visitors"],
  ["d_conv","Boss · Dashboard","Conversion","Conversion"],
  ["d_open","Boss · Dashboard","Oda wazi","Open orders"],
  ["d_new","Boss · Dashboard","mpya","new"],
@@ -1406,7 +1406,7 @@ W.db = {
         if (String(body.password || "").length < 6) throw new Error("password");
         d.users.push({ username: body.username, password: body.password, full_name: body.full_name, whatsapp: W.waPhone(body.whatsapp), email: body.email || null }); d.me = body.username; demoSave(d); return { ok: true };
       }
-      if (action === "login") { var lg = String(body.login).toLowerCase().replace(/^@/, ""); var u = d.users.find(function (x) { return (x.username === lg || (x.email && x.email === lg)) && x.password === body.password; }); if (!u) { d.fails = (d.fails || 0) + 1; demoSave(d); var e = new Error(d.fails >= 5 ? "locked" : "wrong"); e.info = { left: Math.max(0, 5 - d.fails) }; if (d.fails >= 5) d.fails = 0; demoSave(d); throw e; } d.fails = 0; d.me = u.username; demoSave(d); return { ok: true }; }
+      if (action === "login") { var lg = String(body.login).toLowerCase().replace(/^@/, ""); var u = d.users.find(function (x) { return (x.username === lg || (x.email && x.email === lg)) && x.password === body.password; }); if (!u) { d.fails = (d.fails || 0) + 1; demoSave(d); var e = new Error(d.fails >= 4 ? "locked" : "wrong"); e.info = { left: Math.max(0, 5 - d.fails) }; if (d.fails >= 4) d.fails = 0; demoSave(d); throw e; } d.fails = 0; d.me = u.username; demoSave(d); return { ok: true }; }
       if (action === "contacts") { var me = d.users.find(function (x) { return x.username === d.me; }); if (body.whatsapp) { var nw = W.waPhone(body.whatsapp); if (d.users.some(function (x) { return x !== me && x.whatsapp === nw; })) throw new Error("duplicate"); me.whatsapp = nw; } if (body.email !== undefined) me.email = body.email || null; demoSave(d); return { ok: true }; }
       if (action === "delete") { d.users = d.users.filter(function (x) { return x.username !== d.me; }); d.addresses = d.addresses.filter(function (a) { return a.owner !== d.me; }); d.me = null; demoSave(d); return { ok: true }; }
       if (action === "set_pin" || action === "set_password") { if (String(body.password || "").length < 6) throw new Error("password"); return { ok: true }; }

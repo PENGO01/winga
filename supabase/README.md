@@ -30,3 +30,10 @@ Two projects in the same organisation, both Frankfurt:
 | `2026-10-29_v2.19_rollback.sql` | undo only | |
 
 The live database still has a `backup_20261029` schema (a copy taken that morning, before any clean-up).
+
+## What ran on 11 Nov 2026
+| File | Live | Dev |
+|---|---|---|
+| `2026-11-11_v2.23_favorites.sql` | ✓ | ✓ |
+| `2026-11-11_v2.24.2_login_4_tries.sql` | ✓ | ✓ |
+| `2026-11-11_live_clear_prelaunch_events.sql` | ✓ (copy in `backup_20261111.events`) | |
