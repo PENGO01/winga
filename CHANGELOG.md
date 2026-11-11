@@ -4,6 +4,8 @@ Versions ship to `beta/` first. "Live" is the root (`/`, `/admin/`).
 
 | Version | Date | What changed |
 |---|---|---|
+| **2.24.3 live** | 11 Nov | Promote: root rebuilt from `beta/` (v2.24.3: 4 sign-in tries with 1/4 counter, Wageni tile, sub-categories on Kapu and Mimi). Live config kept, cache `winga-full-v45` |
+| **2.24.3** | 11 Nov | Boss dashboard: the visitors tile reads **Wageni** / Visitors (it said *Wateja wapya*, but it counts browsers that opened the shop, not customers). Live visit data before launch (11 Nov, 12:00 EAT) cleared, copy kept in `backup_20261111.events` |
 | **2.24.2** | 11 Nov | Sign-in: 4 wrong tries lock the name for 15 minutes (was 5); the error shows "1/4", "2/4", "3/4" in both apps (the Boss app showed a raw "{m}"). Database `login_fail` changed, see `2026-11-11_v2.24.2_login_4_tries.sql` |
 | **2.24.1 live** | 11 Nov | Promote (branch `v2.24-promote`): `beta/` copied to the root, so `niagize.tz/` runs v2.24.1 on the live database. Root `shared/config.js` kept, `noindex` removed from the shop page (Boss app stays out of search), cache `winga-full-v43`, `og:image` on `niagize.tz` |
 | **2.24.1** | 11 Nov | Kapu and Mimi: picking a category in the product row now shows its sub-categories underneath (same as the home filter), and tapping one filters the products |
