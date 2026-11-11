@@ -17,7 +17,7 @@ jobs:
       - name: Run suites
         working-directory: tests
         run: |
-          for s in boss_orders shop_orders order_tabs v223_polish v224_final; do
+          for s in boss_orders shop_orders order_tabs v223_polish v224_final v225_forgot; do
             echo "== $s"; python3 $s.py | tee out_$s.txt
             tail -1 out_$s.txt | awk -F' / ' '{ if ($1 != $2) exit 1 }'
           done
