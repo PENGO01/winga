@@ -2,11 +2,14 @@
 
 **Status 11 Nov 2026 (checked in the dashboard): done.** Zone `niagize.tz` is active (full DNS). The Worker project **niagize** (static files, auto-deploys from `PENGO01/winga`) serves `niagize.tz`, `www.niagize.tz` and `niagize.kariakoo.workers.dev`. SSL mode *Full*. *Always Use HTTPS* switched on 11 Nov. `_headers` in this repo is read by that project. Mail records (MX) and a DMARC record exist.
 
+## Done 11 Nov (in the dashboards)
+- Always Use HTTPS: on.
+- Redirect rule "www to apex": `https://www.niagize.tz/*` → `https://niagize.tz/${1}`, 301, query string kept (so `?src=kibao` survives). Tested: `http://www.niagize.tz/?src=kibao` lands on `https://niagize.tz/?src=kibao`.
+- Supabase (live project `winga`): Site URL `https://niagize.tz`; redirect URLs `https://niagize.tz/**` and `https://pengo01.github.io/winga/**`. (The dev project `winga-dev` is unchanged.)
+
 ## Still open
-- `www.niagize.tz/*` → 301 to `https://niagize.tz/$1` (Rules → Redirect Rules). Until then both addresses show the same app.
-- Supabase → Authentication → URL Configuration: add `https://niagize.tz`.
 - Root `index.html` `og:image` → `https://niagize.tz/og-v2.jpg` (after promote).
-- Add SPF TXT record (Cloudflare recommends it); proxy or remove the DNS-only record that exposes an IP.
+- SPF TXT record; proxy or remove the DNS-only record that exposes an IP.
 - Web Analytics (free, no cookies): switch on.
 - Search Console, Bing, Google Business Profile (`docs/SEO.md`).
 
