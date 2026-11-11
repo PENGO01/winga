@@ -48,6 +48,7 @@ main{padding:12px var(--gr) 0 var(--gl);display:flex;flex-direction:column;gap:1
 /* masonry */
 .mas{columns:2;column-gap:3px;margin:0 calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
 .fychips{margin-top:-4px;flex-wrap:nowrap}
+.fysubs{flex-wrap:nowrap;overflow-x:auto;margin-top:6px;scrollbar-width:none}.fysubs::-webkit-scrollbar{display:none}.fysubs .chip{flex:none}
 .fychips .belt{display:flex;gap:6px;flex:none;padding-right:6px}
 .fychips .chip svg{width:15px;height:15px;flex:none}
 .thero{display:flex;gap:10px;align-items:center;padding:12px 14px 2px}
@@ -456,8 +457,11 @@ function forYou(n){
   /* the same chip buttons as the home filter: scroll sideways, tap to filter the products under them */
   var one=function(dup){return ['']. concat(cats).map(function(c){return '<button class="chip" data-act="fy" data-cat="'+c+'" aria-pressed="'+(pick===c)+'"'+(dup?' aria-hidden="true" tabindex="-1"':'')+'>'+(c?W.catIcon(c):IC.cats)+esc(c?W.catLabel(c):t("all"))+'</button>';}).join("");};
   var chips='<span class="belt">'+one(false)+'</span><span class="belt">'+one(true)+'</span>';
-  var list=S.products.filter(function(p){return !pick||p.category===pick;});   /* whole shop: a cap here made signed-in users think the shop was smaller */
-  return '<hr class="sep"><div class="chips fychips" id="fyrow">'+chips+'</div><div class="mas">'+list.map(card).join("")+'</div>';
+  /* v2.24.1: a picked category shows its sub-categories under the row, like the home filter (Kapu and Mimi had none) */
+  var subs=pick?W.subs(pick):[],sub=pick&&subs.indexOf(S.fysub)>=0?S.fysub:"";
+  var subrow=subs.length?'<div class="chips subchips fysubs" data-row="fysub">'+[""].concat(subs).map(function(x){return '<button class="chip" data-act="fysub" data-sub="'+x+'" aria-pressed="'+(sub===x)+'">'+esc(x?W.catLabel(pick,x):t("all"))+'</button>';}).join("")+'</div>':'';
+  var list=S.products.filter(function(p){return (!pick||p.category===pick)&&(!sub||p.subcategory===sub);});   /* whole shop: a cap here made signed-in users think the shop was smaller */
+  return '<hr class="sep"><div class="chips fychips" id="fyrow">'+chips+'</div>'+subrow+(list.length?'<div class="mas">'+list.map(card).join("")+'</div>':'<div class="empty">'+esc(t("noMatch"))+'</div>');
 }
 /* the category row drifts slowly by itself; a touch stops it, it starts again after a few seconds */
 function driftCats(){driftRow($("#fyrow"),".belt",0.35);}
@@ -489,9 +493,9 @@ function renderTabs(){
     return '<button data-tab="'+x[0]+'" aria-current="'+(S.tab===x[0]?"page":"false")+'">'+x[1]+'<span>'+esc(x[2])+'</span>'+(x[0]==="cart"&&n?'<span class="bdg">'+n+'</span>':'')+(x[0]==="me"&&Object.keys(PING).length?'<span class="bdg ping">'+Object.keys(PING).length+'</span>':'')+'</button>';}).join("")+'</div>';
 }
 /* what the list on screen depends on; closing a page only rebuilds the list if one of these changed */
-function viewSig(){return [S.tab,S.cat,S.sub,S.fy||"",S.q,S.searching,JSON.stringify(CART),S.products.length,W.lang,document.documentElement.dataset.theme||"",S.me?(S.me.id||1):0,(S.orders||[]).length,(S.addrs||[]).length].join("|");}
+function viewSig(){return [S.tab,S.cat,S.sub,S.fy||"",S.fysub||"",S.q,S.searching,JSON.stringify(CART),S.products.length,W.lang,document.documentElement.dataset.theme||"",S.me?(S.me.id||1):0,(S.orders||[]).length,(S.addrs||[]).length].join("|");}
 function render(){
-  if(S.tab!==S.lastTab){if(S.lastTab!==undefined){S.fy="";if(!S.keepCat){S.cat="all";S.sub="";}}S.keepCat=false;S.lastTab=S.tab;}
+  if(S.tab!==S.lastTab){if(S.lastTab!==undefined){S.fy="";S.fysub="";if(!S.keepCat){S.cat="all";S.sub="";}}S.keepCat=false;S.lastTab=S.tab;}
   renderTabs();
   var a=$("#app");
   if(!S.loaded){a.innerHTML=W.splash("Niagize");return;}
@@ -1049,7 +1053,8 @@ document.addEventListener("click",async function(e){
     case "lang":readAuth();W.setLang(W.lang==="sw"?"en":"sw");render();draw(false);break;
     case "theme":W.toggleTheme();render();draw(false);break;
     case "how":open("tips",{panel:0});break;
-    case "fy":S.fy=el.dataset.cat;var row=$("#fyrow"),sl=row?row.scrollLeft:0;render();var r2=$("#fyrow");if(r2)r2.scrollLeft=sl;break;
+    case "fy":S.fy=el.dataset.cat;S.fysub="";var row=$("#fyrow"),sl=row?row.scrollLeft:0;render();var r2=$("#fyrow");if(r2)r2.scrollLeft=sl;break;
+    case "fysub":S.fysub=el.dataset.sub;var rw=$("#fyrow"),s1=rw?rw.scrollLeft:0,sr=$(".fysubs"),s2=sr?sr.scrollLeft:0;render();var rw2=$("#fyrow"),sr2=$(".fysubs");if(rw2)rw2.scrollLeft=s1;if(sr2)sr2.scrollLeft=s2;break;
     case "tab":cur.c.panel=+el.dataset.i;cur.c.i=0;draw(false);break;
     case "waOpt":W.openWa(S.shop.whatsapp,cur.c.waMsg||"");break;
     case "slide":cur.c.i=Math.max(0,(cur.c.i||0)+(+el.dataset.d));draw(false);break;
