@@ -1,0 +1,2 @@
+Category icons: Fluent Emoji 3D by Microsoft (https://github.com/microsoft/fluentui-emoji), MIT License.
+Resized to 128 px WebP for Niagize. Copyright (c) Microsoft Corporation.
