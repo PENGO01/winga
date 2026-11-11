@@ -688,11 +688,11 @@ W.catPic = function (cat, sub) {
 };
 W.PROVIDERS = ["M-PESA","AIRTEL MONEY","HALOPESA","MIXX BY YAS","CRDB","NMB","SELCOM"];
 /* v2.23 payment badge: a neutral monogram chip. To show an operator's own logo, drop the file the operator gives merchants
-   at beta/img/pay/<slug>.svg (or .png); it covers the monogram when present, nothing breaks when it is missing. */
+   at beta/img/pay/<slug>.png; it covers the monogram when present, nothing breaks when it is missing. */
 W.paySlug = function (v) { return String(v || "").toLowerCase().replace(/[^a-z]/g, "").replace(/^mixbyyas$|^mixx.*|^mix.*|^tigo.*/, "mixx").replace(/^mpesa.*/, "mpesa").replace(/^airtel.*/, "airtel").replace(/^halo.*/, "halopesa") || "other"; };
 W.payBadge = function (v) {
   var sl = W.paySlug(v), ini = String(v || "").replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase() || "\u20AE";
-  return '<span class="pvb" data-pay="' + sl + '">' + ini + '<img src="img/pay/' + sl + '.svg" alt="" width="36" height="36" loading="lazy" onerror="if(!this.dataset.t){this.dataset.t=1;this.src=\'img/pay/' + sl + '.png\';}else{this.remove();}"></span>';
+  return '<span class="pvb" data-pay="' + sl + '">' + ini + '<img src="img/pay/' + sl + '.png" alt="" width="40" height="40" loading="lazy" onerror="this.remove()"></span>';
 };
 function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
 W.ls = ls;

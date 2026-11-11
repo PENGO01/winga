@@ -8,7 +8,7 @@ Order of work follows the NFX rule: **metrics 50%, onboarding 40%, features 10%.
 - Search visibility: robots, sitemap, structured data, llms.txt (see `docs/SEO.md`)
 
 ## Next
-- P-060: ship the Supabase library inside the repo so a slow network never shows the demo shop
+- (done in v2.23) Supabase library ships inside the repo
 - Per-product pages that search engines can read (build step writes `/p/<id>.html` + sitemap)
 - Official operator logos in `beta/img/pay/` (from each operator's merchant kit)
 - Price-drop alert for saved items (trigger `products_price_drop` already exists)
