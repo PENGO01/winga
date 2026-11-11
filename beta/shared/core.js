@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.22.0";
+W.VERSION = "2.23.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -82,16 +82,16 @@ W.STRINGS = [
  ["ptr_busy","Common","Tafadhali subiri…","Please wait…"],
  ["wa_retry","Common","Fungua WhatsApp tena","Open WhatsApp again"],
  ["wa_retry_s","Common","Haikufunguka? Gusa hapa","Didn't open? Tap here"],
- ["similar","Shop","Zinazofanana","Similar items"],
+ ["similar","Shop","Cheki na hizi","Take a look at these"],
  ["noMatch","Shop","Pole, hatuna bidhaa hiyo! Jaribu neno tofauti","Sorry, we don't have that! Try another word"],
  ["sold_n","Shop","{n} wameagiza","{n} ordered"],
  ["rate_1","Shop","Ubora wa kawaida","Standard quality"],
  ["rate_2","Shop","Ubora wa kati","Good quality"],
  ["rate_3","Shop","Ubora wa juu","Top quality"],
- ["chat","Product","Chat nasi","Chat with us"],
- ["addCart","Product","Ongeza kwenye kapu","Add to basket"],
+ ["chat","Product","Tuulize","Ask us"],
+ ["addCart","Product","Tia kapuni","Add to basket"],
  ["kapu","Product","Kapuni","To basket"],
- ["buyNow","Product","Agiza sasa","Order now"],
+ ["buyNow","Product","Agiza chap","Order fast"],
  ["cart_added","Product","Imeongezwa kwenye kapu","Added to basket"],
  ["inCart","Product","Ipo kwenye kapu","In your basket"],
  ["subtotal","Product","Jumla","Subtotal"],
@@ -107,7 +107,7 @@ W.STRINGS = [
  ["cart_title","Basket","Kapu lako","Your basket"],
  ["cart_send","Basket","Tuma oda","Send order"],
  ["cart_total","Basket","Jumla","Total"],
- ["cart_empty","Basket","Kapu lako ni tupu","Your basket is empty"],
+ ["cart_empty","Basket","Hakuna kitu kwenye kapu, chagua bidhaa.","Nothing in your basket yet. Pick a product."],
  ["cart_clear","Basket","Futa kapu","Empty basket"],
  ["delivery","Basket","Delivery","Delivery"],
  ["del_fasta","Basket","Inaharaka","Urgent"],
@@ -233,7 +233,7 @@ W.STRINGS = [
  ["po_tag","Boss · Orders","Picha ya mteja","Customer's photo"],
  ["po_toshop","Boss · Orders","Weka dukani","Add to shop"],
  ["sl_b1","Tips","Chagua bidhaa: gusa picha yake","Pick a product: tap its photo"],
- ["sl_b2","Tips","Gusa Kapuni, au Agiza sasa kwenda moja kwa moja","Tap Kapuni, or Agiza sasa to go straight on"],
+ ["sl_b2","Tips","Gusa Kapuni, au Agiza chap kwenda moja kwa moja","Tap Kapuni, or Agiza chap to go straight on"],
  ["sl_b3","Tips","Weka WhatsApp na mahali pa delivery, gusa Tuma oda","Add your WhatsApp and delivery place, tap Tuma oda"],
  ["sl_b4","Tips","Pokea invoice WhatsApp, lipia, tunakuletea","Get the invoice on WhatsApp, pay, we deliver"],
  ["sl_s1","Tips","Fungua Niagize kwenye Chrome au Safari","Open Niagize in Chrome or Safari"],
@@ -279,7 +279,7 @@ W.STRINGS = [
  ["forgot_msg","Me","Mambo vipi ✌🏾\nNimesahau neno la siri la Niagize. Username: @{u}. Naomba msaada.","Hi ✌🏾\nI forgot my Niagize password. Username: @{u}. Please help."],
  ["err_taken","Me","Username hii imeshachukuliwa","That username is taken"],
  ["err_dup","Me","Tayari una akaunti kwa namba hii","You already have an account with this number"],
- ["err_wrong","Me","Taarifa si sahihi. Majaribio {n} yamebaki","Wrong details. {n} tries left"],
+ ["err_wrong","Me","Taarifa ulizoweka sio sahihi, angalia na ujaribu tena. {n}/{m}","Those details are not right. Check and try again. {n}/{m}"],
  ["err_locked","Me","Umejaribu mara nyingi. Subiri dakika 15","Too many tries. Wait 15 minutes"],
  ["err_pass","Me","Neno la siri liwe herufi 6 au zaidi","Password must be 6 or more characters"],
  ["err_pass2","Me","Maneno ya siri hayafanani","Passwords don't match"],
@@ -294,6 +294,15 @@ W.STRINGS = [
  ["me_orders","Me","Track oda","Track orders"],
  ["me_addr","Me","Anwani","Addresses"],
  ["me_help","Me","Msaada","Help"],
+ ["fav_tile","Me","Hifadhi","Saved"],
+ ["fav_title","Me","Zilizohifadhiwa","Saved items"],
+ ["fav_add","Shop","Hifadhi","Save"],
+ ["fav_del","Shop","Ondoa kwenye hifadhi","Remove from saved"],
+ ["fav_on","Shop","Imehifadhiwa","Saved"],
+ ["fav_off","Shop","Imeondolewa","Removed"],
+ ["fav_guest","Shop","Imehifadhiwa kwenye simu hii. Jisajili uzipate kila mahali","Saved on this phone. Sign up to keep them everywhere"],
+ ["fav_none","Me","Bado hujahifadhi kitu. Gusa alama ya hifadhi kwenye bidhaa","Nothing saved yet. Tap the save mark on a product"],
+ ["fav_gone","Me","Haipo tena dukani","No longer in the shop"],
  ["me_for_you","Me","Kwa ajili yako","For you"],
  ["no_orders","Me","Bado hujaagiza bidhaa","You haven't ordered yet"],
  ["reorder","Me","Agiza tena","Order again"],
@@ -301,10 +310,10 @@ W.STRINGS = [
  ["see_all","Me","Zote","See all"],
  ["pay_pick","Order","Lipa kwa njia moja kati ya hizi","Pay with any one of these"],
  ["inv_row_s","Order","Jumla TSh {x} · Hifadhi au share","Total TSh {x} · Save or share"],
- ["add_short","Shop","Ongeza","Add"],
+ ["add_short","Shop","Tia kapuni","Add to basket"],
  ["hist_active","Me","Zinaendelea","In progress"],
  ["hist_past","Me","Zilizopita","Past orders"],
- ["nx_new","Me","Muuzaji anaandaa invoice","The seller is preparing your invoice"],
+ ["nx_new","Me","Tumepokea, tunakurudia chap","Received. We'll get back to you shortly"],
  ["nx_inv","Me","Lipa, kisha tuma risiti","Pay, then send the receipt"],
  ["nx_claim","Me","Risiti imetumwa · inathibitishwa","Receipt sent · being checked"],
  ["nx_paid","Me","Ukipokea mzigo, bonyeza Nimepokea","When it arrives, tap I've received it"],
@@ -678,6 +687,13 @@ W.catPic = function (cat, sub) {
   return '<img class="c3d" src="' + (W.APP === "boss" ? "../" : "") + 'cat/' + k + '.webp" alt="" width="128" height="128" decoding="async">';
 };
 W.PROVIDERS = ["M-PESA","AIRTEL MONEY","HALOPESA","MIXX BY YAS","CRDB","NMB","SELCOM"];
+/* v2.23 payment badge: a neutral monogram chip. To show an operator's own logo, drop the file the operator gives merchants
+   at beta/img/pay/<slug>.png; it covers the monogram when present, nothing breaks when it is missing. */
+W.paySlug = function (v) { return String(v || "").toLowerCase().replace(/[^a-z]/g, "").replace(/^mixbyyas$|^mixx.*|^mix.*|^tigo.*/, "mixx").replace(/^mpesa.*/, "mpesa").replace(/^airtel.*/, "airtel").replace(/^halo.*/, "halopesa") || "other"; };
+W.payBadge = function (v) {
+  var sl = W.paySlug(v), ini = String(v || "").replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase() || "\u20AE";
+  return '<span class="pvb" data-pay="' + sl + '">' + ini + '<img src="img/pay/' + sl + '.png" alt="" width="40" height="40" loading="lazy" onerror="this.remove()"></span>';
+};
 function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
 W.ls = ls;
 W.lang = ls("winga.lang") || "sw";
@@ -959,6 +975,20 @@ W.mode = live ? "live" : "demo";
 W.stage = C.stage || "pilot";
 W.beta = !!C.beta;          // the /beta/ copy shows a small BETA pill
 W.env = C.env || "prod";
+/* v2.23 favourites: the phone is the first home (works with no account); an account adds sync across phones.
+   Stored under one key, only what the customer asked to save (product ids + time), nothing else. */
+W.fav = (function () {
+  var K = "niagize.favs";
+  function rd() { try { var v = JSON.parse(localStorage.getItem(K)); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+  function wr(v) { try { localStorage.setItem(K, JSON.stringify(v.slice(0, 200))); } catch (e) {} }
+  return {
+    list: function () { return rd(); },
+    ids: function () { return rd().map(function (x) { return x.id; }); },
+    has: function (id) { return rd().some(function (x) { return x.id === id; }); },
+    toggle: function (id) { var v = rd(), i = v.findIndex(function (x) { return x.id === id; }); if (i >= 0) { v.splice(i, 1); wr(v); return false; } v.unshift({ id: id, at: Date.now() }); wr(v); return true; },
+    set: function (v) { wr(v); }
+  };
+})();
 W.betaPill = function () { if (W.env === "dev" && !W.demoForced) return '<span class="envtag" title="Dev database">DEV</span>'; var live = !W.demoForced && !W.beta && W.stage === "production"; return '<span class="betapill '+(live?"live":"pilot")+'" role="img" aria-label="'+(W.demoForced?"Demo":live?"Live":"Beta")+'" title="'+(W.demoForced?"Mfano / Demo":live?"Live":"Beta")+'"></span>'; };   // status dot: yellow = beta/pilot/demo, green = live
 W.frame = function () {};       // the coloured frame was removed in v2; kept so older calls don't break
 function pub(path) { if (!path) return ""; if (/^data:|^https?:/.test(path)) return path; return C.url + "/storage/v1/object/public/products/" + path; }
@@ -1223,6 +1253,20 @@ W.db = {
   async getOrder(code) {
     if (!live) { var d = demoGet(), o = d.orders.find(function (x) { return x.code === String(code).toUpperCase(); }); return o ? demoOrderView(o, d) : null; }
     var r = await sb.rpc("get_order", { c: code }); if (r.error) throw r.error; return r.data;
+  },
+  /* v2.23 favourites on the account. Missing table (database not updated yet) = quietly stay on-device. */
+  async favPull() {
+    if (!live) return null;
+    var s = await sb.auth.getSession(); if (!s.data.session) return null;
+    var r = await sb.from("favorites").select("product_id,created_at").order("created_at", { ascending: false }).limit(200);
+    if (r.error) return null;
+    return r.data.map(function (x) { return { id: x.product_id, at: new Date(x.created_at).getTime() }; });
+  },
+  async favPush(id, on) {
+    if (!live) return;
+    var s = await sb.auth.getSession(); if (!s.data.session) return;
+    if (on) await sb.from("favorites").upsert({ user_id: s.data.session.user.id, product_id: id }, { onConflict: "user_id,product_id" });
+    else await sb.from("favorites").delete().eq("product_id", id);
   },
   /* customer: payment details after the invoice; "Nimepokea" + stars */
   async submitPayment(code, ref, payer, channel) {

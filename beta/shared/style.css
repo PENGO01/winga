@@ -425,7 +425,7 @@ input,textarea{caret-color:var(--focus)}
 .off,.soon{background:var(--sunk)}
 
 /* --- you are here: the bottom tab carries a mark, not only a colour --- */
-nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:0;left:50%;width:22px;height:3px;margin-left:-11px;border-radius:0 0 3px 3px;background:var(--cyan)}
+nav.tabs button[aria-current="page"]::before{content:"";position:absolute;top:0;left:50%;width:22px;height:3px;margin-left:-11px;border-radius:0 0 3px 3px;background:var(--jua)}
 
 /* --- position: nothing sits on top of anything else --- */
 .toast{border-radius:16px;text-align:center;animation:toastin var(--t-base) var(--ease-out)}
@@ -449,3 +449,12 @@ body:has(.waretry.on) .fab{opacity:0;pointer-events:none}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .busy::after,.ptr.spin svg,.spinning svg{animation-duration:2s!important;animation-iteration-count:infinite!important}
 }
+
+/* --- v2.23 light-theme backdrop: an original street-grid sketch (nothing copied from a map) with gold junction dots and a small geometric print.
+   Fixed behind everything, very faint, off in dark mode, off for reduced data. --- */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260' fill='none'%3E%0A%3Cg stroke='%238A5C00' stroke-width='1.2' stroke-linecap='round' opacity='.55'%3E%0A%3Cpath d='M0 62H260M0 168H260M0 236H120M150 236H260'/%3E%0A%3Cpath d='M54 0V260M142 0V104M142 134V260M214 0V260'/%3E%0A%3Cpath d='M0 214L96 118L196 18L260 0' stroke-width='2'/%3E%0A%3Cpath d='M20 0L96 118M260 120L196 18' opacity='.6'/%3E%0A%3Ccircle cx='142' cy='119' r='15'/%3E%3Ccircle cx='142' cy='119' r='6'/%3E%0A%3C/g%3E%0A%3Cg fill='%23F3A500'%3E%0A%3Ccircle cx='54' cy='62' r='4'/%3E%3Ccircle cx='214' cy='168' r='4'/%3E%3Ccircle cx='96' cy='118' r='3.4'/%3E%3Ccircle cx='142' cy='119' r='2.6'/%3E%3Ccircle cx='54' cy='236' r='3.4'/%3E%3Ccircle cx='196' cy='18' r='3.4'/%3E%0A%3C/g%3E%0A%3Cg stroke='%23F3A500' stroke-width='2.2' stroke-linejoin='round' opacity='.9'%3E%0A%3Cpath d='M8 196l8-9 8 9-8 9zM8 224l8-9 8 9-8 9z'/%3E%0A%3Cpath d='M226 94l7-8 7 8-7 8zM226 112l7-8 7 8-7 8z'/%3E%0A%3Cpath d='M170 252l8-8 8 8 8-8 8 8' /%3E%0A%3Cpath d='M66 40l8-8 8 8 8-8 8 8' /%3E%0A%3C/g%3E%3C/svg%3E") 0 0/260px 260px repeat;opacity:.16}
+:root[data-theme="dark"] body::before{display:none}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) body::before{display:none} }
+@media (prefers-reduced-data: reduce){ body::before{display:none} }
+.pvb{position:relative;overflow:hidden}
+.pvb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:0}
