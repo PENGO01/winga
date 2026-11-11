@@ -4,6 +4,7 @@ Versions ship to `beta/` first. "Live" is the root (`/`, `/admin/`).
 
 | Version | Date | What changed |
 |---|---|---|
+| **2.24.2** | 11 Nov | Sign-in: 4 wrong tries lock the name for 15 minutes (was 5); the error shows "1/4", "2/4", "3/4" in both apps (the Boss app showed a raw "{m}"). Database `login_fail` changed, see `2026-11-11_v2.24.2_login_4_tries.sql` |
 | **2.24.1 live** | 11 Nov | Promote (branch `v2.24-promote`): `beta/` copied to the root, so `niagize.tz/` runs v2.24.1 on the live database. Root `shared/config.js` kept, `noindex` removed from the shop page (Boss app stays out of search), cache `winga-full-v43`, `og:image` on `niagize.tz` |
 | **2.24.1** | 11 Nov | Kapu and Mimi: picking a category in the product row now shows its sub-categories underneath (same as the home filter), and tapping one filters the products |
 | **2.24** | 11 Nov | Final polish (branch `v2.24-final-polish`): Hifadhi mark small and bottom-right on cards; new products get a gold frame (no label); **Weka kapuni** gold with black glyph on every screen, Agiza chap in ink; tab **Aina**; share = icon + "Share"; gold how-to bulb, guide opens for first-time visitors and now swipes as well as Endelea; yellow delivery-cost note before Tuma oda; payment list = what the winga offers (no banks); "Piga picha" camera input; order confirmation no longer forces WhatsApp (optional button); Boss order header shows the Mara badge on top; `niagize.tz` printed on shared cards |
