@@ -32,7 +32,7 @@ with sync_playwright() as p:
     ok("C8 active tab is gold",col.replace(" ","") in("rgb(255,198,45)",),col)
     pg.locator("[data-act=open]").first.click(); pg.wait_for_timeout(700)
     bar=pg.inner_text(".actbar")
-    ok("C9 product buttons: Tuulize · Tia kapuni · Agiza chap",all(x in bar for x in("Tuulize","Tia kapuni","Agiza chap")),bar.replace("\n"," | "))
+    ok("C9 product buttons: Tuulize · Weka kapuni · Agiza chap",all(x in bar for x in("Tuulize","Weka kapuni","Agiza chap")),bar.replace("\n"," | "))
     ok("C10 order button has an arrow",pg.locator(".actbar .btn.primary svg").count()==1)
     pg.go_back(); pg.wait_for_timeout(500)
     ok("C11 back swipe closes the product page",pg.locator("#sheetRoot .sheet").count()==0)

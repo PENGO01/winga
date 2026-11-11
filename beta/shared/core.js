@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.23.0";
+W.VERSION = "2.24.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -22,7 +22,7 @@ W.STRINGS = [
  ["or","Common","au","or"],
  ["copied","Common","Imenakiliwa","Copied"],
  ["saved","Common","Imehifadhiwa","Saved"],
- ["share","Common","Shiriki","Share"],
+ ["share","Common","Share","Share"],
  ["copy","Common","Nakili","Copy"],
  ["send","Common","Tuma","Send"],
  ["error","Common","Imeshindikana. Tafadhali jaribu tena","Failed. Please try again"],
@@ -52,7 +52,7 @@ W.STRINGS = [
  ["tagline","Common","SHOP . DELIVER . SATISFY","SHOP . DELIVER . SATISFY"],
  // customer shop
  ["nav_home","Shop · Menu","Nyumbani","Home"],
- ["nav_cats","Shop · Menu","Category","Category"],
+ ["nav_cats","Shop · Menu","Aina","Category"],
  ["nav_cart","Shop · Menu","Kapu","Basket"],
  ["nav_me","Shop · Menu","Mimi","Me"],
  ["hint_digits","Common","Bado tarakimu {n}","{n} more digits"],
@@ -89,7 +89,7 @@ W.STRINGS = [
  ["rate_2","Shop","Ubora wa kati","Good quality"],
  ["rate_3","Shop","Ubora wa juu","Top quality"],
  ["chat","Product","Tuulize","Ask us"],
- ["addCart","Product","Tia kapuni","Add to basket"],
+ ["addCart","Product","Weka kapuni","Add to basket"],
  ["kapu","Product","Kapuni","To basket"],
  ["buyNow","Product","Agiza chap","Order fast"],
  ["cart_added","Product","Imeongezwa kwenye kapu","Added to basket"],
@@ -113,6 +113,9 @@ W.STRINGS = [
  ["del_fasta","Basket","Inaharaka","Urgent"],
  ["del_leo","Basket","Utumwe Leo","Send today"],
  ["fee_tbd","Basket","Tutakutaarifu gharama za delivery kabla ya kulipa","We'll tell you the delivery cost before you pay"],
+ ["fee_note_t","Basket","Kabla ya kulipa","Before you pay"],
+ ["fee_note","Basket","Tutakutaarifu gharama za delivery na jumla kamili kwenye invoice. Hakuna malipo sasa.","We'll send the delivery cost and the full total on your invoice. Nothing to pay now."],
+ ["order_wa_opt","Order","Mjulishe muuzaji WhatsApp (hiari)","Tell the seller on WhatsApp (optional)"],
  ["deliver_to","Basket","Anwani ya kupokea","Delivery address"],
  ["add_addr","Basket","Ongeza anwani","Add address"],
  ["wa_hello","Basket (WhatsApp)","Mambo vipi ✌🏾","Hi ✌🏾"],
@@ -184,7 +187,8 @@ W.STRINGS = [
  ["po_btn","Shop","Agiza kwa picha","Order by photo"],
  ["po_title","Shop","Agiza kwa picha","Order by photo"],
  ["po_s","Shop","Una picha ya bidhaa unayotaka? Tutumie, tutakutafutia Kariakoo na kukutumia bei.","Have a photo of what you want? Send it, we'll find it in Kariakoo and send you the price."],
- ["po_pick","Shop","Chagua au piga picha","Pick or take a photo"],
+ ["po_pick","Shop","Chagua picha","Pick a photo"],
+ ["po_cam","Shop","Piga picha","Take a photo"],
  ["po_change","Shop","Badilisha picha","Change photo"],
  ["po_note","Shop","Eleza: saizi, rangi, idadi…","Describe: size, colour, how many…"],
  ["po_need","Shop","Weka picha kwanza","Add a photo first"],
@@ -310,7 +314,7 @@ W.STRINGS = [
  ["see_all","Me","Zote","See all"],
  ["pay_pick","Order","Lipa kwa njia moja kati ya hizi","Pay with any one of these"],
  ["inv_row_s","Order","Jumla TSh {x} · Hifadhi au share","Total TSh {x} · Save or share"],
- ["add_short","Shop","Tia kapuni","Add to basket"],
+ ["add_short","Shop","Weka kapuni","Add to basket"],
  ["hist_active","Me","Zinaendelea","In progress"],
  ["hist_past","Me","Zilizopita","Past orders"],
  ["nx_new","Me","Tumepokea, tunakurudia chap","Received. We'll get back to you shortly"],
@@ -396,7 +400,7 @@ W.STRINGS = [
  ["st_live","Boss · Home","Live","Live"],
  ["st_pilot","Boss · Home","Test","Test"],
  ["st_down","Boss · Home","Haipatikani","Down"],
- ["share_title","Boss · Share","Shiriki duka","Share the shop"],
+ ["share_title","Boss · Share","Share duka","Share the shop"],
  ["share_link","Boss · Share","Link yangu","My link"],
  ["shareText","Boss · Share","Tumekurahisishia ununuzi wa bidhaa zozote kutoka Kariakoo.\n\nIngia Niagize Kariakoo, ni chap na salama {url}\n\nChagua bidhaa, tutaifanyia kazi kwa wakati, fanya malipo na uletewe mzigo wako mpaka mlangoni.","We made buying anything from Kariakoo easy.\n\nOpen Niagize Kariakoo, fast and safe {url}\n\nPick your items, we work on them on time, you pay and we deliver to your door."],
  ["emptyHome","Boss · Home","Ongeza picha ya bidhaa zako","Add photos of your products"],
@@ -1040,7 +1044,7 @@ W.normalize = normalize;
     c.fillStyle = GOLD; font(c, 600, 24); c.fillText(String(label || "").toUpperCase(), 64, 186);
     c.fillStyle = GOLD; c.fillRect(0, 230, Wd, 10);
   }
-  function foot(c, H, url) { c.fillStyle = INK; c.fillRect(0, H - 140, Wd, 140); c.fillStyle = GOLD; c.fillRect(0, H - 140, Wd, 6); font(c, 800, 28); c.textAlign = "left"; c.fillText("SHOP . DELIVER . SATISFY", 64, H - 58); c.fillStyle = "#C9C9C9"; font(c, 400, 26); c.textAlign = "right"; c.fillText(String(url || "").replace(/^https?:\/\//, "").replace(/\/$/, ""), Wd - 64, H - 58); c.textAlign = "left"; }
+  function foot(c, H, url) { c.fillStyle = INK; c.fillRect(0, H - 140, Wd, 140); c.fillStyle = GOLD; c.fillRect(0, H - 140, Wd, 6); font(c, 800, 28); c.textAlign = "left"; c.fillText("SHOP . DELIVER . SATISFY", 64, H - 58); c.fillStyle = "#C9C9C9"; font(c, 400, 26); c.textAlign = "right"; c.fillText("niagize.tz", Wd - 64, H - 58); c.textAlign = "left"; }
   function canvas(H) { var cv = document.createElement("canvas"); cv.width = Wd; cv.height = H; var c = cv.getContext("2d"); c.fillStyle = "#FFFFFF"; c.fillRect(0, 0, Wd, H); c.textBaseline = "alphabetic"; return { cv: cv, c: c }; }
   function blob(cv) { return new Promise(function (res, rej) { cv.toBlob(function (b) { b ? res(b) : rej(new Error("jpg")); }, "image/jpeg", .86); }); }
   W.cardInvoice = async function (o, shop, url) {

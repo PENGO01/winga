@@ -20,6 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared/style.css">
 <style>
+.vipl{margin-bottom:3px;line-height:1}.vipl .tag{margin:0 !important;vertical-align:baseline !important}
 /* Boss side v2: Shopify-style dashboard, orders, products. Framed icons, back arrows, quiet colour. */
 .app{max-width:640px;margin:0 auto;min-height:100vh;padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 header.top{position:sticky;top:0;z-index:20;background:var(--navy);color:var(--on-navy);padding:10px var(--gr) 10px var(--gl);padding-top:calc(10px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:6px;overflow:hidden}
@@ -758,7 +759,7 @@ PAGES.order=function(){
   if(st==="done")h+='<button class="btn primary block" data-act="cardThx" style="border-radius:999px;min-height:48px">'+IC.share2+esc(t("card_thx_btn"))+'</button>';
   /* 1 · customer: name, number, place — one card */
   h+='<div class="card ocard2"><div class="orow">'+(noName?'<button class="av tap" data-act="nameAdd" aria-label="'+esc(t("name_add"))+'">'+IC.user+'</button>':'<span class="av">'+esc(initials(o.customer_name))+'</span>')+
-   '<div class="grow" style="min-width:0"><div class="nm">'+vipBadge(o)+(noName?'<button class="linkbtn" data-act="nameAdd">'+esc(t("guest"))+'</button>':esc(o.customer_name))+'</div>'+(phone?'<div class="small muted num">+'+esc(phone)+'</div>':'')+'</div>'+
+   '<div class="grow" style="min-width:0">'+(vipBadge(o)?'<div class="vipl">'+vipBadge(o)+'</div>':'')+'<div class="nm">'+(noName?'<button class="linkbtn" data-act="nameAdd">'+esc(t("guest"))+'</button>':esc(o.customer_name))+'</div>'+(phone?'<div class="small muted num">+'+esc(phone)+'</div>':'')+'</div>'+
    (phone?'<a class="fi" href="tel:+'+esc(phone)+'" aria-label="'+esc(t("a_call"))+'">'+IC.phone+'</a><a class="fi wa" href="'+esc(W.wa(phone,""))+'" target="_blank" rel="noopener" aria-label="WhatsApp">'+IC.wa+'</a>':'')+'</div>';
   /* no valid number yet: country + 9 digits, saved before the invoice can go */
   if((!phone||!W.phoneOk(phone))&&!closed)h+='<div class="orow">'+W.phoneField("o_phone",O.phone||(phone||""),IC.wa)+'<button class="fi jua" data-act="savePhone" aria-label="'+esc(t("save"))+'">'+IC.check+'</button></div>';
