@@ -1,11 +1,32 @@
-# Cloudflare Pages settings (GitHub Pages ignores this file)
+# Cloudflare Pages settings (GitHub Pages ignores this file). Plain files, no build step.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(), geolocation=(self), payment=()
+  X-Frame-Options: SAMEORIGIN
+
+# Service workers and pages: always check for a new version
 /sw.js
   Cache-Control: no-cache
 /beta/sw.js
   Cache-Control: no-cache
-/beta/*
-  X-Robots-Tag: noindex
 /*.html
   Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache
+
+# Versioned or never-changing files: keep for a year (the Supabase file name carries its version)
+/shared/supabase-*.js
+  Cache-Control: public, max-age=31536000, immutable
+/beta/shared/supabase-*.js
+  Cache-Control: public, max-age=31536000, immutable
+/beta/img/pay/*
+  Cache-Control: public, max-age=2592000
+/img/pay/*
+  Cache-Control: public, max-age=2592000
 /beta/demo/*
   Cache-Control: public, max-age=604800
+
+# The beta stays out of search
+/beta/*
+  X-Robots-Tag: noindex
