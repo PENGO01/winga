@@ -1,8 +1,8 @@
 /* Winga service worker: app shell offline (network first, cache fallback). Data and photos come from Supabase. */
-const SHELL = "winga-beta-v46";
+const SHELL = "winga-beta-v47";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./shared/style.css", "./shared/core.js", "./shared/config.js", "./shared/supabase-2.45.4.js",
   "./admin/", "./admin/index.html", "./admin/manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-boss-192.png"];
-self.addEventListener("install", e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
+self.addEventListener("install", e => { e.waitUntil(caches.open(SHELL).then(c => c.addAll(FILES.map(f => new Request(f, { cache: "reload" })))).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x.startsWith("winga-beta") && x !== SHELL).map(x => caches.delete(x)))).then(() => self.clients.claim())); });
 /* product photos never change (each upload gets a new name), so keep them on the phone: instant on scroll and back */
 const IMG = "wimg-v1", IMG_MAX = 400;

@@ -12,6 +12,14 @@
   Cache-Control: no-cache
 /*.html
   Cache-Control: no-cache
+/
+  Cache-Control: no-cache
+/admin/
+  Cache-Control: no-cache
+/beta/
+  Cache-Control: no-cache
+/beta/admin/
+  Cache-Control: no-cache
 /manifest.webmanifest
   Cache-Control: no-cache
 

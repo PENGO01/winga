@@ -4,6 +4,7 @@ Versions ship to `beta/` first. "Live" is the root (`/`, `/admin/`).
 
 | Version | Date | What changed |
 |---|---|---|
+| **2.24.5 live** | 11 Nov | Updates reach phones on the next open: `/`, `/admin/` (and beta) are never cached by the network, and the service worker installs a new version straight from the server (`cache: reload`) |
 | **2.24.4 live** | 11 Nov | Boss app icon on black (was navy with a teal B) to match the shop; `favicon.ico` added; icon links carry `?v=3` so browsers and Home Screens pick up the new icon |
 | **2.24.3 live** | 11 Nov | Promote: root rebuilt from `beta/` (v2.24.3: 4 sign-in tries with 1/4 counter, Wageni tile, sub-categories on Kapu and Mimi). Live config kept, cache `winga-full-v45` |
 | **2.24.3** | 11 Nov | Boss dashboard: the visitors tile reads **Wageni** / Visitors (it said *Wateja wapya*, but it counts browsers that opened the shop, not customers). Live visit data before launch (11 Nov, 12:00 EAT) cleared, copy kept in `backup_20261111.events` |
