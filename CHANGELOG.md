@@ -4,6 +4,7 @@ Versions ship to `beta/` first. "Live" is the root (`/`, `/admin/`).
 
 | Version | Date | What changed |
 |---|---|---|
+| **2.25 live** | 11 Nov | Promote v2.25 to the root. Needs the `team` function v2.25 on live first |
 | **2.25** | 11 Nov | Forgot password, no email server needed. Boss app sign-in gets "Umesahau neno la siri?" (WhatsApp to the shop). Team gets "Weka upya neno la siri la mteja": find a customer by @username or WhatsApp number, set a new password (pre-filled, easy to read), send it on WhatsApp. Super Admin can reset Boss. New assistants get a sign-in name from their name (Boss Drew → `bossdrew`). Server: `team` function v2.25 |
 | **2.24.5 live** | 11 Nov | Updates reach phones on the next open: `/`, `/admin/` (and beta) are never cached by the network, and the service worker installs a new version straight from the server (`cache: reload`) |
 | **2.24.4 live** | 11 Nov | Boss app icon on black (was navy with a teal B) to match the shop; `favicon.ico` added; icon links carry `?v=3` so browsers and Home Screens pick up the new icon |

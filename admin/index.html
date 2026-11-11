@@ -383,7 +383,7 @@ a.innerHTML='<div style="min-height:80vh;display:grid;place-items:center;text-al
 var W=window.Winga,t=W.t,esc=W.esc,$=W.$;
 var S={shop:{},products:[],orders:[],dash:null,days:7,me:null,status:"pilot",tab:"home",filter:"all",ofilter:"new",osub:"all",oq:"",cat:"",q:"",email:"",stage:"boot",lastCat:"fashion",lastSub:"women",team:null,pendingOrder:null,busy:false};
 var Q={jobs:[],done:0,total:0,running:false};
-var A=null,E=null,D=null,T=null,C=null,O=null,K=null,R=null;   // add · edit · settings · team · confirm · order · password · reset
+var A=null,E=null,D=null,T=null,C=null,O=null,K=null,R=null,RC=null;   // add · edit · settings · team · confirm · order · password · reset · customer reset
 var stack=[],HOW0=false,ALERT_WELCOME=false;
 var URLS=new Map(); function purl(f){if(!URLS.has(f))URLS.set(f,URL.createObjectURL(f));return URLS.get(f);}
 var P='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">';
@@ -513,7 +513,8 @@ function vLogin(){
    '<label class="ifield" id="w_em">'+IC.user+'<input id="em" autocapitalize="none" autocorrect="off" autocomplete="username" placeholder="'+esc(t("f_login"))+'" value="'+esc(S.email)+'"></label>'+
    '<label class="ifield" id="w_pw">'+IC.lock+'<input id="pw" type="password" autocomplete="current-password" placeholder="'+esc(t("f_secret"))+'"><button type="button" class="eye" data-act="eye" data-for="pw" aria-label="Show">'+IC.eye+'</button></label>'+
    '<div class="ferr" id="lerr" role="alert"></div>'+
-   '<button class="btn primary block" type="submit" style="border-radius:999px;min-height:50px">'+(S.busy?W.SUN:esc(t("login")))+'</button></form>';
+   '<button class="btn primary block" type="submit" style="border-radius:999px;min-height:50px">'+(S.busy?W.SUN:esc(t("login")))+'</button>'+
+   '<button type="button" class="linkbtn" data-act="forgotStaff" style="align-self:center;margin-top:4px">'+esc(t("forgot"))+'</button></form>';
 }
 
 /* ---------------- home: quick actions first, then the numbers ---------------- */
@@ -618,7 +619,7 @@ function vProducts(){
 }
 
 /* ---------------- pages and popups ---------------- */
-var POP={ship:1,brief:1,steps:1,cats:1,confirm:1,share:1,paid:1,total:1,reset:1,name:1};
+var POP={ship:1,brief:1,steps:1,cats:1,confirm:1,share:1,paid:1,total:1,reset:1,name:1,rcust:1};
 var PAGES={};
 function open(name){stack.push(name);draw(true);}
 function back(){
@@ -973,9 +974,11 @@ PAGES.team=function(){
   var list=S.team?S.team.map(function(m){
     var me=S.me&&m.user_id===S.me.id,login=m.username?"@"+m.username:/@users\.niagize\.app$/.test(m.email||"")?"":m.email||"";
     return '<div class="member"><span class="avs">'+esc(initials(m.name))+'</span><div class="grow"><div style="font-weight:600">'+esc(m.name)+(me?' <span class="muted small">· '+esc(t("you"))+'</span>':'')+'</div><div class="small muted">'+esc(login)+'</div></div>'+
-     (m.role==="assistant"?'<button class="fi sm wa" data-act="shareMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_share"))+'">'+IC.share+'</button><button class="fi sm" data-act="resetMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_reset"))+'">'+IC.key+'</button><button class="fi sm red" data-act="rmMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("del"))+'">'+IC.trash+'</button>':'<span class="pill ok">'+esc(t("role_"+m.role))+'</span>')+'</div>';
+     (m.role==="boss"&&S.me&&S.me.role==="super_admin"?'<button class="fi sm" data-act="resetMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_reset"))+'">'+IC.key+'</button><span class="pill ok">'+esc(t("role_boss"))+'</span>':
+     m.role==="assistant"?'<button class="fi sm wa" data-act="shareMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_share"))+'">'+IC.share+'</button><button class="fi sm" data-act="resetMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_reset"))+'">'+IC.key+'</button><button class="fi sm red" data-act="rmMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("del"))+'">'+IC.trash+'</button>':'<span class="pill ok">'+esc(t("role_"+m.role))+'</span>')+'</div>';
   }).join(""):loader();
   return hd(t("team"))+'<div class="bd"><div class="list" style="padding:4px 12px">'+list+'</div>'+
+   (owner()?'<div class="list" style="padding:0 4px">'+mrow("rcust",IC.key,t("rc_title"),t("rc_sub"))+'</div>':'')+
    '<div class="eyebrow" style="margin-top:6px">'+esc(t("team_add"))+'</div>'+
    '<label class="ifield" id="w_t_name">'+IC.user+'<input id="t_name" placeholder="'+esc(t("team_name"))+'" value="'+esc(T.name)+'" autocomplete="off" maxlength="40"></label>'+
    '<label class="ifield" id="w_t_email">'+IC.mail+'<input id="t_email" type="email" inputmode="email" placeholder="'+esc(t("email"))+'" value="'+esc(T.email)+'" autocomplete="off"></label>'+
@@ -987,6 +990,18 @@ PAGES.reset=function(){
    '<label class="ifield" id="w_r_pw">'+IC.lock+'<input id="r_pw" type="text" autocapitalize="none" autocorrect="off" placeholder="'+esc(t("team_pw"))+'" value="'+esc(R.pw||"")+'" autocomplete="off" maxlength="72"></label>'+
    '<div class="ferr" id="r_err" role="alert"></div><button class="btn primary block" data-act="saveReset" style="border-radius:999px">'+esc(t("save"))+'</button></div>';
 };
+PAGES.rcust=function(){
+  if(RC.done)return hd(t("rc_title"))+'<div class="bd"><div class="member"><span class="avs">'+esc(initials(RC.done.name||"?"))+'</span><div class="grow"><div style="font-weight:600">'+esc(RC.done.name||"")+'</div><div class="small muted">@'+esc(RC.done.username||"")+'</div></div></div>'+
+   '<div class="hint">'+esc(t("rc_done",{x:String(RC.done.name||"").split(" ")[0]}))+'</div><div class="ifield" style="justify-content:center"><b class="num" style="font-size:20px;letter-spacing:.06em">'+esc(RC.pw)+'</b></div>'+
+   '<button class="btn primary block wa" data-act="rcSend" style="border-radius:999px">'+IC.wa+esc(t("rc_send"))+'</button></div>';
+  return hd(t("rc_title"))+'<div class="bd"><div class="hint">'+esc(t("rc_hint"))+'</div>'+
+   '<label class="ifield" id="w_rc_login">'+IC.user+'<input id="rc_login" autocapitalize="none" autocorrect="off" autocomplete="off" placeholder="'+esc(t("rc_login"))+'" value="'+esc(RC.login)+'"></label>'+
+   '<label class="ifield" id="w_rc_pw">'+IC.lock+'<input id="rc_pw" type="text" autocapitalize="none" autocorrect="off" autocomplete="off" maxlength="72" placeholder="'+esc(t("team_pw"))+'" value="'+esc(RC.pw)+'"></label>'+
+   '<div class="ferr" id="rc_err" role="alert"></div><button class="btn primary block" data-act="saveRcust" style="border-radius:999px">'+esc(t("save"))+'</button></div>';
+};
+function readRc(){var l=$("#rc_login");if(!l||!RC)return;RC.login=l.value;RC.pw=$("#rc_pw").value;}
+/* a new password that is easy to read out and type: 4 letters + 4 digits, no look-alikes */
+function newPw(){var L="abcdefghjkmnpqrstuvwxyz",D="23456789",a=new Uint32Array(8);(window.crypto||{getRandomValues:function(x){for(var i=0;i<x.length;i++)x[i]=Math.random()*1e9;return x;}}).getRandomValues(a);var s="";for(var i=0;i<8;i++)s+=(i<4?L:D)[a[i]%(i<4?L.length:D.length)];return s;}
 function readTeam(){var n=$("#t_name");if(!n||!T)return;T.name=n.value;T.email=$("#t_email").value;T.pw=$("#t_pw").value;}
 async function loadTeam(){try{var r=await W.db.team("list");S.team=r.team||[];}catch(e){S.team=[];W.toast(t("error"));}if(stack[stack.length-1]==="team")draw(false);}
 /* the full team brief (from a tapped alert): every line readable, order codes tappable */
@@ -1052,7 +1067,7 @@ PAGES.share=function(){
 
 /* ---------------- actions ---------------- */
 function byId(id){return S.products.find(function(p){return p.id===id;});}
-function readAll(){readFields(A||E);readSettings();readTeam();if(O)keepFee();}
+function readAll(){readFields(A||E);readSettings();readTeam();readRc();if(O)keepFee();}
 async function shareShop(){
   if(await W.shareShop())W.ls("winga.shared","1");
   render();draw(false);
@@ -1072,6 +1087,12 @@ document.addEventListener("click",async function(e){
     case "back":try{readAll();}catch(x){console.error(x);}back();break;   /* back always works, even if a half-typed form can't be read */
     case "theme":readAll();W.toggleTheme();render();draw(false);break;
     case "lang":readAll();W.setLang(W.lang==="sw"?"en":"sw");render();draw(false);break;
+    case "forgotStaff":var fe=($("#em")||{}).value||"";var fs=await W.db.getShop().catch(function(){return {};});W.openWa((fs&&fs.whatsapp)||"",t("forgot_staff_msg",{u:fe.trim()||"…"}));break;
+    case "rcust":RC={login:"",pw:newPw(),done:null};open("rcust");break;
+    case "saveRcust":readRc();if(!RC.login.trim())return bad("rc_err","w_rc_login",t("need_field",{f:t("rc_login").toLowerCase()}));if(RC.pw.length<6)return bad("rc_err","w_rc_pw",t("err_pass"));
+      try{RC.done=await W.db.team("reset_customer",{login:RC.login.trim(),password:RC.pw});draw(false);}
+      catch(e){var rm=String(e&&e.message||"");return bad("rc_err","w_rc_login",rm==="not_found"?t("rc_notfound"):rm==="not_customer"?t("rc_staff"):t("error"));}break;
+    case "rcSend":W.openWa(RC.done.whatsapp||"",t("rc_msg",{name:String(RC.done.name||"").split(" ")[0]||"",pw:RC.pw,u:RC.done.username||"",url:W.shopUrl()}));break;
     case "eye":var f=$("#"+el.dataset.for),show=f.type==="password";f.type=show?"text":"password";el.innerHTML=show?IC.eyeOff:IC.eye;break;
     case "signout":await W.db.signOut();closeAll();S.stage="login";clearInterval(S.poll);render();break;
     case "resetDemo":W.db.resetDemo();closeAll();await load();break;
@@ -1208,7 +1229,7 @@ document.addEventListener("click",async function(e){
       if(navigator.share){navigator.share({text:msg}).catch(function(){});}else W.openWa("",msg);break;
     case "resetMember":readTeam();R={m:S.team.find(function(m){return m.user_id===id;}),pw:""};open("reset");break;
     case "saveReset":var np=$("#r_pw").value;R.pw=np;if(np.length<6)return bad("r_err","w_r_pw",t("err_pass"));
-      await W.db.team("reset",{user_id:R.m.user_id,password:np});W.toast(t("team_reset_ok"));back();break;
+      await W.db.team("reset",{user_id:R.m.user_id,password:np,login:R.m.username||R.m.email||""});W.toast(t("team_reset_ok"));back();break;
     case "yesDel":
       if(C.member){await W.db.team("remove",{user_id:C.member.user_id});S.team=S.team.filter(function(m){return m.user_id!==C.member.user_id;});W.toast(t("team_removed"));back();break;}
       for(var d=0;d<C.items.length;d++){var it=C.items[d];await W.db.deleteProduct(it);S.products=S.products.filter(function(x){return x!==it;});}
