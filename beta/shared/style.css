@@ -1,4 +1,5 @@
 html{touch-action:manipulation}
+html.kb nav.tabs{display:none}
 html.sheet-open,html.sheet-open body{overflow:hidden;overscroll-behavior:none}
 /* Niagize Kariakoo shared look (v2.1): the striped sun.
    Market Ink shell, Market Gold for actions, Ocean Cyan for "you are here", Warm Sand light body.

@@ -383,7 +383,7 @@ a.innerHTML='<div style="min-height:80vh;display:grid;place-items:center;text-al
 var W=window.Winga,t=W.t,esc=W.esc,$=W.$;
 var S={shop:{},products:[],orders:[],dash:null,days:7,me:null,status:"pilot",tab:"home",filter:"all",ofilter:"new",osub:"all",oq:"",cat:"",q:"",email:"",stage:"boot",lastCat:"fashion",lastSub:"women",team:null,pendingOrder:null,busy:false};
 var Q={jobs:[],done:0,total:0,running:false};
-var A=null,E=null,D=null,T=null,C=null,O=null,K=null,R=null,RC=null;   // add · edit · settings · team · confirm · order · password · reset · customer reset
+var A=null,E=null,D=null,T=null,C=null,O=null,K=null,R=null,RC=null,P=null;   // add · edit · settings · team · confirm · order · password · reset · customer reset
 var stack=[],HOW0=false,ALERT_WELCOME=false;
 var URLS=new Map(); function purl(f){if(!URLS.has(f))URLS.set(f,URL.createObjectURL(f));return URLS.get(f);}
 var P='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">';
@@ -619,7 +619,7 @@ function vProducts(){
 }
 
 /* ---------------- pages and popups ---------------- */
-var POP={ship:1,brief:1,steps:1,cats:1,confirm:1,share:1,paid:1,total:1,reset:1,name:1,rcust:1};
+var POP={ship:1,brief:1,steps:1,cats:1,confirm:1,share:1,paid:1,total:1,reset:1,name:1,rcust:1,mphone:1};
 var PAGES={};
 function open(name){stack.push(name);draw(true);}
 function back(){
@@ -904,6 +904,7 @@ async function moveOrder(status,extra,msgKey){
 PAGES.profile=function(){
   var me=S.me||{name:"Boss",role:"boss"},rows='';
   if(owner()){rows+=mrow("settings",IC.gear,t("shop_settings"),t("shop_settings_s"));rows+=mrow("cattax",IC.tag,t("tax_title"),t("tax_sub"));rows+=mrow("team",IC.team,t("team"),t("team_s"));}
+  rows+=mrow("myPhone",IC.wa,t("wa_mine"),me.whatsapp?"+"+me.whatsapp:t("wa_mine_s"));
   rows+=mrow("alerts",IC.bell,t("push_title"),S.push==="on"?t("push_on"):t("push_off"));
   rows+=mrow("lang",IC.globe,t("lang"),W.lang==="sw"?"Kiswahili":"English");
   rows+=mrow("theme",W.isDark()?IC.moon:IC.sun,t("theme"),W.isDark()?t("th_dark"):t("th_light"));
@@ -973,7 +974,9 @@ function readSettings(){var w=$("#s_wa");if(!w||!D)return;D.whatsapp=W.phoneVal(
 PAGES.team=function(){
   var list=S.team?S.team.map(function(m){
     var me=S.me&&m.user_id===S.me.id,login=m.username?"@"+m.username:/@users\.niagize\.app$/.test(m.email||"")?"":m.email||"";
-    return '<div class="member"><span class="avs">'+esc(initials(m.name))+'</span><div class="grow"><div style="font-weight:600">'+esc(m.name)+(me?' <span class="muted small">· '+esc(t("you"))+'</span>':'')+'</div><div class="small muted">'+esc(login)+'</div></div>'+
+    var canPh=!me&&(m.role==="assistant"||(m.role==="boss"&&S.me&&S.me.role==="super_admin"));
+    if(m.whatsapp)login+=(login?" · ":"")+"+"+m.whatsapp;
+    return '<div class="member"><span class="avs">'+esc(initials(m.name))+'</span><div class="grow"><div style="font-weight:600">'+esc(m.name)+(me?' <span class="muted small">· '+esc(t("you"))+'</span>':'')+'</div><div class="small muted">'+esc(login)+'</div>'+(canPh?'<button type="button" class="linkbtn small" data-act="memberPhone" data-id="'+esc(m.user_id)+'">'+esc(m.whatsapp?t("wa_label"):t("team_wa_add"))+'</button>':'')+'</div>'+
      (m.role==="boss"&&S.me&&S.me.role==="super_admin"?'<button class="fi sm" data-act="resetMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_reset"))+'">'+IC.key+'</button><span class="pill ok">'+esc(t("role_boss"))+'</span>':
      m.role==="assistant"?'<button class="fi sm wa" data-act="shareMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_share"))+'">'+IC.share+'</button><button class="fi sm" data-act="resetMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("team_reset"))+'">'+IC.key+'</button><button class="fi sm red" data-act="rmMember" data-id="'+esc(m.user_id)+'" aria-label="'+esc(t("del"))+'">'+IC.trash+'</button>':'<span class="pill ok">'+esc(t("role_"+m.role))+'</span>')+'</div>';
   }).join(""):loader();
@@ -981,11 +984,18 @@ PAGES.team=function(){
    (owner()?'<div class="list" style="padding:0 4px">'+mrow("rcust",IC.key,t("rc_title"),t("rc_sub"))+'</div>':'')+
    '<div class="eyebrow" style="margin-top:6px">'+esc(t("team_add"))+'</div>'+
    '<label class="ifield" id="w_t_name">'+IC.user+'<input id="t_name" placeholder="'+esc(t("team_name"))+'" value="'+esc(T.name)+'" autocomplete="off" maxlength="40"></label>'+
+   W.phoneField("t_wa",T.wa||"",IC.wa)+
    '<label class="ifield" id="w_t_email">'+IC.mail+'<input id="t_email" type="email" inputmode="email" placeholder="'+esc(t("email"))+'" value="'+esc(T.email)+'" autocomplete="off"></label>'+
    '<label class="ifield" id="w_t_pw">'+IC.lock+'<input id="t_pw" type="password" placeholder="'+esc(t("team_pw"))+'" value="'+esc(T.pw)+'" autocomplete="new-password"><button type="button" class="eye" data-act="eye" data-for="t_pw" aria-label="Show">'+IC.eye+'</button></label>'+
    '<div class="ferr" id="t_err" role="alert"></div><div class="hint">'+esc(t("team_note"))+'</div></div><div class="ft"><button class="btn primary block" data-act="addMember" style="border-radius:999px">'+IC.plus+esc(t("team_add"))+'</button></div>';
 };
+PAGES.mphone=function(){
+  return hd(P.self?t("wa_mine"):t("wa_label"))+'<div class="bd">'+(P.self?'<div class="hint">'+esc(t("wa_mine_s"))+'</div>':'<div class="hint">'+esc(P.m.name||"")+'</div>')+
+   W.phoneField("mp_wa",P.m.whatsapp||"",IC.wa)+'<div class="ferr" id="mp_err" role="alert"></div><button class="btn primary block" data-act="saveStaffPhone" style="border-radius:999px">'+esc(t("save"))+'</button></div>';
+};
 PAGES.reset=function(){
+  if(R.done)return hd(t("team_reset"))+'<div class="bd"><div class="hint">'+esc(t("rc_done",{x:String(R.m.name||"").split(" ")[0]}))+'</div><div class="ifield" style="justify-content:center"><b class="num" style="font-size:20px;letter-spacing:.06em">'+esc(R.pw)+'</b></div>'+
+   '<button class="btn primary block wa" data-act="resetSend" style="border-radius:999px">'+IC.wa+esc(t("rc_send"))+'</button></div>';
   return hd(t("team_reset"))+'<div class="bd"><div class="hint">'+esc(t("team_reset_s",{x:R.m.name}))+'</div>'+
    '<label class="ifield" id="w_r_pw">'+IC.lock+'<input id="r_pw" type="text" autocapitalize="none" autocorrect="off" placeholder="'+esc(t("team_pw"))+'" value="'+esc(R.pw||"")+'" autocomplete="off" maxlength="72"></label>'+
    '<div class="ferr" id="r_err" role="alert"></div><button class="btn primary block" data-act="saveReset" style="border-radius:999px">'+esc(t("save"))+'</button></div>';
@@ -1002,7 +1012,7 @@ PAGES.rcust=function(){
 function readRc(){var l=$("#rc_login");if(!l||!RC)return;RC.login=l.value;RC.pw=$("#rc_pw").value;}
 /* a new password that is easy to read out and type: 4 letters + 4 digits, no look-alikes */
 function newPw(){var L="abcdefghjkmnpqrstuvwxyz",D="23456789",a=new Uint32Array(8);(window.crypto||{getRandomValues:function(x){for(var i=0;i<x.length;i++)x[i]=Math.random()*1e9;return x;}}).getRandomValues(a);var s="";for(var i=0;i<8;i++)s+=(i<4?L:D)[a[i]%(i<4?L.length:D.length)];return s;}
-function readTeam(){var n=$("#t_name");if(!n||!T)return;T.name=n.value;T.email=$("#t_email").value;T.pw=$("#t_pw").value;}
+function readTeam(){var n=$("#t_name");if(!n||!T)return;T.name=n.value;T.email=$("#t_email").value;T.pw=$("#t_pw").value;T.wa=W.phoneVal("t_wa");}
 async function loadTeam(){try{var r=await W.db.team("list");S.team=r.team||[];}catch(e){S.team=[];W.toast(t("error"));}if(stack[stack.length-1]==="team")draw(false);}
 /* the full team brief (from a tapped alert): every line readable, order codes tappable */
 var BRIEF="";
@@ -1229,7 +1239,15 @@ document.addEventListener("click",async function(e){
       if(navigator.share){navigator.share({text:msg}).catch(function(){});}else W.openWa("",msg);break;
     case "resetMember":readTeam();R={m:S.team.find(function(m){return m.user_id===id;}),pw:""};open("reset");break;
     case "saveReset":var np=$("#r_pw").value;R.pw=np;if(np.length<6)return bad("r_err","w_r_pw",t("err_pass"));
-      await W.db.team("reset",{user_id:R.m.user_id,password:np,login:R.m.username||R.m.email||""});W.toast(t("team_reset_ok"));back();break;
+      await W.db.team("reset",{user_id:R.m.user_id,password:np,login:R.m.username||R.m.email||""});W.toast(t("team_reset_ok"));
+      if(R.m.whatsapp){R.done=true;draw(false);}else back();break;
+    case "resetSend":W.openWa(R.m.whatsapp,t("team_reset_msg",{name:String(R.m.name||"").split(" ")[0],pw:R.pw,login:R.m.username?"@"+R.m.username:R.m.email||"",url:W.adminUrl()}));break;
+    case "memberPhone":readTeam();P={m:S.team.find(function(m){return m.user_id===id;}),self:false};open("mphone");break;
+    case "myPhone":P={m:{name:(S.me||{}).name,whatsapp:(S.me||{}).whatsapp||""},self:true};open("mphone");break;
+    case "saveStaffPhone":var pw2=W.phoneVal("mp_wa");if(!W.phoneOk(pw2))return bad("mp_err","w_mp_wa",W.phoneErr("mp_wa"));
+      try{if(P.self){await W.db.setMyPhone(pw2);S.me.whatsapp=W.waPhone(pw2);}else{await W.db.team("set_phone",{user_id:P.m.user_id,whatsapp:pw2});P.m.whatsapp=W.waPhone(pw2);}}
+      catch(e){return bad("mp_err","w_mp_wa",String(e&&e.message)==="duplicate"?t("err_dup"):t("error"));}
+      W.toast(t("team_wa_saved"));back();if(stack[stack.length-1]==="team")draw(false);break;
     case "yesDel":
       if(C.member){await W.db.team("remove",{user_id:C.member.user_id});S.team=S.team.filter(function(m){return m.user_id!==C.member.user_id;});W.toast(t("team_removed"));back();break;}
       for(var d=0;d<C.items.length;d++){var it=C.items[d];await W.db.deleteProduct(it);S.products=S.products.filter(function(x){return x!==it;});}
@@ -1266,10 +1284,11 @@ async function saveSettings(){
 }
 async function addMember(){
   if(!T.name.trim())return bad("t_err","w_t_name",t("need_field",{f:t("team_name").toLowerCase()}));
+  if(!W.phoneOk(T.wa))return bad("t_err","w_t_wa",W.phoneErr("t_wa"));
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(T.email.trim()))return bad("t_err","w_t_email",t("need_field",{f:t("email").toLowerCase()}));
   if(T.pw.length<6)return bad("t_err","w_t_pw",t("err_pass"));
   var btn=$("[data-act=addMember]");if(btn)btn.disabled=true;
-  try{await W.db.team("add",{name:T.name.trim(),email:T.email.trim().toLowerCase(),password:T.pw});T={name:"",email:"",pw:""};W.toast(t("team_added"));await loadTeam();}
+  try{await W.db.team("add",{name:T.name.trim(),email:T.email.trim().toLowerCase(),password:T.pw,whatsapp:T.wa});T={name:"",email:"",pw:"",wa:""};W.toast(t("team_added"));await loadTeam();}
   finally{var b2=$("[data-act=addMember]");if(b2)b2.disabled=false;}
 }
 async function savePin(){
