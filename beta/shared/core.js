@@ -5,7 +5,7 @@
 (function () {
 "use strict";
 var W = window.Winga = {};
-W.VERSION = "2.25.0";
+W.VERSION = "2.26.0";
 W.UPDATED = { sw: "Okt 2026", en: "Oct 2026" };
 W.APP = window.NIAGIZE_APP || "shop";
 
@@ -589,6 +589,11 @@ W.STRINGS = [
  ["team_reset_s","Boss · Assistants","Kwa {x}. Mpe neno hili jipya","For {x}. Give them this new password"],
  ["team_reset_ok","Boss · Assistants","Neno jipya la siri limewekwa","New password set"],
  ["you","Boss · Assistants","Wewe","You"],
+ ["wa_mine","Boss · Profile","Namba yangu ya WhatsApp","My WhatsApp number"],
+ ["wa_mine_s","Boss · Profile","Ili timu ikutumie neno jipya ukisahau","So the team can send you a new password if you forget"],
+ ["team_wa_add","Boss · Assistants","Ongeza namba","Add number"],
+ ["team_wa_saved","Boss · Assistants","Namba imetunzwa","Number saved"],
+ ["team_reset_msg","Boss · Assistants","Mambo vipi {name} ✌🏾\nNeno lako jipya la siri la Niagize ni: {pw}\nIngia kama {login} hapa {url}","Hi {name} ✌🏾\nYour new Niagize password is: {pw}\nSign in as {login} at {url}"],
  ["forgot_staff_msg","Boss · Sign in","Mambo vipi ✌🏾\nNimesahau neno la siri la kuingia Niagize (Boss app). Jina: {u}. Naomba unibadilishie.","Hi ✌🏾\nI forgot my Niagize Boss app password. Sign-in name: {u}. Please reset it for me."],
  ["rc_title","Boss · Reset","Weka upya neno la siri la mteja","Reset a customer's password"],
  ["rc_sub","Boss · Reset","Mteja aliyesahau, amekutumia WhatsApp","A customer who forgot and messaged you"],
@@ -710,6 +715,21 @@ W.payBadge = function (v) {
 };
 function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
 W.ls = ls;
+/* v2.26: iPhone Safari can leave a bottom bar stranded mid-screen after the keyboard or a sheet closes.
+   While the keyboard is up (the visible area shrinks) the bar hides; when it closes, or a sheet closes,
+   a zero-distance scroll makes Safari put fixed bars back at the bottom. */
+(function () {
+  var de = document.documentElement, vv = window.visualViewport, kb = false;
+  function nudge() { requestAnimationFrame(function () { window.scrollTo(window.scrollX, window.scrollY); }); }
+  if (vv) vv.addEventListener("resize", function () {
+    var now = vv.height < window.innerHeight * 0.8;
+    if (now !== kb) { kb = now; de.classList.toggle("kb", kb); if (!kb) { nudge(); setTimeout(nudge, 350); } }
+  });
+  document.addEventListener("focusout", function () { setTimeout(nudge, 300); });
+  var open = de.classList.contains("sheet-open");
+  new MutationObserver(function () { var o = de.classList.contains("sheet-open"); if (open && !o) { nudge(); setTimeout(nudge, 350); } open = o; })
+    .observe(de, { attributes: true, attributeFilter: ["class"] });
+})();
 W.lang = ls("winga.lang") || "sw";
 W.setLang = function (l) { W.lang = l; ls("winga.lang", l); document.documentElement.lang = l; };
 W.t = function (k, v) { var s = (STR[W.lang] || STR.sw)[k]; if (s == null) s = STR.sw[k] || k; if (v) for (var p in v) s = s.split("{" + p + "}").join(v[p]); return s; };
@@ -793,7 +813,10 @@ W.fieldHint = function (el) {
   if (msg) { h.textContent = msg; h.hidden = false; } else h.hidden = true;
 };
 document.addEventListener("input", function (e) { var el = e.target; if (el && (el.dataset && el.dataset.phone || el.type === "email")) W.fieldHint(el); });
-document.addEventListener("focusout", function (e) { var el = e.target, w = el && el.closest && el.closest(".ifield"), h = w && w.nextElementSibling; if (h && h.classList.contains("fhint")) h.hidden = true; });
+/* v2.26: hiding the hint on blur moved the buttons under a finger mid-tap (the tap landed on the backdrop and closed the
+   sheet), so the hint now stays until the field is fixed, emptied, or the next tap has finished */
+document.addEventListener("focusout", function (e) { var el = e.target, w = el && el.closest && el.closest(".ifield"), h = w && w.nextElementSibling; if (!h || !h.classList.contains("fhint")) return;
+  setTimeout(function () { if (h.isConnected && document.activeElement !== el && !(el.value || "").trim()) h.hidden = true; }, 400); });
 /* while typing: digits only, no leading 0, grouped 3-3-3, never more than the country allows */
 document.addEventListener("input", function (e) {
   var el = e.target; if (!el || !el.dataset || !el.dataset.phone) return;
@@ -1398,7 +1421,8 @@ W.db = {
   async team(action, body) {
     if (!live) {
       var d = demoGet(); d.team = d.team || [{ user_id: "demo-boss", name: "Boss Deus", role: "boss", email: "boss@mfano" }];
-      if (action === "add") { if (d.team.some(function (m) { return m.email === body.email; })) throw new Error("exists"); d.team.push({ user_id: W.uid(), name: body.name, role: "assistant", email: body.email }); }
+      if (action === "add") { if (d.team.some(function (m) { return m.email === body.email; })) throw new Error("exists"); d.team.push({ user_id: W.uid(), name: body.name, role: "assistant", email: body.email, username: String(body.name || "").toLowerCase().replace(/[^a-z0-9]/g, ""), whatsapp: W.waPhone(body.whatsapp) }); }
+      if (action === "set_phone") { var pm = d.team.find(function (m) { return m.user_id === body.user_id; }); if (!pm) throw new Error("not_assistant"); pm.whatsapp = W.waPhone(body.whatsapp); }
       if (action === "remove") d.team = d.team.filter(function (m) { return m.user_id !== body.user_id; });
       if (action === "reset" && String(body.password || "").length < 6) throw new Error("password_short");
       if (action === "reset_customer") { if (String(body.password || "").length < 6) throw new Error("password_short"); var lg = String(body.login || "").trim().replace(/^@/, "").toLowerCase(); if (!lg || lg === "hakuna") throw new Error("not_found"); return { ok: true, name: "Mteja wa Mfano", username: /^[0-9+ ]+$/.test(lg) ? "mteja" : lg, whatsapp: "255700000000" }; }
@@ -1482,11 +1506,16 @@ W.db = {
   async teamHere() { if (!live) return ls("winga.demoTeam") === "1"; var s = await this.session(); return !!s && await this.isAdmin(); },
   async isAdmin() { if (!live) return true; var r = await sb.rpc("is_admin"); return !r.error && r.data === true; },
   async me() {
-    if (!live) return { id: "demo-boss", name: "Boss Deus", role: ls("winga.demoRole") || "boss", email: "boss@mfano", username: "bossdeus" };
+    if (!live) return { id: "demo-boss", name: "Boss Deus", role: ls("winga.demoRole") || "boss", email: "boss@mfano", username: "bossdeus", whatsapp: ls("winga.demoPhone") || "" };
     var s = await sb.auth.getSession(), u = s.data.session && s.data.session.user; if (!u) return null;
     var r = await sb.from("admins").select("name,role").eq("user_id", u.id).maybeSingle();
-    var p = await sb.from("profiles").select("username").eq("id", u.id).maybeSingle();
-    return { id: u.id, name: (r.data && r.data.name) || u.email.split("@")[0], role: (r.data && r.data.role) || "assistant", email: /@users\.niagize\.app$/.test(u.email) ? "" : u.email, username: p.data && p.data.username };
+    var p = await sb.from("profiles").select("username,whatsapp").eq("id", u.id).maybeSingle();
+    return { id: u.id, name: (r.data && r.data.name) || u.email.split("@")[0], role: (r.data && r.data.role) || "assistant", email: /@users\.niagize\.app$/.test(u.email) ? "" : u.email, username: p.data && p.data.username, whatsapp: (p.data && p.data.whatsapp) || "" };
+  },
+  /* v2.26: a staff member saves their own WhatsApp number (for "forgot password" replies) */
+  async setMyPhone(w) {
+    if (!live) { ls("winga.demoPhone", w); return { ok: true }; }
+    return W.db.account("contacts", { whatsapp: w });
   },
   async signOut() { if (!live) { if (W.APP === "shop") { var d = demoGet(); d.me = null; demoSave(d); } return; } await sb.auth.signOut(); }
 };

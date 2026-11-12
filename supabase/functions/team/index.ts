@@ -2,6 +2,7 @@
 // The caller's own token proves who they are; the service key (server-side only) creates the account.
 // v2.25: "add" also gives the assistant a sign-in name (from their name), the super admin can reset the boss,
 // and an owner can reset a customer's password ("reset_customer") after a "forgot password" WhatsApp.
+// v2.26: staff WhatsApp numbers: "add" takes one, "set_phone" changes one, "list" returns them.
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
 const CORS = {
@@ -46,6 +47,8 @@ Deno.serve(async (req) => {
     const email = String(body.email ?? "").trim().toLowerCase();
     const password = String(body.password ?? "");
     const name = String(body.name ?? "").trim().slice(0, 40);
+    const whatsapp = phone(body.whatsapp ?? "");
+    if (whatsapp && (whatsapp.length < 11 || whatsapp.length > 15)) return json({ error: "whatsapp" }, 400);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "email" }, 400);
     if (password.length < 6) return json({ error: "password_short" }, 400);
     if (!name) return json({ error: "name" }, 400);
@@ -55,8 +58,8 @@ Deno.serve(async (req) => {
     if (ie) { await admin.auth.admin.deleteUser(made.user.id); return json({ error: "save_failed" }, 500); }
     // a sign-in name too, so the assistant can type it instead of the email (v2.25)
     const username = await freeUsername(name);
-    await admin.from("profiles").insert({ id: made.user.id, username, full_name: name, kind: "staff", verified: true });
-    return json({ ok: true, user_id: made.user.id, name, email, username });
+    await admin.from("profiles").insert({ id: made.user.id, username, full_name: name, kind: "staff", verified: true, whatsapp: whatsapp || null });
+    return json({ ok: true, user_id: made.user.id, name, email, username, whatsapp: whatsapp || null });
   }
 
   if (body.action === "remove") {
@@ -93,7 +96,7 @@ Deno.serve(async (req) => {
     if (!okPass(password)) return json({ error: "password_short" }, 400);
     const w = phone(login);
     let q = admin.from("profiles").select("id,username,full_name,whatsapp,kind");
-    q = /^[0-9+ ]+$/.test(login) && w.length >= 12 ? q.eq("whatsapp", w) : q.eq("username", login);
+    q = /^[0-9+ ]+$/.test(login) && w.length >= 12 ? q.eq("whatsapp", w).eq("kind", "customer") : q.eq("username", login);
     const { data: rows } = await q.limit(2);
     const p = rows && rows.length === 1 ? rows[0] : null;
     if (!p) return json({ error: "not_found" }, 404);
@@ -105,6 +108,21 @@ Deno.serve(async (req) => {
     return json({ ok: true, name: p.full_name, username: p.username, whatsapp: p.whatsapp });
   }
 
+  // v2.26: an owner sets an assistant's WhatsApp number (the super admin may also set the boss's)
+  if (body.action === "set_phone") {
+    const id = String(body.user_id ?? "");
+    const whatsapp = phone(body.whatsapp ?? "");
+    if (whatsapp.length < 11 || whatsapp.length > 15) return json({ error: "whatsapp" }, 400);
+    const { data: row } = await admin.from("admins").select("role,name").eq("user_id", id).maybeSingle();
+    let allowed = !!row && row.role === "assistant";
+    if (row && row.role === "boss") { const { data: isSuper } = await asCaller.rpc("is_super"); allowed = isSuper === true; }
+    if (!allowed) return json({ error: "not_assistant" }, 400);
+    const { data: has } = await admin.from("profiles").select("id").eq("id", id).maybeSingle();
+    if (has) await admin.from("profiles").update({ whatsapp }).eq("id", id);
+    else await admin.from("profiles").insert({ id, username: await freeUsername(row!.name || "staff"), full_name: row!.name || "", kind: "staff", verified: true, whatsapp });
+    return json({ ok: true, whatsapp });
+  }
+
   if (body.action === "list") {
     const { data: isSuper } = await asCaller.rpc("is_super");
     const { data: rows } = await admin.from("admins").select("user_id,name,role,added_at").order("added_at");
@@ -112,8 +130,8 @@ Deno.serve(async (req) => {
     for (const r of rows ?? []) {
       if (r.role === "super_admin" && isSuper !== true) continue;   // the super admin stays out of a boss's list
       const { data: u } = await admin.auth.admin.getUserById(r.user_id);
-      const { data: pr } = await admin.from("profiles").select("username").eq("id", r.user_id).maybeSingle();
-      out.push({ ...r, email: u?.user?.email ?? "", username: pr?.username ?? null });
+      const { data: pr } = await admin.from("profiles").select("username,whatsapp").eq("id", r.user_id).maybeSingle();
+      out.push({ ...r, email: u?.user?.email ?? "", username: pr?.username ?? null, whatsapp: pr?.whatsapp ?? null });
     }
     return json({ ok: true, team: out });
   }
